@@ -1,9 +1,11 @@
-import { Image, SafeAreaView, View, Text, TextInput, ScrollView } from 'react-native'
+import { Image, SafeAreaView, View, Text, TextInput, ScrollView, ViewComponent } from 'react-native'
 import React, { useLayoutEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { UserIcon, ChevronDownIcon, AdjustmentsVerticalIcon, MagnifyingGlassIcon, ArrowRightIcon } from 'react-native-heroicons/outline';
-import Categories from '../components/Categories';
-import Featured from '../components/Featured';
+import Categories from '../components/CardHolders/Categories';
+import Sports from '../components/CardHolders/Sports';
+import Specials from '../components/CardHolders/Specials';
+import MovieShows from '../components/CardHolders/MovieShows';
 
 export default function HomeScreen() {
 
@@ -16,10 +18,12 @@ export default function HomeScreen() {
     }, []);
 
     return (
-        <SafeAreaView className=" bg-gray-300 pt-5">
+        <SafeAreaView className="pt-5 flex-1">
+
+
             <View className="flex-row pb-3 px-2 items-center mx-4 space-x-2">
-                <Image
-                    className="h-7 w-7 p-4 bg-black rounded-full"
+                <Image source={require("../assets/Images/Logo.png")}
+                    className="h-7 w-7"
                 />
 
                 <View className="flex-1">
@@ -30,6 +34,7 @@ export default function HomeScreen() {
                 </View>
                 <UserIcon size={35} color={"#000000"} />
             </View>
+
 
             {/* Search */}
             <View className="flex-row items-center px-2 pb-4 space-x-2">
@@ -42,25 +47,38 @@ export default function HomeScreen() {
                 </View>
                 <AdjustmentsVerticalIcon color={"#8500ED"} />
             </ View>
-            <ScrollView className="bg-gray-300 border-y-2 border-opacity-50 border-orange-50"
-                contentContainerStyle={{ paddingBottom: 10 }}>
-                <Categories />
-            </ScrollView>
-            <View className=" items-center">
-                <Text className=" -mb-2  font-bold text-lg">Featured</Text>
-                <View className="flex-row items-center">
-                    <Text className=" text-xs font">
-                        Learn how to Promote your place of business
-                    </Text>
-                    <ArrowRightIcon color={"#8500ED"} />
+
+
+            <ScrollView className="mb-3">
+
+
+                <ScrollView className="bg-blend-darken"
+                    contentContainerStyle={{ paddingBottom: 10 }}>
+                    <Categories />
+                </ScrollView>
+                <View className=" items-center">
+                    <Text className=" -mb-2  font-bold text-lg">Featured</Text>
+                    <View className="flex-row items-center">
+                        <Text className=" text-xs font underline">
+                            Learn how to Promote your place of Event
+                        </Text>
+                    </View>
                 </View>
 
-            </View>
+                {/* Sports*/}
+                <View className=" mb-1">
+                    <Sports />
+                </View>
+                {/* Specialls*/}
+                <View className=" bg-inherit mb-1">
+                    <Specials />
+                </View>
+                {/* Movies Shows*/}
+                <View>
+                    <MovieShows />
+                </View>
 
-            <ScrollView>
-                <Featured title={"Featured Sports"} description="Featured Sports Near You" />
-                <Featured title={"Featured Specials"} description="Restaurant/Bar Specials" />
-                <Featured title={"Featured Shows/Movies"} description="Movie Deals and Shows" />
+
             </ScrollView>
 
         </SafeAreaView>

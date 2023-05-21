@@ -1,11 +1,11 @@
 import { View, Text, ScrollView } from 'react-native'
 import React from 'react'
-import Drinks from '../assets/Images/CockTail.png'
-import Movie from '../assets/Images/Movie.png'
-import Concert from '../assets/Images/Concert.png'
-import Sports from '../assets/Images/Sports.png'
-import Deals from '../assets/Images/Deals.png'
-import CategoryCard from './CategoryCard'
+import Drinks from '../../assets/Images/CockTail.png'
+import Movie from '../../assets/Images/Movie.png'
+import Concert from '../../assets/Images/Concert.png'
+import Sports from '../../assets/Images/Sports.png'
+import Deals from '../../assets/Images/Deals.png'
+import CategoryCard from '../Cards/CategoryCard'
 
 
 export default function Categories() {
