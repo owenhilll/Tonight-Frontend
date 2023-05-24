@@ -7,6 +7,7 @@ import Sports from '../components/CardHolders/Sports';
 import Specials from '../components/CardHolders/Specials';
 import MovieShows from '../components/CardHolders/MovieShows';
 
+
 export default function HomeScreen() {
 
     const navigation = useNavigation();

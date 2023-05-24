@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "scheme": "Tonight",
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
@@ -18,6 +19,12 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
+      },
+      "package": "host.exp.exponent"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "93f10c67-152e-4191-b008-d8bc73e6f30a"
       }
     }
   }
