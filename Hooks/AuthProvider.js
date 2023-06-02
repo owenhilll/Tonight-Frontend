@@ -1,57 +1,42 @@
-import { useEffect, useState, createContext, useContext } from "react";
-import * as Google from 'expo-auth-session/providers/google';
+import React, { useContext, useEffect, useState, createContext } from "react";
+import * as WebBrowser from "expo-web-browser";
+import { auth } from "../firebase";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const AuthContext = createContext({});
 
-export const GetAuthProvider = ({ children }) => {
+const config = {
+  iosClientId:
+    "453837494402-hdph8gj1hn1jm56ugk0b403pl89g8pjj.apps.googleusercontent.com",
+  androidClientId:
+    "453837494402-pnprn521g1jk5tkgbsg6n48j9g7epni4.apps.googleusercontent.com",
+  expoClientId:
+    "843737074628-da6c5imppl5d5879glgv4k1d2asqvaks.apps.googleusercontent.com",
+  webClientId:
+    "843737074628-da6c5imppl5d5879glgv4k1d2asqvaks.apps.googleusercontent.com",
+  scopes: ["profile", "email"],
+  permissions: ["public_profile", "email", "gender", "location"],
+};
 
-    const [token, setToken] = useState("");
-    const [userInfo, setUserInfo] = useState(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState("");
 
-    const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-        androidClientId: '453837494402-3vm4kri0fiugqfnik3is5gt1bk94mmqd.apps.googleusercontent.com',
-        //hidestream
-        iosClientId: '453837494402-hdph8gj1hn1jm56ugk0b403pl89g8pjj.apps.googleusercontent.com',
+  useEffect(() => {
+    auth.onAuthStateChanged(setUser);
+  }, []);
 
-        expoClientId: '6033273538-lremjotnp5l3o1pfctvrgf5ql9as3qej.apps.googleusercontent.com'
-        //hidestream 
-    });
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
-    useEffect(() => {
-        if (response?.type === "success") {
-            setToken(response.authentication.accessToken);
-            getUserInfo();
-        }
-    }, [response, token]);
-
-    const getUserInfo = async () => {
-        try {
-            const response = await fetch(
-                "https://www.googleapis.com/userinfo/v2/me",
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
-
-            const user = await response.json();
-            setUserInfo(user);
-        } catch (error) {
-            // Add your own error handler here
-
-        }
-    };
-
-    return (
-        <AuthContext.Provider
-            value={{
-                user: null,
-                promptAsync
-            }}>
-            {children}
-        </AuthContext.Provider>
-    )
-}
-
-export default function AuthenticationProvider() {
-    return useContext(AuthContext);
+export default function useAuth() {
+  return useContext(AuthContext);
 }

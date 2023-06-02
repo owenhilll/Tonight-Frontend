@@ -2,10 +2,10 @@
   "expo": {
     "name": "Tonight",
     "slug": "Tonight",
+    "scheme" : "exp",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "scheme": "Tonight",
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
@@ -14,14 +14,21 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "package": "host.exp.exponent"
+      "package": "host.exp.exponent",
+      "googleServicesFile": "./google-services.json"
     },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/perf",
+      "@react-native-firebase/crashlytics"
+    ],
     "extra": {
       "eas": {
         "projectId": "93f10c67-152e-4191-b008-d8bc73e6f30a"

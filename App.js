@@ -1,19 +1,16 @@
+import { NavigationContainer } from "@react-navigation/native";
+import Navigator from "./Navigator";
+import React from "react";
+import { AuthProvider } from "./Hooks/authProvider";
 
-import { NavigationContainer } from '@react-navigation/native';
-import Navigator from './Navigator';
-import React from 'react'
-import { GetAuthProvider } from './Hooks/AuthProvider';
+import "./assets/styles.css";
 
 export default function App() {
   return (
     <NavigationContainer>
-      <GetAuthProvider>
+      <AuthProvider>
         <Navigator />
-      </GetAuthProvider>
+      </AuthProvider>
     </NavigationContainer>
-  )
+  );
 }
-
-
-
-
