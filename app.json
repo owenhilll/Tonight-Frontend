@@ -1,37 +1,38 @@
 {
   "expo": {
-    "name": "Tonight",
-    "slug": "Tonight",
-    "scheme" : "exp",
+    "name": "my-expo-app",
+    "slug": "my-expo-app",
     "version": "1.0.0",
+    "scheme":"my-scheme",
+    "web": {
+      "bundler":"metro",
+      "favicon": "./assets/favicon.png"
+    },
+
+    "experiments": {
+      "tsconfigPaths": true
+    },
+
+    "plugins": [],
+
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
+
     "userInterfaceStyle": "light",
+
     "splash": {
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "host.exp.exponent",
-      "googleServicesFile": "./google-services.json"
-    },
-    "plugins": [
-      "@react-native-firebase/app",
-      "@react-native-firebase/perf",
-      "@react-native-firebase/crashlytics"
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "93f10c67-152e-4191-b008-d8bc73e6f30a"
       }
     }
   }
