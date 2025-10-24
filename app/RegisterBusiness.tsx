@@ -1,85 +1,76 @@
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { request } from '../utils/axios';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
+import { isAxiosError } from 'axios';
+import { router } from 'expo-router';
 
 const RegisterBusiness = () => {
-  const [inputs, setInputs] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    category: '',
-  });
+  const [email, setEmail] = useState('');
+
+  const [name, setName] = useState('');
+
+  const [password, setPassword] = useState('');
+
+  const [address, setAddress] = useState('');
+
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const [err, setErr] = useState(null);
 
-  const handleChange = (e: any) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
   const handleClick = async () => {
-    inputs.category = category;
     try {
-      request.post('/auth/registerbusiness', inputs);
-    } catch (e: any) {
-      setErr(e);
+      if (confirmPassword != password) {
+        Alert.alert('Incorrect Input', 'Passwords do not Match!');
+        return;
+      }
+      await request.post('/auth/registerbusiness', { name, password, address, email });
+      router.navigate('/SignIn');
+    } catch (e: unknown) {
+      if (isAxiosError(e)) {
+        setErr(e.response?.data.message);
+      }
     }
   };
 
-  const [category, setCategory] = useState('');
-
-  const handleCategory = (selected: any) => {
-    setCategory(selected.target.value);
-  };
-  const [items, setItems] = useState<Array<ItemType<string>>>([
-    { label: 'Food and Drink', value: 'Food and Drink' },
-    { label: 'Venue', value: 'Venue' },
-    { label: 'Consumer Product', value: 'Consumer Product' },
-  ]);
-  const [open, setOpen] = useState<boolean>(false);
-  const [singleValue, setSingleValue] = useState<string | null>(null);
-
-  const options = ['Food and Drink', 'Venue', 'Consumer Products'];
-
   return (
-    <View className="flex-1 items-center justify-center bg-black">
-      <View>
+    <View className="align-center flex-1 items-center justify-center bg-black">
+      <View className="items-center justify-center">
         <Text className="text-center text-xl text-white">Register Business</Text>
 
         <TextInput
-          className="my-5 rounded-full border-2 border-purple-800 p-2 text-xl"
+          className="my-5 min-w-[50%] rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           placeholder="Business name"
-          nativeID="username"
-          onChange={handleChange}
+          value={name}
+          onChangeText={setName}
         />
 
         <TextInput
-          className="my-5 rounded-full border-2 border-purple-800 p-2 text-xl"
+          className="my-5 min-w-[50%] rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           placeholder="Email"
-          nativeID="email"
-          onChange={handleChange}
+          value={email}
+          onChangeText={setEmail}
         />
         <TextInput
-          className="my-5 rounded-full border-2 border-purple-800 p-2 text-xl"
+          className="my-5 min-w-[50%] rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           placeholder="Address"
-          nativeID="address"
-          onChange={handleChange}
+          value={address}
+          onChangeText={setAddress}
         />
         <TextInput
-          className="my-5 rounded-full border-2 border-purple-800 p-2 text-xl"
+          className="my-5 min-w-[50%] rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           placeholder="Password"
-          nativeID="password"
-          onChange={handleChange}
+          value={password}
+          onChangeText={setPassword}
         />
         <TextInput
-          className="my-5 rounded-full border-2 border-purple-800 p-2 text-xl"
+          className="my-5 min-w-[50%] rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           placeholder="Confirm Password"
-          nativeID="confirmPassword"
-          onChange={handleChange}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
         />
-        {err && err}
+        {err && <Text className="max-w-[50%] text-center text-xl text-red-300">{err}</Text>}
         <TouchableOpacity
           className="my-10 rounded-full bg-purple-800 p-2 text-center text-xl text-white"
           onPress={handleClick}>

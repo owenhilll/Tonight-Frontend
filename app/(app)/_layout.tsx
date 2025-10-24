@@ -9,13 +9,7 @@ export default function AppLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <Stack>
-        <Stack.Screen name="(root)" />
-        <Stack.Screen
-          name="LoginScreen"
-          options={{
-            presentation: 'modal',
-          }}
-        />
+        <Stack.Screen options={{ headerShown: false }} name="(root)" />
       </Stack>
     </QueryClientProvider>
   );

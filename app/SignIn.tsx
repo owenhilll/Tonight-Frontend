@@ -14,17 +14,18 @@ const Register = () => {
   const [password, setPassword] = useState<string>('');
 
   const [err, setErr] = useState('');
-  const handleLogin = async (e: any) => {
+
+  async function handleLogin(e: any) {
     e.preventDefault();
     try {
-      await login({ email, password });
+      await login(email, password);
       router.navigate('/');
     } catch (e: unknown) {
       if (isAxiosError(e)) {
         setErr(e.response?.data.message);
       }
     }
-  };
+  }
 
   return (
     <View className="flex-1 items-center justify-center bg-black">

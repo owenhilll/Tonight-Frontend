@@ -14,6 +14,7 @@ export default function LoginScreen() {
     e.preventDefault();
     try {
       request.post('/auth/register', { email, password });
+      router.navigate('/SignIn');
     } catch (err: any) {
       setErr(err);
     }
@@ -30,12 +31,12 @@ export default function LoginScreen() {
         <Text className="text-center text-xl text-white">Sign Up</Text>
         <TextInput
           nativeID="emailField"
-          className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl"
+          className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           onChangeText={setEmail}
           placeholder="Email"
         />
         <TextInput
-          className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl"
+          className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           nativeID="passwordField"
           onChangeText={setPassword}
           placeholder="Password"

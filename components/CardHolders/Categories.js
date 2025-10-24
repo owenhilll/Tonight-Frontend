@@ -1,27 +1,34 @@
 import { View, Text, ScrollView } from 'react-native';
-import React from 'react';
-import Drinks from '../../assets/CockTail.png';
-import Movie from '../../assets/Movie.png';
-import Concert from '../../assets/Concert.png';
-import Sports from '../../assets/Sports.png';
-import Deals from '../../assets/Deals.png';
-import CategoryCard from '../Cards/CategoryCard';
 
+import CategoryCard from '../Cards/CategoryCard';
+import SportsBarIcon from '@mui/icons-material/SportsBarRounded';
+import SlideshowIcon from '@mui/icons-material/Slideshow';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 export default function Categories() {
   return (
-    <ScrollView
-      className="justify-center"
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-        paddingTop: 10,
-      }}>
-      <CategoryCard imgUrl={Drinks} title={'Specials'} />
-      <CategoryCard imgUrl={Movie} title={'Movies/Shows'} />
-      <CategoryCard imgUrl={Concert} title={'Concerts'} />
-      <CategoryCard imgUrl={Sports} title={'Sports'} />
-      <CategoryCard imgUrl={Deals} title={'Deals'} />
-    </ScrollView>
+    <View className="mt-[2%] flex-row justify-center">
+      <CategoryCard>
+        <SportsBarIcon sx={{ color: '#8500ED' }} />
+        <Text className="text-center text-sm text-white">Drinks</Text>
+      </CategoryCard>
+      <CategoryCard>
+        <SlideshowIcon sx={{ color: '#8500ED' }} />
+        <Text className="text-center text-sm text-white">Movies/Shows</Text>
+      </CategoryCard>
+      <CategoryCard>
+        <MusicNoteIcon sx={{ color: '#8500ED' }} />
+        <Text className="text-center text-sm text-white">Music</Text>
+      </CategoryCard>
+      <CategoryCard>
+        <LocalOfferIcon sx={{ color: '#8500ED' }} />
+        <Text className="text-center text-sm text-white">Deals</Text>
+      </CategoryCard>
+      <CategoryCard>
+        <SportsFootballIcon sx={{ color: '#8500ED' }} />
+        <Text className="text-center text-sm text-white">Sports</Text>
+      </CategoryCard>
+    </View>
   );
 }

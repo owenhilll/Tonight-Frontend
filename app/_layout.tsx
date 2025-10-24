@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import useAuth, { AuthContextProvider } from 'Hooks/authContext';
 import '../global.css';
-export default function RootLayout() {
+export default function AuthLayout() {
   console.log('here');
   return (
     <AuthContextProvider>
@@ -11,15 +11,18 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
+
   return (
     <Stack>
-      <Stack.Protected guard={!!currentUser}>
+      <Stack.Protected guard={!!user}>
         <Stack.Screen options={{ headerShown: false }} name="(app)" />
       </Stack.Protected>
 
-      <Stack.Protected guard={!currentUser}>
+      <Stack.Protected guard={!user}>
         <Stack.Screen options={{ headerShown: false }} name="index" />
+        <Stack.Screen options={{ headerShown: false }} name="SignIn" />
+        <Stack.Screen options={{ headerShown: false }} name="RegisterBusiness" />
       </Stack.Protected>
     </Stack>
   );
