@@ -32,6 +32,11 @@ export default function HomeScreen() {
             onPress={() => setShowProfile(!showProfile)}>
             <UserIcon color={'white'} width={40} />
           </TouchableOpacity>
+          <TouchableOpacity
+            className="absolute right-[5%] top-[10%] z-10 h-[10%] align-top"
+            onPress={logout}>
+            <Text className="justify-center text-xl text-white underline">Log out</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
       <View className="h-[10%] w-full flex-row justify-center space-x-20">
@@ -84,16 +89,16 @@ export default function HomeScreen() {
         </View>
 
         {/* Sports*/}
-        <View className="mb-1 flex-1">
-          <EventList title={'Sporting Events'} category={'sports'} />
+        <View className="mb-1 h-auto">
+          <EventList title={'Sport'} category={'Sport'} />
         </View>
         {/* Specialls*/}
-        <View className=" mb-1 h-full flex-1">
-          <EventList title={'Deals'} category={'Deals'} />
+        <View className=" mb-1 h-auto">
+          <EventList title={'Drink'} category={'Drink'} />
         </View>
         {/* Movies Shows*/}
-        <View className=" mb-1 flex-1 ">
-          <EventList title={'Movie & Shows'} category={'shows'} />
+        <View className=" mb-1 h-auto">
+          <EventList title={'Food'} category={'Food'} />
         </View>
       </ScrollView>
     </SafeAreaView>

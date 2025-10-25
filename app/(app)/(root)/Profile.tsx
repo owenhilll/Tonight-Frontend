@@ -2,12 +2,14 @@ import Share from './Share';
 import { request } from '../../../utils/axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 import { Box, Grid, Stack } from '@mui/material';
 import useAuth from '../../../Hooks/authContext';
 import { Text, View, Image } from 'react-native';
 import { Link } from 'expo-router';
+import { MapPinIcon } from '@heroicons/react/24/outline';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -26,6 +28,26 @@ const Profile = () => {
         return res.data;
       }),
   });
+  const [index, setIndex] = useState(0);
+  const FirstRoute = () => <Share />;
+  const SecondRoute = () => <View style={{ backgroundColor: '#ff4081' }} />;
+  const renderScene = SceneMap({
+    share: FirstRoute,
+    posts: SecondRoute,
+  });
+
+  const renderTabBar = (props: any) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: 'white' }}
+      style={{ backgroundColor: 'black' }}
+    />
+  );
+
+  const routes = [
+    { key: 'share', title: 'Share' },
+    { key: 'posts', title: 'Posts' },
+  ];
 
   const {
     isLoading: followersLoading,
@@ -71,18 +93,28 @@ const Profile = () => {
                 defaultSource={require('../../../assets/img.png')}
               />
             </View>
-            <View className="h-[30%]">
+            <View className="h-[30%] items-center">
               <Text className="text-xl text-white">{business.name}</Text>
               <View className="text-white">
                 {followersLoading ? 'Loading' : followers.length} followers
               </View>
-              <Text className="text-white">City: {business.city}</Text>
+              <View className="flex-row items-center justify-center">
+                <MapPinIcon color="white" height={'100%'} />
+                <Text className="text-white">{business.city}</Text>
+              </View>
               <Text className="text-white">Website: {business.website}</Text>
               <Link href="edit">edit</Link>
             </View>
           </View>
+
           <View className="mt-[5%] h-[65%]">
-            <Share />
+            <TabView
+              navigationState={{ index, routes }}
+              renderScene={renderScene}
+              onIndexChange={setIndex}
+              renderTabBar={renderTabBar}
+              initialLayout={{ height: 65 }}
+            />
           </View>
         </View>
       )}

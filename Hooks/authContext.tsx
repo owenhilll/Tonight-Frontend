@@ -1,4 +1,3 @@
-import { useStorageState } from 'utils/useStorageState';
 import { request } from '../utils/axios';
 import { createContext, PropsWithChildren, use, useEffect, useState } from 'react';
 import Geolocation from '@react-native-community/geolocation';
@@ -11,7 +10,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const AuthContext = createContext(null);
 
 export function AuthContextProvider({ children }: PropsWithChildren) {
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,9 +39,8 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
   const getLocation = () => {
     Geolocation.getCurrentPosition(
       (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        setCoords({ x: latitude, y: longitude });
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
       },
       (error) => {
         console.error('Error getting location:', error);
@@ -72,7 +71,9 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
       value={{
         user,
         login,
-        coords,
+        latitude,
+        longitude,
+        getLocation,
         logout,
       }}>
       {children}
