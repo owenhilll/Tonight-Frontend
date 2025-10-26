@@ -57,7 +57,7 @@ export default function HomeScreen() {
           />
         </View>
         <View className="z-10 h-[100%] w-[10%] justify-center">
-          {user.business ? (
+          {user['business'] ? (
             <TouchableOpacity onPress={() => setShowProfile(!showProfile)}>
               <UserIcon color={'white'} width={40} />
             </TouchableOpacity>
@@ -80,7 +80,7 @@ export default function HomeScreen() {
         <View className="h-[10%] items-center">
           <Text className=" -mb-2 text-lg font-bold text-white">Featured</Text>
           <View className="flex-row items-center">
-            {user.business && (
+            {user['business'] && (
               <Text className=" text-xs text-white underline">
                 Learn how to Promote your place of Event
               </Text>

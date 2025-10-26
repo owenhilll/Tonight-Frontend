@@ -10,8 +10,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const AuthContext = createContext(null);
 
 export function AuthContextProvider({ children }: PropsWithChildren) {
-  const [latitude, setLatitude] = useState();
-  const [longitude, setLongitude] = useState();
+  const [latitude, setLatitude] = useState<number | undefined>(undefined);
+  const [longitude, setLongitude] = useState<number | undefined>(undefined);
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

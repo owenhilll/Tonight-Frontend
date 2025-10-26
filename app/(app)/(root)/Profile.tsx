@@ -1,4 +1,5 @@
 import Share from './Share';
+import Posts from './Posts';
 import { request } from '../../../utils/axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
@@ -23,14 +24,14 @@ const Profile = () => {
   } = useQuery({
     queryKey: ['user'],
     queryFn: () =>
-      request.get('/businesses/find/' + user.user.id).then((res) => {
+      request.get('/businesses/find/' + user['user']['id']).then((res) => {
         console.log(res.data);
         return res.data;
       }),
   });
   const [index, setIndex] = useState(0);
   const FirstRoute = () => <Share />;
-  const SecondRoute = () => <View style={{ backgroundColor: '#ff4081' }} />;
+  const SecondRoute = () => <Posts id={user['user']['id']} />;
   const renderScene = SceneMap({
     share: FirstRoute,
     posts: SecondRoute,
@@ -56,15 +57,15 @@ const Profile = () => {
   } = useQuery({
     queryKey: ['followersQuery'],
     queryFn: () =>
-      request.get('/relationship?id=' + user.user.id).then((res) => {
+      request.get('/relationship?id=' + user['user']['id']).then((res) => {
         return res.data;
       }),
   });
 
   const followMutation = useMutation({
     mutationFn: (following: any) => {
-      if (following) return request.delete('/relationship?id=' + user.user.id);
-      return request.post('/relationship?id=' + user.user.id);
+      if (following) return request.delete('/relationship?id=' + user['user']['id']);
+      return request.post('/relationship?id=' + user['user']['id']);
     },
     onSuccess: () => {
       // Invalidate and refetch
