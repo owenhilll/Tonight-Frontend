@@ -39,11 +39,12 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
       </Modal>
-      <View className="h-[10%] w-full flex-row justify-center space-x-20">
+      <View className="h-[8%] w-full flex-row justify-center space-x-20">
         <View className="w-[10%]">
           <Image
             source={require('../../../assets/Logo.png')}
             style={{ width: '100%', height: '100%' }}
+            resizeMode="stretch"
           />
         </View>
 
@@ -72,7 +73,7 @@ export default function HomeScreen() {
       <View className="h-[10%] w-full justify-center">
         <Categories />
       </View>
-      <ScrollView className="w-full flex-1 " contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView className="w-full flex-1 bg-[#222222]" contentContainerStyle={{ flexGrow: 1 }}>
         <hr
           color="#8500ED"
           style={{ color: '#8500ED', height: 3, marginTop: 20, marginBottom: 10, border: 0 }}

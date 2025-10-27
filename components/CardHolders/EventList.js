@@ -1,7 +1,13 @@
 import { View, Text, ScrollView, FlatList, TouchableOpacity, Image } from 'react-native';
 import React, { useState } from 'react';
 import EventCard from '../Cards/EventCard';
-import { ArrowLeftIcon, ArrowRightIcon, BackwardIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  BackwardIcon,
+  CalendarDateRangeIcon,
+  InformationCircleIcon,
+} from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import useAuth from 'Hooks/authContext';
 import { request } from 'utils/axios';
@@ -44,17 +50,25 @@ export default function EventList({ title, category }) {
       });
 
     return (
-      <TouchableOpacity className="mx-1 w-auto rounded-2xl border-2 border-purple-300 p-2 shadow-orange-50">
+      <TouchableOpacity className="mx-1 w-80 rounded-2xl border-2 border-purple-300 bg-[#181818] p-2 shadow-orange-50">
         <View className="flex-row">
-          <View className="flex-column">
-            <Text className=" mb-5 ml-2 text-base font-bold text-white">{item.title}</Text>
-            <Text className="text-s ml-2 text-white">{item.desc}</Text>
-            <Text className="text-s ml-2 mt-5 text-white">{date.toDateString()}</Text>
-            <Text className="text-s ml-2 mt-1 text-white">{time}</Text>
+          <View className="flex-column h-48 w-44">
+            <Text className="mb-5 ml-2 flex-1 text-xl font-bold text-white">{item.title}</Text>
+            <View className="mt-4 flex-row items-center justify-center">
+              <InformationCircleIcon className="w-8" />
+              <Text className="text-s ml-2 flex-1 text-white">{item.desc}</Text>
+            </View>
+            <View className="mt-4 flex-row items-center justify-center">
+              <CalendarDateRangeIcon className="w-8" />
+              <Text className="text-s ml-2 flex-1 text-white">
+                {date.toDateString()} - {time}
+              </Text>
+            </View>
           </View>
-          <View className=" border-1 mb-3 ml-2 h-[50%] overflow-hidden rounded-full border-purple-500 shadow-sm shadow-white">
+          <View className=" border-1 mb-3 ml-5 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
             <Image
               style={{ width: 90, height: 90, margin: 0, padding: 0 }}
+              className="h-auto w-auto"
               resizeMode="center"
               source={{
                 uri: profileUri,

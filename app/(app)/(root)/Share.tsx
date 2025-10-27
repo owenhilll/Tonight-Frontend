@@ -82,8 +82,8 @@ const Share = () => {
   };
 
   return (
-    <View className=" border-2 border-purple-800 bg-black shadow-lg shadow-white">
-      <View>
+    <View className="border-2 border-purple-800 bg-black shadow-lg shadow-white">
+      <View className="overflow-visible">
         <View className="flex-column flex-1 border-0 border-b border-purple-800">
           <TextInput
             numberOfLines={3}
@@ -98,7 +98,7 @@ const Share = () => {
             onChangeText={setDesc}
           />
         </View>
-        <View className="flex-row">
+        <View className="flex-row overflow-visible" style={{ zIndex: timeOpen ? 1000 : 0 }}>
           <View className="flex-1 justify-center border-0 border-b border-r border-purple-800 p-2 text-white">
             <TextInput
               className="h-full border-0"
@@ -106,7 +106,7 @@ const Share = () => {
               onChangeText={setDate}
             />
           </View>
-          <View className="flex-1 flex-row border-b border-purple-800 p-2 text-white">
+          <View className="flex-1 flex-row overflow-visible border-b border-purple-800 p-2 text-white">
             <TextInput
               className="w-[70%] text-wrap"
               placeholder="Time (E.g 12:05pm or 3:05am)"
@@ -114,15 +114,12 @@ const Share = () => {
             />
             <DropDownPicker
               placeholder="AM/PM"
-              zIndex={99}
               style={{
                 backgroundColor: 'black',
-                zIndex: 999,
                 width: '30%',
               }}
               dropDownContainerStyle={{
                 backgroundColor: 'black',
-                zIndex: 999,
                 padding: 0,
                 margin: 0,
                 borderColor: 'gray',
@@ -135,7 +132,6 @@ const Share = () => {
                 padding: 0,
                 width: 'auto',
                 borderRadius: 5,
-                zIndex: 999,
                 backgroundColor: 'black',
               }}
               listItemContainerStyle={{
@@ -143,10 +139,8 @@ const Share = () => {
                 justifyContent: 'center',
                 margin: 0,
                 padding: 0,
-                zIndex: 999,
                 borderBottomWidth: 1,
               }}
-              modalContentContainerStyle={{ zIndex: 999, padding: 0 }}
               items={timeItems}
               open={timeOpen}
               setOpen={setTimeOpen}
@@ -155,32 +149,40 @@ const Share = () => {
             />
           </View>
         </View>
-        <DropDownPicker
-          placeholder="Select event Category"
-          style={{
-            backgroundColor: 'black',
-          }}
-          dropDownContainerStyle={{ backgroundColor: 'black', borderColor: 'gray' }}
-          textStyle={{ color: 'white' }}
-          containerStyle={{
-            borderColor: 'gray',
-            borderWidth: 1,
-            margin: 10,
-            borderRadius: 5,
-            backgroundColor: 'black',
-            width: '80%',
-          }}
-          listItemContainerStyle={{
-            borderBottomColor: 'gray',
-            borderBottomWidth: 1,
-          }}
-          zIndex={10}
-          open={open}
-          setOpen={setOpen}
-          items={items}
-          value={category}
-          setValue={setCategory}
-        />
+        <View style={{ zIndex: open ? 1000 : 0 }}>
+          <DropDownPicker
+            placeholder="Select event Category"
+            style={{
+              backgroundColor: 'black',
+              overflow: 'visible',
+            }}
+            dropDownContainerStyle={{
+              backgroundColor: 'black',
+              overflow: 'visible',
+              borderColor: 'gray',
+            }}
+            textStyle={{ color: 'white' }}
+            containerStyle={{
+              borderColor: 'gray',
+              borderWidth: 1,
+              margin: 10,
+              borderRadius: 5,
+              backgroundColor: 'black',
+              width: '80%',
+              overflow: 'visible',
+            }}
+            listItemContainerStyle={{
+              borderBottomColor: 'gray',
+              borderBottomWidth: 1,
+              overflow: 'visible',
+            }}
+            open={open}
+            setOpen={setOpen}
+            items={items}
+            value={category}
+            setValue={setCategory}
+          />
+        </View>
         <View className="items-center justify-center">
           {err && <Text className="text-xl text-red-200">{err}</Text>}
           <TouchableOpacity

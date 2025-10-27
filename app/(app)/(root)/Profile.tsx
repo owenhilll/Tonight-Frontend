@@ -90,7 +90,7 @@ const Profile = () => {
     <TabBar
       {...props}
       indicatorStyle={{ backgroundColor: 'white' }}
-      style={{ backgroundColor: 'black' }}
+      style={{ backgroundColor: 'black', overflow: 'visible' }}
     />
   );
 
@@ -165,7 +165,7 @@ const Profile = () => {
             </View>
           </View>
 
-          <View>
+          <View className="flex-1">
             <TabView
               navigationState={{ index, routes }}
               renderScene={renderScene}
