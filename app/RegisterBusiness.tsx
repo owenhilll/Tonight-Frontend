@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { request } from '../utils/axios';
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
 import { isAxiosError } from 'axios';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 const RegisterBusiness = () => {
   const [email, setEmail] = useState('');
@@ -36,7 +36,10 @@ const RegisterBusiness = () => {
 
   return (
     <View className="align-center flex-1 items-center justify-center bg-black">
-      <View className="items-center justify-center">
+      <View>
+        <Link href={'/'} className="justify-start">
+          <ArrowLeftIcon className="w-8 text-white" />
+        </Link>
         <Text className="text-center text-xl text-white">Register Business</Text>
 
         <TextInput

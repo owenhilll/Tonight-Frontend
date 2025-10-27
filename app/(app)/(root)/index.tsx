@@ -2,15 +2,13 @@ import { Image, View, Text, TextInput, ScrollView, TouchableOpacity } from 'reac
 import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Categories from '../../../components/CardHolders/Categories';
-import Sports from '../../../components/CardHolders/EventList';
-import Specials from '../../../components/CardHolders/Specials';
-import MovieShows from '../../../components/CardHolders/MovieShows';
+import Categories from './Categories';
+import Sports from './EventList';
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { router } from 'expo-router';
-import useAuth from 'Hooks/authContext';
-import EventList from '../../../components/CardHolders/EventList';
+import useAuth from '../../../Hooks/authContext';
+import EventList from './EventList';
 import Modal from 'react-native-modal';
 import Profile from './Profile';
 export default function HomeScreen() {

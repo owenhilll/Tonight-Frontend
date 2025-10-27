@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, FlatList, TouchableOpacity, Image, Platform } from 'react-native';
 import React, { useState } from 'react';
-import EventCard from '../Cards/EventCard';
+import EventCard from './EventCard';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -9,12 +9,12 @@ import {
   InformationCircleIcon,
 } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
-import useAuth from 'Hooks/authContext';
-import { request } from 'utils/axios';
+import useAuth from '../../../Hooks/authContext';
+import { request } from '../../../utils/axios';
 import { useRouter } from 'expo-router';
 import Modal from 'react-native-modal';
-import Posts from '../../app/(app)/(root)/Posts';
-export default function EventList({ title, category }) {
+import Posts from './Posts';
+export default function EventList({ title, category }: { title: string; category: string }) {
   const { longitude, latitude, user } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const router = useRouter();
@@ -37,20 +37,29 @@ export default function EventList({ title, category }) {
         }),
   });
 
-  const Item = ({ item }) => {
+  const [modalItem, setModalItem] = useState(null);
+  const [showEventModal, setShowEventModal] = useState(false);
+  function showCard({ item }: { item: any }) {
+    setModalItem(item);
+    setShowEventModal(true);
+  }
+
+  const Item = ({ item }: { item: any }) => {
     const date = new Date(item.date);
-    let options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    let options: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
     let time = date.toLocaleTimeString('en-US', options);
     const [profileUri, setProfileUri] = useState('');
 
     request
-      .get(`/businesses/edit/profilepic?id=${item['businessid']}&fetchtype=getObject`)
+      .get(`/businesses/profilepic?id=${item['businessid']}&fetchtype=getObject`)
       .then((json) => {
         setProfileUri(json.data);
       });
 
     return (
-      <TouchableOpacity className="mx-1 w-80 rounded-2xl border-2 border-purple-300 bg-[#181818] p-2 shadow-orange-50">
+      <TouchableOpacity
+        onPress={() => showCard({ item })}
+        className="mx-1 w-80 rounded-2xl border-2 border-purple-300 bg-[#181818] p-2 shadow-orange-50">
         <View className="flex-row">
           <View className="flex-column h-48 w-44">
             <Text className="mb-5 ml-2 flex-1 text-xl font-bold text-white">{item.title}</Text>
@@ -92,10 +101,26 @@ export default function EventList({ title, category }) {
           paddingTop: 10,
         }}>
         <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-          <ArrowLeftIcon width={20} className="text-white" />
+          <ArrowLeftIcon className="w-8 text-white" />
         </TouchableOpacity>
         <Posts data={data} id={user['user']['id']} />
       </Modal>
+
+      <Modal
+        isVisible={showEventModal}
+        style={{
+          backgroundColor: '#262626',
+          borderRadius: 10,
+          margin: Platform.OS == 'web' ? '15%' : 20,
+          paddingLeft: 10,
+          paddingTop: 10,
+        }}>
+        <TouchableOpacity onPress={() => setShowEventModal(false)}>
+          <ArrowLeftIcon className="w-8 text-white" />
+        </TouchableOpacity>
+        <EventCard item={modalItem} />
+      </Modal>
+
       <View className="flex-1 rounded-xl border-2 border-purple-400 p-2 text-xl text-white">
         <View className="m-5 flex-row items-center justify-between">
           <Text className="font-bold text-white">{title}</Text>

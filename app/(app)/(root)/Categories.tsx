@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from 'react-native';
 
-import CategoryCard from '../Cards/CategoryCard';
+import CategoryCard from './CategoryCard';
 import SportsBarIcon from '@mui/icons-material/SportsBarRounded';
 import SlideshowIcon from '@mui/icons-material/Slideshow';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';

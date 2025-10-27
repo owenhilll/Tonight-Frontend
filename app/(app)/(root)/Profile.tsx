@@ -57,7 +57,7 @@ const Profile = () => {
       if (response.didCancel || response.errorCode) return;
 
       await request
-        .get(`/businesses/edit/profilepic?id=${user['user']['id']}&fetchtype=putObject`)
+        .get(`/businesses/profilepic?id=${user['user']['id']}&fetchtype=putObject`)
         .then(async (json) => {
           console.log(json);
           const url = json.data;

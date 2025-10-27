@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { AxiosError, isAxiosError } from 'axios';
 import { request } from '../utils/axios';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import useAuth from 'Hooks/authContext';
-import { useRouter } from 'expo-router';
+
+import { Link, useRouter } from 'expo-router';
+import useAuth from '../Hooks/authContext';
 
 const Register = () => {
   const { login } = useAuth();
@@ -49,6 +49,20 @@ const Register = () => {
           onPress={handleLogin}>
           <Text className="p-2 text-center text-xl text-white">Login</Text>
         </TouchableOpacity>
+      </View>
+      <View className="flex-column items-center space-y-10 border-blue-800">
+        <View className="flex-row">
+          <Text className="text-white">Dont have an account?</Text>
+          <Link href={'/'}>
+            <Text className="mx-2 text-blue-200 underline">Sign up</Text>
+          </Link>
+        </View>
+        <View className="flex-row">
+          <Text className="text-white">Register your business: </Text>
+          <Link href={'/RegisterBusiness'}>
+            <Text className="mx-2 text-blue-200 underline">Register Business</Text>
+          </Link>
+        </View>
       </View>
     </View>
   );
