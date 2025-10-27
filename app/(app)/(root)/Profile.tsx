@@ -5,10 +5,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-
+import * as ImagePicker from 'react-native-image-picker';
 import { Box, Grid, Stack } from '@mui/material';
 import useAuth from '../../../Hooks/authContext';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { MapPinIcon } from '@heroicons/react/24/outline';
 
@@ -25,17 +25,66 @@ const Profile = () => {
     queryKey: ['user'],
     queryFn: () =>
       request.get('/businesses/find/' + user['user']['id']).then((res) => {
-        console.log(res.data);
         return res.data;
       }),
   });
+
+  const {
+    isLoading: postsLoading,
+    error: postsError,
+    data: posts,
+  } = useQuery({
+    queryKey: ['events' + user['user']['id']],
+    queryFn: () =>
+      request.get('/events/' + user['user']['id']).then((res) => {
+        return res.data;
+      }),
+  });
+
   const [index, setIndex] = useState(0);
+  const [profilepic, setProfilePic] = useState(
+    `https://tonight-profiles.s3.us-east-1.amazonaws.com/business_${user['user']['id']}_profile_pic`
+  );
   const FirstRoute = () => <Share />;
-  const SecondRoute = () => <Posts id={user['user']['id']} />;
+  const SecondRoute = () => <Posts id={user['user']['id']} data={posts} />;
   const renderScene = SceneMap({
     share: FirstRoute,
     posts: SecondRoute,
   });
+
+  const SetProfilePic = () => {
+    ImagePicker.launchImageLibrary({ mediaType: 'photo' }, async (response) => {
+      if (response.didCancel || response.errorCode) return;
+
+      await request
+        .get(`/businesses/edit/profilepic?id=${user['user']['id']}&fetchtype=putObject`)
+        .then(async (json) => {
+          console.log(json);
+          const url = json.data;
+          const res = await fetch(response.assets![0].uri!);
+          const blob = await res.blob();
+          const file = new File([blob], 'name');
+          await fetch(url, {
+            method: 'PUT',
+            body: file,
+            headers: {
+              'Content-Type': 'image/png',
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  };
+
+  const GetProfilePic = () => {
+    request
+      .get(`/businesses/edit/profilepic?id=${user['user']['id']}&fetchtype=getObject`)
+      .then((json) => {
+        setProfilePic(json.data);
+      });
+  };
 
   const renderTabBar = (props: any) => (
     <TabBar
@@ -77,6 +126,10 @@ const Profile = () => {
     followMutation.mutate(followers?.includes(user));
   };
 
+  GetProfilePic();
+
+  console.log(profilepic);
+
   return (
     <View className="align-center w-[100%] flex-1 justify-center p-16">
       {businessLoading || followersLoading ? (
@@ -84,17 +137,21 @@ const Profile = () => {
       ) : businessError ? (
         <Text className="text-white">Error</Text>
       ) : (
-        <View className="flex-column flex-1">
-          <View className="flex-column mb-[5%] h-[30%] items-center">
-            <View className=" mb-3 h-[65%] overflow-hidden rounded-full border-2 border-purple-800 shadow-lg shadow-white">
+        <View className="flex-column h-full flex-1">
+          <View className="flex-column items-center">
+            <View className=" h-100 w-100 mb-3 overflow-hidden rounded-full border-2 border-purple-800 shadow-lg shadow-white">
               <Image
-                src={business.profilepic}
-                resizeMode="cover"
-                style={{ flex: 1, width: 200 }}
-                defaultSource={require('../../../assets/img.png')}
+                style={{ width: 150, height: 150, margin: 0, padding: 0 }}
+                resizeMode="stretch"
+                source={{
+                  uri: profilepic,
+                }}
               />
             </View>
             <View className="h-[30%] items-center">
+              <TouchableOpacity onPress={SetProfilePic}>
+                <Text className="text-center text-white underline">Change</Text>
+              </TouchableOpacity>
               <Text className="text-xl text-white">{business.name}</Text>
               <View className="text-white">
                 {followersLoading ? 'Loading' : followers.length} followers
@@ -103,18 +160,17 @@ const Profile = () => {
                 <MapPinIcon color="white" height={'100%'} />
                 <Text className="text-white">{business.city}</Text>
               </View>
-              <Text className="text-white">Website: {business.website}</Text>
+              <Text className="text-white">{business.website}</Text>
               <Link href="edit">edit</Link>
             </View>
           </View>
 
-          <View className="mt-[5%] h-[65%]">
+          <View>
             <TabView
               navigationState={{ index, routes }}
               renderScene={renderScene}
               onIndexChange={setIndex}
               renderTabBar={renderTabBar}
-              initialLayout={{ height: 65 }}
             />
           </View>
         </View>

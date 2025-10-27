@@ -1,26 +1,18 @@
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useQuery } from '@tanstack/react-query';
-import { Alert, FlatList, Platform, Text, TouchableOpacity, View } from 'react-native';
+import { QueryClient, useQuery } from '@tanstack/react-query';
+import useAuth from 'Hooks/authContext';
+import { Alert, FlatList, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { request } from 'utils/axios';
 
-export default function Posts({ id }: { id: string }) {
-  const {
-    isLoading: postsLoading,
-    error: postsError,
-    data: posts,
-  } = useQuery({
-    queryKey: ['events' + id],
-    queryFn: () =>
-      request.get('/events/' + id).then((res) => {
-        console.log(res.data);
-        return res.data;
-      }),
-  });
+export default function Posts({ id, data }: { id: string; data: any | undefined }) {
+  const queryClient = new QueryClient();
+  const { user } = useAuth();
+  let adminRights = id === user['user']['id'];
+
   const deletePost = async (e: number) => {
     console.log(e);
     if (Platform.OS === 'web') {
       const result = window.confirm('Are you sure you want to delete this Post?');
-      console.log(result);
       if (!result) return;
     } else {
       Alert.alert('Deletion Confirmation', 'Are you sure you want to delete this Post?', [
@@ -36,11 +28,14 @@ export default function Posts({ id }: { id: string }) {
     }
     await request
       .delete('/events/delete', { params: { eventid: id } })
-      .then((res) => {})
+      .then((res) => {
+        queryClient.invalidateQueries({ queryKey: ['events' + id] });
+      })
       .catch((err) => {
         Alert.alert(err);
       });
   };
+
   const Post = ({ item }: { item: any }) => {
     const date = new Date(item.date);
     const options: Intl.DateTimeFormatOptions = {
@@ -59,23 +54,25 @@ export default function Posts({ id }: { id: string }) {
             <Text className="text-s ml-2 mt-5 text-white">{date.toDateString()}</Text>
             <Text className="text-s ml-2 mt-1 text-white">{time}</Text>
           </View>
-          <View className="flex-column justify-between">
-            <PencilIcon className="h-5 w-5 text-white" />
-            <TrashIcon className="h-5 w-5 text-white" onClick={() => deletePost(item.id)} />
-          </View>
+          {adminRights && (
+            <View className="flex-column justify-between">
+              <PencilIcon className="h-5 w-5 text-white" />
+              <TrashIcon className="h-5 w-5 text-white" onClick={() => deletePost(item.id)} />
+            </View>
+          )}
         </View>
       </TouchableOpacity>
     );
   };
 
   return (
-    <View>
+    <ScrollView className="w-full flex-1">
       <FlatList
         className="flex-1 px-2 pb-2"
-        data={posts}
+        data={data}
         renderItem={({ item }) => <Post item={item} />}
         keyExtractor={(item) => item.id.toString()}
         initialNumToRender={5}></FlatList>
-    </View>
+    </ScrollView>
   );
 }
