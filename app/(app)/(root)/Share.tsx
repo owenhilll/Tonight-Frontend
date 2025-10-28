@@ -3,23 +3,23 @@ import { useContext } from 'react';
 import { useState } from 'react';
 import { request } from '../../../utils/axios';
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
-import useAuth from 'Hooks/authContext';
+import useAuth from '../../../Hooks/authContext';
 import { MapIcon, PhotoIcon } from '@heroicons/react/24/outline';
-import { Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-
-import DatePicker from 'react-datepicker';
+import { Alert, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { DateSelection } from '../../../utils/DateTimePicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-const Share = () => {
+const Share = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [time, setTime] = useState('');
+  const [site, setSite] = useState('');
+
   const [date, setDate] = useState('');
-  const [category, setCategory] = useState(null);
-  const [timePeriod, setTimePeriod] = useState(null);
+  const [category, setCategory] = useState('');
+
   const [open, setOpen] = useState(false);
-  const [timeOpen, setTimeOpen] = useState(false);
+
   const [err, setErr] = useState('');
   const { user } = useAuth();
   const [items, setItems] = useState([
@@ -27,6 +27,9 @@ const Share = () => {
     { label: 'Drink', value: 'Drink' },
     { label: 'Music', value: 'Music' },
     { label: 'Sport', value: 'Sport' },
+    { label: 'Show', value: 'Show' },
+    { label: 'Game (non-sport)', value: 'Game' },
+    { label: 'Outdoor Activity', value: 'outActivity' },
   ]);
   const [timeItems, setTimeItems] = useState([
     { label: 'AM', value: 'AM' },
@@ -36,8 +39,14 @@ const Share = () => {
 
   const mutation = useMutation({
     mutationFn: (newPost) => {
-      console.log('Adding event');
-      return request.post('/events', { desc, category, title, timePeriod, time, date });
+      return request.post('/events', { desc, category, title, time, date, site }).then((res) => {
+        if (res.status != 200) {
+          Alert.alert('Error creating event.', `Error Creating Event: ${res.data}`);
+        } else {
+          queryClient.invalidateQueries({ queryKey: [category] });
+          close(false);
+        }
+      });
     },
     onSuccess: () => {
       // Invalidate and refetch
@@ -45,129 +54,65 @@ const Share = () => {
     },
   });
 
-  const isValidDateString = (dateString: string) => {
-    const parsedDate = new Date(dateString);
-    return !isNaN(parsedDate.getTime());
-  };
-  const validateTime = (inputTime: string) => {
-    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/; // HH:MM format
-    if (!timeRegex.test(inputTime)) {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
   const handleClick = (e: any) => {
     setErr('');
-    console.log('clicked');
     e.preventDefault();
     if (
       title.trim() == '' ||
-      date.trim() == '' ||
+      date == null ||
       time.trim() == '' ||
       desc.trim() == '' ||
       category == null
     ) {
-      setErr('All fields are required!');
-      return;
-    } else if (!isValidDateString(date)) {
-      setErr('Please enter a valid Date/Time');
-      return;
-    } else if (!validateTime(time)) {
-      setErr('Invalid Time. Use format HH:MM');
+      setErr('Title, Description, DateTime, and Category are required!');
       return;
     }
     mutation.mutate();
   };
 
   return (
-    <View className="border-2 border-purple-800 bg-black shadow-lg shadow-white">
-      <View className="overflow-visible">
-        <View className="flex-column flex-1 border-0 border-b border-purple-800">
-          <TextInput
-            numberOfLines={3}
-            className="p-2 text-2xl text-white "
-            placeholder="Title"
-            onChangeText={setTitle}
-          />
-          <TextInput
-            numberOfLines={3}
-            className="flex-1 p-2 text-xl text-white "
-            placeholder="Event Description"
-            onChangeText={setDesc}
-          />
-        </View>
-        <View className="flex-row overflow-visible" style={{ zIndex: timeOpen ? 1000 : 0 }}>
-          <View className="flex-1 justify-center border-0 border-b border-r border-purple-800 p-2 text-white">
-            <TextInput
-              className="h-full border-0"
-              placeholder="Date (MM-DD-YYYY)"
-              onChangeText={setDate}
-            />
+    <View className="bg-blue-50 shadow-lg shadow-white">
+      <View className="m-3 flex-1 overflow-visible">
+        <TextInput
+          numberOfLines={3}
+          className="mb-3 rounded-full border-2 border-purple-500 p-2 text-3xl text-white "
+          placeholder="Title"
+          onChangeText={setTitle}
+        />
+        <TextInput
+          numberOfLines={3}
+          className="rounded-full border-2 border-purple-500 p-2 text-xl text-white "
+          placeholder="Event Description"
+          onChangeText={setDesc}
+        />
+
+        <View className="mt-3 flex-row space-x-3 overflow-visible">
+          <View className="flex-1 justify-center">
+            <DateSelection date={date} setDate={setDate} type="date" />
           </View>
-          <View className="flex-1 flex-row overflow-visible border-b border-purple-800 p-2 text-white">
-            <TextInput
-              className="w-[70%] text-wrap"
-              placeholder="Time (E.g 12:05pm or 3:05am)"
-              onChangeText={setTime}
-            />
-            <DropDownPicker
-              placeholder="AM/PM"
-              style={{
-                backgroundColor: 'black',
-                width: '30%',
-              }}
-              dropDownContainerStyle={{
-                backgroundColor: 'black',
-                padding: 0,
-                margin: 0,
-                borderColor: 'gray',
-              }}
-              textStyle={{ color: 'white' }}
-              containerStyle={{
-                borderColor: 'gray',
-                borderWidth: 1,
-                margin: 0,
-                padding: 0,
-                width: 'auto',
-                borderRadius: 5,
-                backgroundColor: 'black',
-              }}
-              listItemContainerStyle={{
-                borderBottomColor: 'gray',
-                justifyContent: 'center',
-                margin: 0,
-                padding: 0,
-                borderBottomWidth: 1,
-              }}
-              items={timeItems}
-              open={timeOpen}
-              setOpen={setTimeOpen}
-              value={timePeriod}
-              setValue={setTimePeriod}
-            />
+          <View className="flex-1 justify-center">
+            <DateSelection date={time} setDate={setTime} type="time" />
           </View>
         </View>
-        <View style={{ zIndex: open ? 1000 : 0 }}>
+
+        <View style={{ zIndex: open ? 1000 : 0 }} className="mt-5 items-center justify-center">
           <DropDownPicker
             placeholder="Select event Category"
             style={{
-              backgroundColor: 'black',
-              overflow: 'visible',
+              backgroundColor: 'transparent',
+              width: 'auto',
+              borderWidth: 0,
             }}
             dropDownContainerStyle={{
-              backgroundColor: 'black',
+              backgroundColor: 'white',
               overflow: 'visible',
               borderColor: 'gray',
             }}
-            textStyle={{ color: 'white' }}
+            textStyle={{ color: 'black', fontSize: 25 }}
             containerStyle={{
-              borderColor: 'gray',
-              borderWidth: 1,
-              margin: 10,
+              borderColor: 'white',
               borderRadius: 5,
-              backgroundColor: 'black',
+              backgroundColor: 'lightgray',
               width: '80%',
               overflow: 'visible',
             }}
@@ -183,8 +128,16 @@ const Share = () => {
             setValue={setCategory}
           />
         </View>
+        <View className="py-3">
+          <Text className="text-lg text-black">Optional</Text>
+          <TextInput
+            className="flex-1 rounded-full border-2 border-purple-500 p-2 text-xl text-white "
+            placeholder="Reservation Link or Ticket Purchasing Link."
+            onChangeText={setSite}
+          />
+        </View>
         <View className="items-center justify-center">
-          {err && <Text className="text-xl text-red-200">{err}</Text>}
+          {err && <Text className="my-5 text-xl text-red-200">{err}</Text>}
           <TouchableOpacity
             className="rounded-full bg-purple-600 px-10 py-3 text-center text-xl"
             onPress={handleClick}>

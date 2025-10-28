@@ -1,37 +1,66 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
-import { MapPinIcon } from '@heroicons/react/24/outline';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  ArrowUpOnSquareStackIcon,
+  BookmarkIcon,
+  MapPinIcon,
+  ShareIcon,
+} from '@heroicons/react/24/outline';
 import { request } from '../../../utils/axios';
-export default function EventCard({ item }: { item: any }) {
+export default function EventCard({ item, date, time }: { item: any; date: Date; time: string }) {
   const [profileUri, setProfileUri] = useState('');
-  const [business, setB] = useState(null);
+  const [business, setBusiness] = useState<any>();
 
-  request
-    .get(`/businesses/profilepic?id=${item['businessid']}&fetchtype=getObject`)
-    .then((json) => {
-      setProfileUri(json.data);
+  useEffect(() => {
+    request
+      .get(`/businesses/profilepic?id=${item['businessid']}&fetchtype=getObject`)
+      .then((json) => {
+        setProfileUri(json.data);
+      });
+
+    request.get(`/businesses/find/${item['businessid']}`).then((json) => {
+      setBusiness(json.data);
     });
-
-  request.get(`/businesses/find/${item['businessid']}`).then((json) => {
-    setProfileUri(json.data);
-  });
+  }, []);
 
   return (
-    <TouchableOpacity className="flex-1 rounded-md shadow-sm shadow-blue-500">
-      <View>
-        <Text className="ml-2 text-base font-bold text-white">Profile pic</Text>
-        <Text className="text-s ml-2 font-bold text-white">title</Text>
-        <Text className="text-s ml-2 mt-5 text-white">desc</Text>
-        <Text className="text-s ml-2 mt-5 text-white">date</Text>
-        <Text className="text-s ml-2 mt-5 text-white">timr</Text>
-        <Text className="text-s ml-2 mt-5 text-white">Reservation portal</Text>
-        <Text className="text-s ml-2 mt-5 text-white">Bookmark</Text>
-        <Text className="text-s ml-2 mt-5 text-white">Share</Text>
+    <View className="h-full py-10">
+      <View className="mx-5">
+        <View className="border-b-2 border-purple-400 pb-5">
+          <View className="mb-3 items-center overflow-hidden rounded-full border-2 border-purple-800 bg-white shadow-lg shadow-white">
+            <Image
+              style={{ width: 150, height: 150, margin: 0, padding: 0 }}
+              resizeMode="stretch"
+              source={{
+                uri: profileUri,
+              }}
+            />
+          </View>
+          <Text className="text-center text-3xl font-bold text-white">{business?.name}</Text>
+          <View className="mt-5 flex-row justify-center">
+            <MapPinIcon className="w-7 text-blue-500" />
+            <Text className="text-lg text-white">{business?.address}</Text>
+          </View>
+        </View>
+        <Text className="mt-5 text-center text-5xl text-white">{item.title}</Text>
+        <Text className="mt-5 text-center text-xl text-white">{item.desc}</Text>
+        <Text className="mt-5 text-center text-2xl text-white">
+          {date.toDateString()} - {time}
+        </Text>
+        <View className="my-10 flex-1 flex-row">
+          <TouchableOpacity className="flex-1">
+            <Text className="text-center text-lg text-white underline">
+              Reserve or Purchase Tickets
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="flex-1 items-center justify-center">
+            <BookmarkIcon className="w-7 text-white" />
+          </TouchableOpacity>
+          <TouchableOpacity className="flex-1 items-center justify-center">
+            <ArrowUpOnSquareStackIcon className="w-7 text-white" />
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <View className="mb-2 ml-2">
-        <MapPinIcon className="w-10" />
-      </View>
-    </TouchableOpacity>
+    </View>
   );
 }

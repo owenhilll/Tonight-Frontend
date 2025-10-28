@@ -3,7 +3,7 @@ import Posts from './Posts';
 import { request } from '../../../utils/axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import React, { SetStateAction, useContext, useState } from 'react';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import * as ImagePicker from 'react-native-image-picker';
 import { Box, Grid, Stack } from '@mui/material';
@@ -12,7 +12,7 @@ import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { MapPinIcon } from '@heroicons/react/24/outline';
 
-const Profile = () => {
+const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const { user } = useAuth();
 
   const queryClient = useQueryClient();
@@ -45,8 +45,10 @@ const Profile = () => {
   const [profilepic, setProfilePic] = useState(
     `https://tonight-profiles.s3.us-east-1.amazonaws.com/business_${user['user']['id']}_profile_pic`
   );
-  const FirstRoute = () => <Share />;
-  const SecondRoute = () => <Posts id={user['user']['id']} data={posts} />;
+  const FirstRoute = () => <Share close={close} />;
+  const SecondRoute = () => (
+    <Posts id={user['user']['id']} data={posts} queryKey={'events' + user['user']['id']} />
+  );
   const renderScene = SceneMap({
     share: FirstRoute,
     posts: SecondRoute,
@@ -59,7 +61,6 @@ const Profile = () => {
       await request
         .get(`/businesses/profilepic?id=${user['user']['id']}&fetchtype=putObject`)
         .then(async (json) => {
-          console.log(json);
           const url = json.data;
           const res = await fetch(response.assets![0].uri!);
           const blob = await res.blob();
@@ -80,7 +81,7 @@ const Profile = () => {
 
   const GetProfilePic = () => {
     request
-      .get(`/businesses/edit/profilepic?id=${user['user']['id']}&fetchtype=getObject`)
+      .get(`/businesses/profilepic?id=${user['user']['id']}&fetchtype=getObject`)
       .then((json) => {
         setProfilePic(json.data);
       });
@@ -128,8 +129,6 @@ const Profile = () => {
 
   GetProfilePic();
 
-  console.log(profilepic);
-
   return (
     <View className="align-center w-[100%] flex-1 justify-center p-16">
       {businessLoading || followersLoading ? (
@@ -139,7 +138,7 @@ const Profile = () => {
       ) : (
         <View className="flex-column h-full flex-1">
           <View className="flex-column items-center">
-            <View className=" h-100 w-100 mb-3 overflow-hidden rounded-full border-2 border-purple-800 shadow-lg shadow-white">
+            <View className="mb-3 items-center overflow-hidden rounded-full border-2 border-purple-800 bg-white shadow-lg shadow-white">
               <Image
                 style={{ width: 150, height: 150, margin: 0, padding: 0 }}
                 resizeMode="stretch"

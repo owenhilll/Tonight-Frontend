@@ -1,16 +1,23 @@
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { QueryClient, useQuery } from '@tanstack/react-query';
-import useAuth from 'Hooks/authContext';
-import { Alert, FlatList, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { request } from 'utils/axios';
+import { QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
+import useAuth from '../../../Hooks/authContext';
 
-export default function Posts({ id, data }: { id: string; data: any | undefined }) {
-  const queryClient = new QueryClient();
+import { Alert, FlatList, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { request } from '../../../utils/axios';
+
+export default function Posts({
+  id,
+  data,
+  queryKey,
+}: {
+  id: string;
+  data: any | undefined;
+  queryKey: string;
+}) {
+  const queryClient = useQueryClient();
   const { user } = useAuth();
-  let adminRights = id === user['user']['id'];
 
   const deletePost = async (e: number) => {
-    console.log(e);
     if (Platform.OS === 'web') {
       const result = window.confirm('Are you sure you want to delete this Post?');
       if (!result) return;
@@ -27,9 +34,9 @@ export default function Posts({ id, data }: { id: string; data: any | undefined 
       ]);
     }
     await request
-      .delete('/events/delete', { params: { eventid: id } })
+      .delete('/events/delete?id=', { params: { eventid: e } })
       .then((res) => {
-        queryClient.invalidateQueries({ queryKey: ['events' + id] });
+        queryClient.invalidateQueries({ queryKey: [queryKey] });
       })
       .catch((err) => {
         Alert.alert(err);
@@ -44,7 +51,7 @@ export default function Posts({ id, data }: { id: string; data: any | undefined 
       hour12: true,
     };
     let time = date.toLocaleTimeString('en-US', options);
-
+    const adminRights = id === item['businessid'];
     return (
       <TouchableOpacity className="mt-5 w-full rounded-2xl border-2 border-purple-300 p-2 shadow-orange-50">
         <View className="flex-row">

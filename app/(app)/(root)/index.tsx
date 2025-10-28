@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Categories from './Categories';
 import Sports from './EventList';
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { router } from 'expo-router';
 import useAuth from '../../../Hooks/authContext';
@@ -19,19 +19,18 @@ export default function HomeScreen() {
     <SafeAreaView className="align-center flex-1 bg-[#262626]">
       <Modal
         isVisible={showProfile}
-        className="ml-[10%] bg-black"
+        className="m-[10%]"
         animationIn="slideInRight"
-        style={{ margin: 0, marginLeft: 20, backgroundColor: 'black' }}
         animationOut="slideOutRight">
-        <View className="flex-1">
-          <Profile />
+        <View className="flex-1 rounded-md bg-black">
+          <Profile close={setShowProfile} />
           <TouchableOpacity
-            className="absolute right-[5%] top-[4%] z-10 h-[10%] align-top"
+            className="absolute left-[5%] top-[4%] z-10 h-[10%] align-top"
             onPress={() => setShowProfile(!showProfile)}>
-            <UserIcon color={'white'} width={40} />
+            <ArrowLeftIcon color={'white'} width={40} />
           </TouchableOpacity>
           <TouchableOpacity
-            className="absolute right-[5%] top-[10%] z-10 h-[10%] align-top"
+            className="absolute right-[5%] top-[4%] z-10 h-[10%] align-top"
             onPress={logout}>
             <Text className="justify-center text-xl text-white underline">Log out</Text>
           </TouchableOpacity>
@@ -68,15 +67,11 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <View className="h-[10%] w-full justify-center">
+      <View className="h-[10%] w-[100%] justify-center">
         <Categories />
       </View>
       <ScrollView className="w-full flex-1 bg-[#222222]" contentContainerStyle={{ flexGrow: 1 }}>
-        <hr
-          color="#8500ED"
-          style={{ color: '#8500ED', height: 3, marginTop: 20, marginBottom: 10, border: 0 }}
-        />
-        <View className="h-[10%] items-center">
+        <View className="my-5 items-center">
           <Text className=" -mb-2 text-lg font-bold text-white">Featured</Text>
           <View className="flex-row items-center">
             {user['business'] && (
@@ -89,15 +84,15 @@ export default function HomeScreen() {
 
         {/* Sports*/}
         <View className="mb-1 h-auto">
-          <EventList title={'Sport'} category={'Sport'} />
+          <EventList title={'Sports'} category={'Sport'} />
         </View>
         {/* Specialls*/}
         <View className=" mb-1 h-auto">
-          <EventList title={'Drink'} category={'Drink'} />
+          <EventList title={'Drinks'} category={'Drink'} />
         </View>
         {/* Movies Shows*/}
         <View className=" mb-1 h-auto">
-          <EventList title={'Food'} category={'Food'} />
+          <EventList title={'Foods'} category={'Food'} />
         </View>
       </ScrollView>
     </SafeAreaView>

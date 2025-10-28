@@ -1,11 +1,14 @@
 import { Stack } from 'expo-router';
 import useAuth, { AuthContextProvider } from 'Hooks/authContext';
 import '../global.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 export default function AuthLayout() {
-  console.log('here');
+  const queryClient = new QueryClient();
   return (
     <AuthContextProvider>
-      <RootNavigator />
+      <QueryClientProvider client={queryClient}>
+        <RootNavigator />
+      </QueryClientProvider>
     </AuthContextProvider>
   );
 }
