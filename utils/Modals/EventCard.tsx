@@ -6,7 +6,7 @@ import {
   MapPinIcon,
   ShareIcon,
 } from '@heroicons/react/24/outline';
-import { request } from '../../../utils/axios';
+import { request } from '../axios';
 export default function EventCard({ item, date, time }: { item: any; date: Date; time: string }) {
   const [profileUri, setProfileUri] = useState('');
   const [business, setBusiness] = useState<any>();
@@ -27,10 +27,10 @@ export default function EventCard({ item, date, time }: { item: any; date: Date;
     <View className="h-full py-10">
       <View className="mx-5">
         <View className="border-b-2 border-purple-400 pb-5">
-          <View className="mb-3 items-center overflow-hidden rounded-full border-2 border-purple-800 bg-white shadow-lg shadow-white">
+          <View className="mb-3 items-center justify-center overflow-hidden rounded-full border-2 border-purple-800 bg-white shadow-lg shadow-white">
             <Image
               style={{ width: 150, height: 150, margin: 0, padding: 0 }}
-              resizeMode="stretch"
+              resizeMode="contain"
               source={{
                 uri: profileUri,
               }}
@@ -49,9 +49,11 @@ export default function EventCard({ item, date, time }: { item: any; date: Date;
         </Text>
         <View className="my-10 flex-1 flex-row">
           <TouchableOpacity className="flex-1">
-            <Text className="text-center text-lg text-white underline">
-              Reserve or Purchase Tickets
-            </Text>
+            {item.url && (
+              <Text className="text-center text-lg text-white underline">
+                Reserve or Purchase Tickets
+              </Text>
+            )}
           </TouchableOpacity>
           <TouchableOpacity className="flex-1 items-center justify-center">
             <BookmarkIcon className="w-7 text-white" />

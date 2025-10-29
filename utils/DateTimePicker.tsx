@@ -7,23 +7,25 @@ import { createElement, useState } from 'react';
 export const DateSelection = ({
   date,
   setDate,
+  defValue,
   type,
 }: {
   date: any;
   setDate: any;
+  defValue: any;
   type: string | undefined;
 }) => {
   if (Platform.OS === 'web') {
     return createElement('input', {
       type: type,
+      defaultValue: defValue,
       style: {
-        fontSize: 25,
         justifyItems: 'center',
         backgroundColor: 'lightgray',
       },
       value: date,
       className:
-        'rounded-full items-center border-purple-300 border-2 p-1 mx-2 justify-center bg-red-300',
+        'rounded-full items-center text-lg border-purple-300 border-2 p-0 mx-2 justify-center bg-red-300',
       onChange: (event) => setDate(event.target.value),
     });
   } else {

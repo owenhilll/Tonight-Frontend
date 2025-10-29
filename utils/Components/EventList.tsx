@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, FlatList, TouchableOpacity, Image, Platform } from 'react-native';
 import React, { useState } from 'react';
-import EventCard from './EventCard';
+import EventCard from '../Modals/EventCard';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -9,11 +9,11 @@ import {
   InformationCircleIcon,
 } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
-import useAuth from '../../../Hooks/authContext';
-import { request } from '../../../utils/axios';
+import useAuth from '../../Hooks/authContext';
+import { request } from '../axios';
 import { useRouter } from 'expo-router';
 import Modal from 'react-native-modal';
-import Posts from './Posts';
+import Posts from '../Modals/Posts';
 export default function EventList({ title, category }: { title: string; category: string }) {
   const { longitude, latitude, user } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -52,7 +52,7 @@ export default function EventList({ title, category }: { title: string; category
       });
 
     return (
-      <View>
+      <View className="mx-2">
         <Modal
           isVisible={showEventModal}
           style={{
@@ -62,7 +62,7 @@ export default function EventList({ title, category }: { title: string; category
             paddingTop: 20,
           }}>
           <TouchableOpacity
-            className="ml-5 h-8 w-8 text-white"
+            className="ml-5 mt-5 h-8 w-8 text-white"
             onPress={() => setShowEventModal(false)}>
             <ArrowLeftIcon className="h-8 w-8 text-white" />
           </TouchableOpacity>
@@ -70,7 +70,7 @@ export default function EventList({ title, category }: { title: string; category
         </Modal>
         <TouchableOpacity
           onPress={() => setShowEventModal(true)}
-          className="mx-1 w-80 rounded-2xl border-2 border-purple-300 bg-[#181818] p-2 shadow-orange-50">
+          className="mx-1 w-80 rounded-2xl border-2 border-purple-300 bg-[#4c4c4c] p-2 shadow-orange-50">
           <View className="flex-row">
             <View className="flex-column h-48 w-44">
               <Text className="mb-5 ml-2 flex-1 text-xl font-bold text-white">{item.title}</Text>
@@ -108,17 +108,16 @@ export default function EventList({ title, category }: { title: string; category
         style={{
           backgroundColor: '#262626',
           borderRadius: 10,
-          margin: 20,
-          paddingLeft: 10,
-          paddingTop: 10,
+          margin: Platform.OS == 'web' ? '10%' : 20,
+          paddingTop: 20,
         }}>
-        <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+        <TouchableOpacity className="ml-5 mt-5" onPress={() => setIsModalVisible(false)}>
           <ArrowLeftIcon className="w-8 text-white" />
         </TouchableOpacity>
-        <Posts data={data} id={user['user']['id']} queryKey={category} />
+        <Posts data={data} id={user['user']['id']} queryKey={category} profile={true} />
       </Modal>
 
-      <View className="flex-1 rounded-xl border-2 border-purple-400 p-2 text-xl text-white">
+      <View className="flex-1 rounded-xl border-2 border-purple-800 p-2 text-xl text-white">
         <View className="m-5 flex-row items-center justify-between">
           <Text className="font-bold text-white">{title}</Text>
           <TouchableOpacity onPress={() => setIsModalVisible(true)}>

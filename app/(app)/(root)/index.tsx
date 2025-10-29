@@ -2,13 +2,13 @@ import { Image, View, Text, TextInput, ScrollView, TouchableOpacity } from 'reac
 import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Categories from './Categories';
-import Sports from './EventList';
+import Categories from '../../../utils/Components/Categories';
+
 import { ArrowLeftIcon, ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { router } from 'expo-router';
 import useAuth from '../../../Hooks/authContext';
-import EventList from './EventList';
+import EventList from '../../../utils/Components/EventList';
 import Modal from 'react-native-modal';
 import Profile from './Profile';
 export default function HomeScreen() {
@@ -16,62 +16,21 @@ export default function HomeScreen() {
   const [showProfile, setShowProfile] = useState(false);
 
   return (
-    <SafeAreaView className="align-center flex-1 bg-[#262626]">
-      <Modal
-        isVisible={showProfile}
-        className="m-[10%]"
-        animationIn="slideInRight"
-        animationOut="slideOutRight">
-        <View className="flex-1 rounded-md bg-black">
-          <Profile close={setShowProfile} />
-          <TouchableOpacity
-            className="absolute left-[5%] top-[4%] z-10 h-[10%] align-top"
-            onPress={() => setShowProfile(!showProfile)}>
-            <ArrowLeftIcon color={'white'} width={40} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="absolute right-[5%] top-[4%] z-10 h-[10%] align-top"
-            onPress={logout}>
-            <Text className="justify-center text-xl text-white underline">Log out</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-      <View className="h-[8%] w-full flex-row justify-center space-x-20">
-        <View className="w-[10%]">
-          <Image
-            source={require('../../../assets/Logo.png')}
-            style={{ width: '100%', height: '100%' }}
-            resizeMode="stretch"
-          />
-        </View>
-
-        <View className="flex-1 flex-row rounded-full border-2 border-purple-800 p-2 text-xl text-white">
-          <MagnifyingGlassIcon color={'#8500ED'} width={30} />
-          <TextInput
-            id="Search"
-            className="w-full"
-            placeholder="Search Event"
-            keyboardType="default"
-          />
-        </View>
-        <View className="z-10 h-[100%] w-[10%] justify-center">
-          {user['business'] ? (
-            <TouchableOpacity onPress={() => setShowProfile(!showProfile)}>
-              <UserIcon color={'white'} width={40} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={logout}>
-              <Text className="justify-center text-xl text-white underline">Log out</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+    <SafeAreaView className="align-center flex-1 bg-black">
+      <View className="h-20 items-center justify-center p-0">
+        <Image
+          source={require('../../../assets/logo4.png')}
+          resizeMode="center"
+          style={{ flex: 1, padding: 0, margin: -10 }}
+        />
       </View>
 
-      <View className="h-[10%] w-[100%] justify-center">
+      <View className="h-[7%] w-[100%] justify-center ">
         <Categories />
       </View>
-      <ScrollView className="w-full flex-1 bg-[#222222]" contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="my-5 items-center">
+
+      <ScrollView className="my-2 w-full flex-1 bg-black" contentContainerStyle={{ flexGrow: 1 }}>
+        <View className="items-center">
           <Text className=" -mb-2 text-lg font-bold text-white">Featured</Text>
           <View className="flex-row items-center">
             {user['business'] && (
@@ -83,15 +42,15 @@ export default function HomeScreen() {
         </View>
 
         {/* Sports*/}
-        <View className="mb-1 h-auto">
+        <View className="mx-[2%] my-[1%] h-auto bg-[#262626]">
           <EventList title={'Sports'} category={'Sport'} />
         </View>
         {/* Specialls*/}
-        <View className=" mb-1 h-auto">
+        <View className="mx-[2%] my-[1%] h-auto bg-[#262626]">
           <EventList title={'Drinks'} category={'Drink'} />
         </View>
         {/* Movies Shows*/}
-        <View className=" mb-1 h-auto">
+        <View className="mx-[2%] my-[1%] h-auto bg-[#262626]">
           <EventList title={'Foods'} category={'Food'} />
         </View>
       </ScrollView>
