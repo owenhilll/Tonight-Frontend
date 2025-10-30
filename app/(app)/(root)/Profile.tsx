@@ -29,18 +29,6 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
       }),
   });
 
-  const {
-    isLoading: postsLoading,
-    error: postsError,
-    data: posts,
-  } = useQuery({
-    queryKey: ['events' + user['user']['id']],
-    queryFn: () =>
-      request.get('/events/' + user['user']['id']).then((res) => {
-        return res.data;
-      }),
-  });
-
   const [index, setIndex] = useState(0);
   const [profilepic, setProfilePic] = useState(
     `https://tonight-profiles.s3.us-east-1.amazonaws.com/business_${user['user']['id']}_profile_pic`
@@ -165,9 +153,10 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
 
           <View className="flex-1">
             <Posts
+              header=""
               id={user['user']['id']}
               queryKey={'events' + user['user']['id']}
-              data={posts}
+              querystring={'/events/' + user['user']['id']}
               profile={true}
             />
           </View>

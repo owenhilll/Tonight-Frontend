@@ -29,9 +29,9 @@ import { request } from '../axios';
 
 export default function Categories() {
   const [index, setIndex] = useState(0);
-  const { user, longitude, latitude } = useAuth();
+  const { user, longitude, latitude, radius } = useAuth();
   const [data, setData] = useState([]);
-
+  const [category, setCategory] = useState('');
   const handleNext = () => {
     setIndex(index + 1);
   };
@@ -39,16 +39,7 @@ export default function Categories() {
     setIndex(index - 1);
   };
   const handleClick = (ctg: string) => {
-    request
-      .get('/events/near?category=' + ctg, {
-        params: {
-          y: latitude,
-          x: longitude,
-        },
-      })
-      .then((res) => {
-        return setData(res.data);
-      });
+    setCategory(ctg);
     setIsModalVisible(true);
   };
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -58,15 +49,23 @@ export default function Categories() {
       <Modal
         isVisible={isModalVisible}
         style={{
-          backgroundColor: '#262626',
+          backgroundColor: 'black',
           borderRadius: 10,
+          shadowColor: 'white',
+          shadowRadius: 2,
           margin: Platform.OS == 'web' ? '10%' : 20,
           paddingTop: 20,
         }}>
         <TouchableOpacity className="ml-5 mt-5" onPress={() => setIsModalVisible(false)}>
           <ArrowLeftIcon className="w-8 text-white" />
         </TouchableOpacity>
-        <Posts data={data} id={user['user']['id']} queryKey={''} profile={false} />
+        <Posts
+          querystring={'/events/near?category=' + category + '&radius=' + radius}
+          id={user['user']['id']}
+          queryKey={''}
+          header={category}
+          profile={false}
+        />
       </Modal>
 
       {index == 0 && (

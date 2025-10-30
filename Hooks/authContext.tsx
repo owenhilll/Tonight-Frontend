@@ -1,5 +1,5 @@
 import { request } from '../utils/axios';
-import { createContext, PropsWithChildren, use, useEffect, useState } from 'react';
+import React, { createContext, PropsWithChildren, use, useEffect, useState } from 'react';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -9,10 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthContext = createContext(null);
 
-export function AuthContextProvider({ children }: PropsWithChildren) {
+export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) => {
   const [latitude, setLatitude] = useState<number | undefined>(undefined);
   const [longitude, setLongitude] = useState<number | undefined>(undefined);
-
+  const [radius, setRadius] = useState<number>(5);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -49,6 +49,10 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
     );
   };
 
+  const setRadiusFromChild = (e: number) => {
+    setRadius(e);
+  };
+
   useEffect(() => {
     getLocation();
     const loadAuthData = async () => {
@@ -66,20 +70,19 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
     loadAuthData();
   }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        latitude,
-        longitude,
-        getLocation,
-        logout,
-      }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
+  const contextValue = {
+    user,
+    login,
+    latitude,
+    longitude,
+    setRadius,
+    getLocation,
+    logout,
+    radius,
+  };
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+};
 
 export default function useAuth() {
   const value = use(AuthContext);
