@@ -8,9 +8,10 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import * as ImagePicker from 'react-native-image-picker';
 import { Box, Grid, Modal, Stack } from '@mui/material';
 import useAuth from '../../../Hooks/authContext';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { Text, View, Image, TouchableOpacity, TextInput, Linking } from 'react-native';
 import { Link } from 'expo-router';
 import { MapPinIcon, PlusIcon } from '@heroicons/react/24/outline';
+import ErrorIcon from '@mui/icons-material/Error';
 
 const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const { user, logout } = useAuth();
@@ -59,6 +60,18 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
     });
   };
 
+  const [website, setWebsite] = useState('');
+
+  const updatewebsite = () => {
+    const id = user['user']['id'];
+    request
+      .put('/businesses/website', { website, id })
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ['user'] });
+      })
+      .catch(() => {});
+  };
+
   const GetProfilePic = () => {
     request
       .get(`/businesses/profilepic?id=${user['user']['id']}&fetchtype=getObject`)
@@ -99,7 +112,7 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
   GetProfilePic();
 
   return (
-    <View className="align-center w-[100%] flex-1 justify-center bg-black p-16">
+    <View className="align-center w-[100%] flex-1 justify-center bg-black pt-[5%]">
       <Modal open={showShare} className="m-[10%] h-auto w-auto rounded-lg bg-[#262626]">
         <Share close={setShowShare} queryKey={'events' + user['user']['id']} />
       </Modal>
@@ -120,28 +133,43 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
               </TouchableOpacity>
             </View>
             <View className="flex-column flex-1 items-center">
-              <View className="mb-3 items-center overflow-hidden rounded-full border-2 border-purple-800 bg-white shadow-lg shadow-white">
-                <Image
-                  style={{ width: 150, height: 150, margin: 0, padding: 0 }}
-                  resizeMode="stretch"
-                  source={{
-                    uri: profilepic,
-                  }}
-                />
-              </View>
-              <View className="h-[30%] items-center">
-                <TouchableOpacity onPress={SetProfilePic}>
-                  <Text className="text-center text-white underline">Change</Text>
-                </TouchableOpacity>
-                <Text className="text-xl text-white">{business.name}</Text>
-                <View className="text-white">
-                  {followersLoading ? 'Loading' : followers.length} followers
-                </View>
+              <View className="h-[30%] items-center space-y-4">
+                <Text className="text-2xl text-white">{business.name}</Text>
+
                 <View className="flex-row items-center justify-center">
-                  <MapPinIcon color="white" height={'100%'} />
-                  <Text className="text-white">{business.city}</Text>
+                  <MapPinIcon color="white" className="w-7" />
+                  <Text className="text-xl text-white">{business.address}</Text>
                 </View>
-                <Text className="text-white">{business.website}</Text>
+                <TouchableOpacity
+                  className="flex-row rounded-full bg-[#567eb9] p-2"
+                  onPress={SetProfilePic}>
+                  <Text className="text-center text-white">Edit Profile Picture</Text>
+                </TouchableOpacity>
+                <View>
+                  {business.website == null ? (
+                    <View className="flex-row items-center space-x-2">
+                      <ErrorIcon className="w-5 text-red-500" />
+                      <TextInput
+                        value={website}
+                        onChangeText={setWebsite}
+                        className="rounded-full border-white px-2 text-lg text-white"
+                        placeholder="Business Website"
+                        style={{ borderWidth: 1 }}
+                      />
+                      <TouchableOpacity
+                        onPress={updatewebsite}
+                        className="flex-row rounded-full bg-[#4c4c4c] p-2">
+                        <Text className="text-white">Save</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <Text
+                      onPress={() => Linking.openURL(business.website)}
+                      className="text-white underline">
+                      {business.website}
+                    </Text>
+                  )}
+                </View>
               </View>
             </View>
             <View className="flex-1 items-center justify-center">
@@ -151,7 +179,7 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
             </View>
           </View>
 
-          <View className="flex-1">
+          <View className="mb-2 flex-1">
             <Posts
               header=""
               id={user['user']['id']}

@@ -94,7 +94,7 @@ export default function Posts({
 
   return (
     <View className="flex-1">
-      <Text className="mt-2 text-center text-3xl text-white">{modifiedHeader}</Text>
+      <Text className="mt-0 text-center text-3xl text-white">{modifiedHeader}</Text>
       {data && data.length > 0 ? (
         <ScrollView>
           <FlatList

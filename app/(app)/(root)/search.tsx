@@ -7,7 +7,9 @@ export default function Search() {
         <Text className="flex-1 text-center text-5xl text-white">Search</Text>
       </View>
       <View className="m-3 flex-1 overflow-visible">
-        <View className="flex-1 justify-center"></View>
+        <View className="flex-1 justify-center">
+          <Text className="text-center text-xl text-white">Coming soon ...</Text>
+        </View>
       </View>
     </View>
   );

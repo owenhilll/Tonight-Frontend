@@ -47,12 +47,15 @@ export default function EventList({ title, category }: { title: string; category
           shadowColor: 'white',
           shadowRadius: 2,
           margin: Platform.OS == 'web' ? '10%' : 20,
-          paddingTop: 20,
+          paddingTop: 10,
         }}>
-        <TouchableOpacity className="ml-5 mt-5" onPress={() => setIsModalVisible(false)}>
+        <TouchableOpacity
+          className="absolute left-5 top-5 z-50"
+          onPress={() => setIsModalVisible(false)}>
           <ArrowLeftIcon className="w-8 text-white" />
         </TouchableOpacity>
         <Posts
+          header={category}
           querystring={'/events/near?category=' + category + '&radius=' + radius}
           id={user['user']['id']}
           queryKey={category}

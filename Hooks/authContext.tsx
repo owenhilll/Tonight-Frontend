@@ -70,6 +70,11 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
     loadAuthData();
   }, []);
 
+  const continueAsGuest = () => {
+    let u = { user: { id: null }, guest: true };
+    setUser(u);
+  };
+
   const contextValue = {
     user,
     login,
@@ -78,6 +83,7 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
     setRadius,
     getLocation,
     logout,
+    continueAsGuest,
     radius,
   };
 

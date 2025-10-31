@@ -205,7 +205,9 @@ export const Post = ({
             </View>
             <View className="flex-row">
               <View className="flex-1 flex-row items-center">
-                <TouchableOpacity onPress={bookmarked ? removeBookmark : bookmarkItem}>
+                <TouchableOpacity
+                  disabled={user['business']}
+                  onPress={bookmarked ? removeBookmark : bookmarkItem}>
                   <BookmarkIcon
                     className="h-7 w-7 text-white"
                     fill={bookmarked ? 'white' : 'transparent'}
@@ -219,39 +221,7 @@ export const Post = ({
               </View>
             </View>
           </View>
-          {adminRights && (
-            <View className="flex-column justify-between text-right">
-              <PencilIcon className="h-7 text-white" onClick={() => setEdit(true)} />
-              {!edit && (
-                <TrashIcon className="h-7 text-white" onClick={() => deletePost(item.id)} />
-              )}
-              {edit && (
-                <View className="rounded-full bg-white p-2 text-purple-900">
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (
-                        editDate != item.date ||
-                        editTitle != item.title ||
-                        editDesc != item.desc
-                      ) {
-                        request
-                          .put('/events/update?id=' + item.id, {
-                            editTitle,
-                            editDesc,
-                            editDate,
-                          })
-                          .then(() => {
-                            queryClient.invalidateQueries({ queryKey: [queryKey] });
-                          });
-                      }
-                      setEdit(false);
-                    }}>
-                    Save
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          )}
+
           <View className="flex-col">
             <View className="mb-3 items-center justify-center overflow-hidden rounded-full border-2 border-purple-800 bg-white shadow-lg shadow-white">
               <Image
@@ -265,10 +235,42 @@ export const Post = ({
             <Text className="text-center text-white">{business?.name}</Text>
             <Text className="text-center text-white">{business?.address}</Text>
           </View>
-          <View className="ml-10">
-            <TouchableOpacity className="text-white">
+
+          <View className="ml-10 h-[100%]">
+            <TouchableOpacity className="flex-1 text-white">
               <ArrowUpOnSquareIcon className="w-7" />
             </TouchableOpacity>
+            {adminRights && (
+              <View className="flex-column flex-1 justify-between text-right">
+                {!edit && <PencilIcon className="h-7 text-white" onClick={() => setEdit(true)} />}
+                {edit && (
+                  <View className="rounded-full bg-white p-2 text-purple-900">
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (
+                          editDate != item.date ||
+                          editTitle != item.title ||
+                          editDesc != item.desc
+                        ) {
+                          request
+                            .put('/events/update?id=' + item.id, {
+                              editTitle,
+                              editDesc,
+                              editDate,
+                            })
+                            .then(() => {
+                              queryClient.invalidateQueries({ queryKey: [queryKey] });
+                            });
+                        }
+                        setEdit(false);
+                      }}>
+                      Save
+                    </TouchableOpacity>
+                  </View>
+                )}
+                <TrashIcon className="h-7 text-white" onClick={() => deletePost(item.id)} />
+              </View>
+            )}
           </View>
         </View>
       </View>

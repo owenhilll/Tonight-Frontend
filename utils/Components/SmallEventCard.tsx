@@ -3,7 +3,16 @@ import { request } from '../axios';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, FlatList, TouchableOpacity, Image, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Modal,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Platform,
+} from 'react-native';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -12,7 +21,9 @@ import {
   CalendarDateRangeIcon,
   EyeIcon,
   InformationCircleIcon,
+  MapPinIcon,
 } from '@heroicons/react/24/outline';
+
 //for use in rendering events in the home page (the horizontal list)
 export const SmallEventCard = ({ item }: { item: any }) => {
   const { user } = useAuth();
@@ -76,11 +87,12 @@ export const SmallEventCard = ({ item }: { item: any }) => {
         return res.data.length;
       }),
   });
-
+  const [showProfile, setShowProfile] = useState(false);
   const date = new Date(item.date);
   let options: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
   let time = date.toLocaleTimeString('en-US', options);
   const [profileUri, setProfileUri] = useState('');
+  const [business, setBusiness] = useState<any>();
   //fetch the profile uri for the business, and increment the view this event got.
   useEffect(() => {
     request
@@ -88,15 +100,18 @@ export const SmallEventCard = ({ item }: { item: any }) => {
       .then((json) => {
         setProfileUri(json.data);
       });
+    request.get(`/businesses/find/${item['businessid']}`).then((json) => {
+      setBusiness(json.data);
+    });
     request
-      .get(`/events/update/view?eventid=${item['id']}`)
+      .put(`/events/update/view?eventid=${item['id']}`)
       .then(() => {})
       .catch(() => {});
   }, []);
 
   return (
     <View className="mx-2">
-      <TouchableOpacity className="mx-1 w-80 rounded-2xl border-2 border-purple-300 bg-[#4c4c4c] p-2 shadow-orange-50">
+      <View className="mx-1 w-80 rounded-2xl border-2 border-purple-300 bg-[#4c4c4c] p-2 shadow-orange-50">
         <View className="flex-row">
           <View className="flex-column h-48 w-44">
             <Text className="mb-5 ml-2 flex-1 text-xl font-bold text-white">{item.title}</Text>
@@ -112,7 +127,9 @@ export const SmallEventCard = ({ item }: { item: any }) => {
             </View>
           </View>
           <View className="flex-col">
-            <View className=" border-1 mb-3 ml-5 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
+            <TouchableOpacity
+              onPress={() => setShowProfile(!showProfile)}
+              className=" border-1 mb-3 ml-5 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
               <Image
                 style={{ width: 90, height: 90, margin: 0, padding: 0 }}
                 className="h-auto w-auto"
@@ -121,16 +138,57 @@ export const SmallEventCard = ({ item }: { item: any }) => {
                   uri: profileUri,
                 }}
               />
-            </View>
-            <View className="mr-1 w-full flex-1 flex-row items-end justify-end">
-              <TouchableOpacity onPress={bookmarked ? removeBookmark : bookmarkItem}>
-                <BookmarkIcon
-                  className="w-6 text-white"
-                  fill={bookmarked ? 'white' : 'transparent'}
-                />
-              </TouchableOpacity>
-              <Text className="ml-1 text-white">({bookmarks})</Text>
-            </View>
+              <Modal visible={showProfile} transparent={true}>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  }}>
+                  <View
+                    style={{
+                      width: Platform.OS == 'web' ? 300 : '70%',
+                      height: Platform.OS == 'web' ? 300 : '50%',
+                      justifyContent: 'center',
+                      backgroundColor: 'black',
+                      borderRadius: '20%',
+                    }}>
+                    <View className="mt-2 flex-1 items-center justify-center">
+                      <View className=" border-1 mb-3 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
+                        <Image
+                          style={{ width: 90, height: 90, margin: 0, padding: 0 }}
+                          className="h-auto w-auto"
+                          resizeMode="center"
+                          source={{
+                            uri: profileUri,
+                          }}
+                        />
+                      </View>
+                      <View className="items-center space-y-4">
+                        <Text className="text-xl text-white">{business?.name}</Text>
+                        <View className="flex-row">
+                          <MapPinIcon className="w-5 text-white" />
+                          <Text className="text-white">{business?.address}</Text>
+                        </View>
+                        <Text className="text-white">{business?.website}</Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
+            </TouchableOpacity>
+            {!user['business'] && (
+              <View className="mr-1 w-full flex-1 flex-row items-end justify-end">
+                <TouchableOpacity onPress={bookmarked ? removeBookmark : bookmarkItem}>
+                  <BookmarkIcon
+                    className="w-6 text-white"
+                    fill={bookmarked ? 'white' : 'transparent'}
+                  />
+                </TouchableOpacity>
+                <Text className="ml-1 text-white">({bookmarks})</Text>
+              </View>
+            )}
             <View className="mr-1 w-full flex-row items-end justify-end">
               <TouchableOpacity>
                 <EyeIcon className="w-6 text-white" />
@@ -139,7 +197,7 @@ export const SmallEventCard = ({ item }: { item: any }) => {
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     </View>
   );
 };

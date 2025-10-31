@@ -31,24 +31,35 @@ export default function BookMarks() {
       <View className="mt-5 w-[100%] flex-row items-center justify-center">
         <Text className="text-center text-5xl text-white">Bookmarks</Text>
       </View>
-      <View className="h-full flex-1 items-center justify-center">
-        {bookmarks && bookmarks.length > 0 ? (
-          <Posts
-            id={user['user']['id']}
-            header={''}
-            querystring={'/bookmarks/get?userid=' + user['user']['id']}
-            profile={false}
-            queryKey={user['user']['id']}
-          />
-        ) : (
-          <View className="">
-            <Text className="text-center text-2xl text-white">Nothing bookmarked.</Text>
-            <Text className="text-center text-sm text-white">
-              Start discovering events in the home page!
-            </Text>
-          </View>
-        )}
-      </View>
+      {!user['guest'] ? (
+        <View className="h-full flex-1 items-center justify-center">
+          {bookmarks && bookmarks.length > 0 ? (
+            <Posts
+              id={user['user']['id']}
+              header={''}
+              querystring={'/bookmarks/get?userid=' + user['user']['id']}
+              profile={false}
+              queryKey={user['user']['id']}
+            />
+          ) : (
+            <View className="">
+              <Text className="text-center text-2xl text-white">Nothing bookmarked.</Text>
+              <Text className="text-center text-sm text-white">
+                Start discovering events in the home page!
+              </Text>
+            </View>
+          )}
+        </View>
+      ) : (
+        <View className="h-full flex-1 items-center justify-center">
+          <Text className="text-xl text-white">
+            Create a user account to start bookmarking events!
+          </Text>
+          <Text className="text-xm text-white">
+            User accounts earn rewards, and get notified when their favorite venues post!
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

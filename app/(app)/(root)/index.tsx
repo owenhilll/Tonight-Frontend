@@ -11,7 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import SetRadiusSlider from '../../../utils/Components/SetRadiusSlider';
 
 export default function HomeScreen() {
-  const { radius, setRadius, logout } = useAuth();
+  const { radius, setRadius, logout, user } = useAuth();
 
   const queryClient = useQueryClient();
 
@@ -27,9 +27,15 @@ export default function HomeScreen() {
           />
         </View>
         <View className="mt-3 w-[20%] items-center">
-          <TouchableOpacity className="rounded-full bg-slate-300 p-2" onPress={logout}>
-            <Text className="flex-1 text-black">Log out</Text>
-          </TouchableOpacity>
+          {!user['guest'] ? (
+            <TouchableOpacity className="rounded-full bg-slate-300 p-2" onPress={logout}>
+              <Text className="flex-1 text-black">Log out</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity className="rounded-full bg-slate-300 p-2" onPress={logout}>
+              <Text className="flex-1 text-black">Sign in</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 

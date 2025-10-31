@@ -5,9 +5,11 @@ import { TextInput } from 'react-native';
 
 import useAuth from '../Hooks/authContext';
 import { Link, useRouter } from 'expo-router';
-import { request } from 'utils/axios';
+import { request } from '../utils/axios';
 
 export default function LoginScreen() {
+  const { continueAsGuest } = useAuth();
+
   const router = useRouter();
 
   const handleClick = async (e: any) => {
@@ -18,6 +20,10 @@ export default function LoginScreen() {
     } catch (err: any) {
       setErr(err);
     }
+  };
+
+  const guestBrowse = () => {
+    continueAsGuest();
   };
 
   const [err, setErr] = useState(null);
@@ -61,6 +67,9 @@ export default function LoginScreen() {
             <Text className="mx-2 text-blue-200 underline">Register Business</Text>
           </Link>
         </View>
+        <Text onPress={continueAsGuest} className="text-lg text-white">
+          Continue as guest
+        </Text>
       </View>
       <Text>{err}</Text>
     </View>
