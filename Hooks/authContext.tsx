@@ -46,6 +46,7 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
       }
     })
     .catch(() => {});
+
   const setRadiusFromChild = (e: number) => {
     setRadius(e);
   };

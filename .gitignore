@@ -13,7 +13,10 @@ web-build/
 
 
 
-ios
+ios/Pods
+ios/myexpoapp.xcodeproj
+ios/myexpoapp.xcworkspace
+ios/myexpoapp/Images.xcassets
 android
 
 # macOS
