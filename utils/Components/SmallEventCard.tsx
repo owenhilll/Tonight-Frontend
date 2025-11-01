@@ -13,16 +13,7 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  BackwardIcon,
-  BookmarkIcon,
-  CalendarDateRangeIcon,
-  EyeIcon,
-  InformationCircleIcon,
-  MapPinIcon,
-} from '@heroicons/react/24/outline';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 //for use in rendering events in the home page (the horizontal list)
 export const SmallEventCard = ({ item }: { item: any }) => {
@@ -116,11 +107,11 @@ export const SmallEventCard = ({ item }: { item: any }) => {
           <View className="flex-column h-48 w-44">
             <Text className="mb-5 ml-2 flex-1 text-xl font-bold text-white">{item.title}</Text>
             <View className="mt-4 flex-row items-center justify-center">
-              <InformationCircleIcon className="w-8" />
+              <FontAwesome6 iconStyle="solid" color="#8500ED" name="info" />
               <Text className="text-s ml-2 flex-1 text-white">{item.desc}</Text>
             </View>
             <View className="mt-4 flex-row items-center justify-center">
-              <CalendarDateRangeIcon className="w-8" />
+              <FontAwesome6 iconStyle="solid" color="#8500ED" name="calendar" />
               <Text className="text-s ml-2 flex-1 text-white">
                 {date.toDateString()} - {time}
               </Text>
@@ -168,7 +159,7 @@ export const SmallEventCard = ({ item }: { item: any }) => {
                       <View className="items-center space-y-4">
                         <Text className="text-xl text-white">{business?.name}</Text>
                         <View className="flex-row">
-                          <MapPinIcon className="w-5 text-white" />
+                          <FontAwesome6 iconStyle="solid" color="#8500ED" name="map-pin" />
                           <Text className="text-white">{business?.address}</Text>
                         </View>
                         <Text className="text-white">{business?.website}</Text>
@@ -181,9 +172,12 @@ export const SmallEventCard = ({ item }: { item: any }) => {
             {!user['business'] && (
               <View className="mr-1 w-full flex-1 flex-row items-end justify-end">
                 <TouchableOpacity onPress={bookmarked ? removeBookmark : bookmarkItem}>
-                  <BookmarkIcon
+                  <FontAwesome6
+                    color="#8500ED"
+                    name="bookmark"
+                    iconStyle="solid"
                     className="w-6 text-white"
-                    fill={bookmarked ? 'white' : 'transparent'}
+                    selectionColor={bookmarked ? 'white' : 'transparent'}
                   />
                 </TouchableOpacity>
                 <Text className="ml-1 text-white">({bookmarks})</Text>
@@ -191,7 +185,7 @@ export const SmallEventCard = ({ item }: { item: any }) => {
             )}
             <View className="mr-1 w-full flex-row items-end justify-end">
               <TouchableOpacity>
-                <EyeIcon className="w-6 text-white" />
+                <FontAwesome6 iconStyle="solid" color="#8500ED" name="eye" />
               </TouchableOpacity>
               <Text className="mb-1 ml-1 text-white">({item.views})</Text>
             </View>

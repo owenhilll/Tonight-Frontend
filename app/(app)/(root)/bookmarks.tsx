@@ -1,10 +1,10 @@
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
 import useAuth from '../../../Hooks/authContext';
 import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { request } from '../../../utils/axios';
 import { Post } from '../../../utils/Components/Post';
 import Posts from '../../../utils/Modals/Posts';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function BookMarks() {
   const { user } = useAuth();
@@ -52,10 +52,10 @@ export default function BookMarks() {
         </View>
       ) : (
         <View className="h-full flex-1 items-center justify-center">
-          <Text className="text-xl text-white">
+          <Text className="text-center text-xl text-white">
             Create a user account to start bookmarking events!
           </Text>
-          <Text className="text-xm text-white">
+          <Text className="text-xm text-center text-white">
             User accounts earn rewards, and get notified when their favorite venues post!
           </Text>
         </View>

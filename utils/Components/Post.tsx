@@ -1,14 +1,6 @@
 import { request } from '../axios';
-import {
-  ArrowDownOnSquareIcon,
-  ArrowUpOnSquareIcon,
-  BookmarkIcon,
-  CalendarDateRangeIcon,
-  EyeIcon,
-  InformationCircleIcon,
-  PencilIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
+
 import React, { SetStateAction, useContext, useEffect, useState } from 'react';
 
 import useAuth from '../../Hooks/authContext';
@@ -172,7 +164,7 @@ export const Post = ({
               )}
             </View>
             <View className="flex-1 flex-row items-center">
-              <InformationCircleIcon className="w-7 text-white" />
+              <FontAwesome6 iconStyle="solid" color="#8500ED" name="info" />
               {!edit && <Text className="text-s ml-2 text-white">{item.desc}</Text>}
               {edit && (
                 <TextInput
@@ -191,7 +183,7 @@ export const Post = ({
             </View>
 
             <View className="flex-1 flex-row items-center">
-              <CalendarDateRangeIcon className="w-7 text-white" />
+              <FontAwesome6 iconStyle="solid" color="#8500ED" name="calendar" />
               {!edit && <Text className="text-s mx-2 text-white">{date.toDateString()}</Text>}
               {edit && (
                 <DateSelection
@@ -208,15 +200,17 @@ export const Post = ({
                 <TouchableOpacity
                   disabled={user['business']}
                   onPress={bookmarked ? removeBookmark : bookmarkItem}>
-                  <BookmarkIcon
+                  <FontAwesome6
+                    color="#8500ED"
+                    name="bookmark"
                     className="h-7 w-7 text-white"
-                    fill={bookmarked ? 'white' : 'transparent'}
+                    selectionColor={bookmarked ? 'white' : 'transparent'}
                   />
                 </TouchableOpacity>
                 <Text className="flex-1 text-white">({bookmarks})</Text>
               </View>
               <View className="flex-1 flex-row items-center">
-                <EyeIcon className="h-8 w-8 text-white" />
+                <FontAwesome6 iconStyle="solid" color="#8500ED" name="eye" />
                 <Text className="flex-1 text-white">({item.views})</Text>
               </View>
             </View>
@@ -238,11 +232,18 @@ export const Post = ({
 
           <View className="ml-10 h-[100%]">
             <TouchableOpacity className="flex-1 text-white">
-              <ArrowUpOnSquareIcon className="w-7" />
+              <FontAwesome6 iconStyle="solid" color="#8500ED" name="arrow-up-right-from-square" />
             </TouchableOpacity>
             {adminRights && (
               <View className="flex-column flex-1 justify-between text-right">
-                {!edit && <PencilIcon className="h-7 text-white" onClick={() => setEdit(true)} />}
+                {!edit && (
+                  <FontAwesome6
+                    iconStyle="solid"
+                    color="#8500ED"
+                    name="pencil"
+                    onPress={() => setEdit(true)}
+                  />
+                )}
                 {edit && (
                   <View className="rounded-full bg-white p-2 text-purple-900">
                     <TouchableOpacity
@@ -268,7 +269,12 @@ export const Post = ({
                     </TouchableOpacity>
                   </View>
                 )}
-                <TrashIcon className="h-7 text-white" onClick={() => deletePost(item.id)} />
+                <FontAwesome6
+                  color="#8500ED"
+                  name="trash-can"
+                  iconStyle="solid"
+                  onPress={() => deletePost(item.id)}
+                />
               </View>
             )}
           </View>

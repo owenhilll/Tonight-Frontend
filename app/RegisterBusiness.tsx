@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { request } from '../utils/axios';
-import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TextInput, TouchableOpacity, View, Modal } from 'react-native';
 import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
 import { isAxiosError } from 'axios';
 import { Link, router } from 'expo-router';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { Modal } from '@mui/material';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 const RegisterBusiness = () => {
   const [email, setEmail] = useState('');
@@ -38,7 +37,7 @@ const RegisterBusiness = () => {
 
   return (
     <View className="align-center flex-1 bg-black">
-      <Modal open={showModal} className="m-[10%] flex-1 rounded-lg bg-[#262626] p-2">
+      <Modal visible={showModal} className="m-[10%] flex-1 rounded-lg bg-[#262626] p-2">
         <View
           style={{ outlineStyle: 'none' }}
           className="m-8 flex-1 border-collapse flex-col items-center rounded-lg">
@@ -70,7 +69,12 @@ const RegisterBusiness = () => {
       </Modal>
       <View className="mx-[20%] mt-7 flex-1">
         <Link href={'/'} className="justify-start">
-          <ArrowLeftIcon visibility={showModal ? 'hidden' : 'visible'} className="w-8 text-white" />
+          <FontAwesome6
+            iconStyle="solid"
+            color="#8500ED"
+            name="arrow-left"
+            className="w-8 text-white"
+          />
         </Link>
         <Text className="text-center text-xl text-white">Register Business</Text>
 

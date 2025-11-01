@@ -1,11 +1,3 @@
-import {
-  ArrowLeftIcon,
-  BookmarkIcon,
-  CalendarDateRangeIcon,
-  InformationCircleIcon,
-  PencilIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
 import { QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 import useAuth from '../../Hooks/authContext';
 

@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import useAuth, { AuthContextProvider } from '../Hooks/authContext';
 import '../global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SafeAreaView } from 'react-native-safe-area-context';
 export default function AuthLayout() {
   const queryClient = new QueryClient();
   return (

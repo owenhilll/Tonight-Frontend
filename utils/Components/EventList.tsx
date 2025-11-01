@@ -1,12 +1,7 @@
 import { View, Text, ScrollView, FlatList, TouchableOpacity, Image, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  BackwardIcon,
-  CalendarDateRangeIcon,
-  InformationCircleIcon,
-} from '@heroicons/react/24/outline';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
+
 import { useQuery } from '@tanstack/react-query';
 import useAuth from '../../Hooks/authContext';
 import { request } from '../axios';
@@ -52,7 +47,7 @@ export default function EventList({ title, category }: { title: string; category
         <TouchableOpacity
           className="absolute left-5 top-5 z-50"
           onPress={() => setIsModalVisible(false)}>
-          <ArrowLeftIcon className="w-8 text-white" />
+          <FontAwesome6 iconStyle="solid" color="#8500ED" name="arrow-left" />
         </TouchableOpacity>
         <Posts
           header={category}
@@ -67,7 +62,7 @@ export default function EventList({ title, category }: { title: string; category
         <View className="m-5 flex-row items-center justify-between">
           <Text className="font-bold text-white">{title}</Text>
           <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-            <ArrowRightIcon color={'#8500ED'} width={20} />
+            <FontAwesome6 iconStyle="solid" color="#8500ED" name="arrow-right" />
           </TouchableOpacity>
         </View>
         {dataError || data == null ? (

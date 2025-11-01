@@ -16,8 +16,8 @@ export default function HomeScreen() {
   const queryClient = useQueryClient();
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
-      <View className="h-20 w-full flex-row">
+    <View className="flex-1 bg-black">
+      <View className="w-full flex-row">
         <View className="w-[20%]" />
         <View className="h-20 w-[60%] items-center justify-center p-0">
           <Image
@@ -28,25 +28,30 @@ export default function HomeScreen() {
         </View>
         <View className="mt-3 w-[20%] items-center">
           {!user['guest'] ? (
-            <TouchableOpacity className="rounded-full bg-slate-300 p-2" onPress={logout}>
-              <Text className="flex-1 text-black">Log out</Text>
+            <TouchableOpacity
+              className=" items-center justify-center rounded-full bg-slate-300 p-2"
+              onPress={logout}>
+              <Text className="items-center text-black">Log out</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity className="rounded-full bg-slate-300 p-2" onPress={logout}>
-              <Text className="flex-1 text-black">Sign in</Text>
+            <TouchableOpacity
+              className="items-center justify-center rounded-full bg-slate-300 p-2"
+              onPress={logout}>
+              <Text className="items-center text-black">Sign in</Text>
             </TouchableOpacity>
           )}
         </View>
       </View>
 
-      <View className="h-[7%] w-full justify-center ">
+      <View className="w-full items-center">
         <Categories />
       </View>
 
-      <View className="flex-col items-center justify-center">
+      <View className="flex-col items-center">
         <Text className="text-center text-lg font-bold text-white">Featured</Text>
       </View>
-      <View className="w-full flex-row items-center justify-center">
+
+      <View className="flex-row items-center">
         <SetRadiusSlider />
       </View>
 
@@ -64,6 +69,6 @@ export default function HomeScreen() {
           <EventList title={'Foods'} category={'Food'} />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

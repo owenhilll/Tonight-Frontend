@@ -29,26 +29,35 @@ const Register = () => {
 
   return (
     <View className="flex-1 items-center justify-center bg-black">
-      <View>
-        <Text className="text-center text-xl text-white">Sign In</Text>
+      <View className="w-full px-[10%]">
+        <Text className="text-center text-3xl text-white">Sign In</Text>
         <TextInput
+          placeholderTextColor={'grty'}
           nativeID="emailField"
+          autoCapitalize="none"
           className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           onChangeText={setEmail}
           placeholder="Email"
         />
         <TextInput
+          placeholderTextColor={'gray'}
           className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           nativeID="passwordField"
           onChangeText={setPassword}
           placeholder="Password"
         />
-        {err && <Text className="text-center text-xl text-red-200">{err}</Text>}
-        <TouchableOpacity
-          className="my-10 rounded-full bg-purple-800 p-2 text-center text-xl"
-          onPress={handleLogin}>
-          <Text className="p-2 text-center text-xl text-white">Login</Text>
-        </TouchableOpacity>
+        {err && (
+          <Text>
+            <Text className="text-center text-xl text-red-400">{err}</Text>
+          </Text>
+        )}
+        <View className="items-center">
+          <TouchableOpacity
+            className="my-10 justify-center rounded-full bg-purple-800 p-2 text-center text-xl"
+            onPress={handleLogin}>
+            <Text className="text-center text-xl text-white">Login</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <View className="flex-column items-center space-y-10 border-blue-800">
         <View className="flex-row">

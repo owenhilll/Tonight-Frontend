@@ -1,9 +1,9 @@
 import Slider from '@react-native-community/slider';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
-import useAuth from 'Hooks/authContext';
+import useAuth from '../../Hooks/authContext';
 import { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 export default function SetRadiusSlider() {
   const { radius, setRadius } = useAuth();
@@ -12,10 +12,17 @@ export default function SetRadiusSlider() {
   const queryClient = useQueryClient();
   return (
     <View className="w-full flex-col items-center justify-center">
-      <View className="flex-1 flex-row">
+      <View className="flex-row">
         <Text className=" text-center text-white">Search Radius</Text>
-        <TouchableOpacity className="h-3 w-3 text-white" onPress={() => setShowRadius(!showRadius)}>
-          <ArrowDropDownIcon className="h-3 w-3 text-white" />
+        <TouchableOpacity
+          className="ml-2 items-center justify-center text-white"
+          onPress={() => setShowRadius(!showRadius)}>
+          <FontAwesome6
+            color="#8500ED"
+            name="caret-down"
+            iconStyle="solid"
+            className="h-4 text-white"
+          />
         </TouchableOpacity>
       </View>
       {showRadius && (

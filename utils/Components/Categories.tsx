@@ -1,31 +1,14 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, Text, ScrollView, Modal, TouchableOpacity, Image, Platform } from 'react-native';
 
 import CategoryCard from './CategoryCard';
-import SportsBarIcon from '@mui/icons-material/SportsBarRounded';
-import SlideshowIcon from '@mui/icons-material/Slideshow';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import SportsFootballIcon from '@mui/icons-material/SportsFootball';
-import CasinoIcon from '@mui/icons-material/Casino';
-import SunnyIcon from '@mui/icons-material/Sunny';
-import SchoolIcon from '@mui/icons-material/School';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import { useState } from 'react';
-
-import {
-  ArrowLeftCircleIcon,
-  ArrowLeftIcon,
-  ArrowRightCircleIcon,
-  ArrowRightIcon,
-  SunIcon,
-} from '@heroicons/react/24/outline';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 import Animated, { FadeInLeft, FadeInRight, FadeOutLeft } from 'react-native-reanimated';
-import Modal from 'react-native-modal';
 import Posts from '../Modals/Posts';
 import useAuth from '../../Hooks/authContext';
 import { useQuery } from '@tanstack/react-query';
 import { request } from '../axios';
+import { useState } from 'react';
 
 export default function Categories() {
   const [index, setIndex] = useState(0);
@@ -45,9 +28,9 @@ export default function Categories() {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
-    <View className="bg-black">
+    <View className="w-full bg-black">
       <Modal
-        isVisible={isModalVisible}
+        visible={isModalVisible}
         style={{
           backgroundColor: 'black',
           borderRadius: 10,
@@ -59,7 +42,7 @@ export default function Categories() {
         <TouchableOpacity
           className="absolute left-5 top-5 z-50"
           onPress={() => setIsModalVisible(false)}>
-          <ArrowLeftIcon className="w-8 text-white" />
+          <FontAwesome6 iconStyle="solid" color="#8500ED" name="arrow-left" />
         </TouchableOpacity>
         <Posts
           querystring={'/events/near?category=' + category + '&radius=' + radius}
@@ -72,49 +55,51 @@ export default function Categories() {
 
       {index == 0 && (
         <Animated.View entering={FadeInRight.duration(500)} exiting={FadeOutLeft.duration(500)}>
-          <View className="flex-row">
+          <View className="mx-5 flex-row">
             <CategoryCard handleClick={() => handleClick('Drink')}>
-              <SportsBarIcon sx={{ color: '#8500ED' }} />
+              <FontAwesome6 iconStyle="solid" color="#8500ED" name="glass-water" />
               <Text className="text-center text-sm text-white">Drinks</Text>
             </CategoryCard>
             <CategoryCard handleClick={() => handleClick('Show')}>
-              <SlideshowIcon sx={{ color: '#8500ED' }} />
-              <Text className="text-center text-sm text-white">Movies/Shows</Text>
+              <FontAwesome6 iconStyle="solid" color="#8500ED" name="film" />
+              <Text className="text-center text-sm text-white">Shows</Text>
             </CategoryCard>
             <CategoryCard handleClick={() => handleClick('Music')}>
-              <MusicNoteIcon sx={{ color: '#8500ED' }} />
+              <FontAwesome6 color="#8500ED" iconStyle="solid" name="music" />
               <Text className="text-center text-sm text-white">Music</Text>
             </CategoryCard>
             <CategoryCard handleClick={() => handleClick('Food')}>
-              <FastfoodIcon sx={{ color: '#8500ED' }} />
+              <FontAwesome6 color="#8500ED" iconStyle="solid" name="utensils" />
               <Text className="text-center text-sm text-white">Food</Text>
             </CategoryCard>
             <CategoryCard handleClick={() => handleClick('Sport')}>
-              <SportsFootballIcon sx={{ color: '#8500ED' }} />
+              <FontAwesome6 iconStyle="solid" color="#8500ED" name="football" />
               <Text className="text-center text-sm text-white">Sports</Text>
             </CategoryCard>
-            <TouchableOpacity className="absolute right-0 top-2 mr-5 w-7 text-white">
-              <ArrowRightIcon className="w-7 text-white" onClick={handleNext} />
-            </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            className="absolute right-0 top-2 mr-0 w-7 text-white"
+            onPress={handleNext}>
+            <FontAwesome6 iconStyle="solid" color="#8500ED" name="arrow-right" />
+          </TouchableOpacity>
         </Animated.View>
       )}
       {index == 1 && (
         <Animated.View entering={FadeInRight.duration(500)} exiting={FadeOutLeft.duration(500)}>
-          <View className="flex-row justify-center">
-            <TouchableOpacity className="absolute left-0 top-2 ml-5 w-7 text-white">
-              <ArrowLeftIcon className="w-7 text-white" onClick={handlePrev} />
-            </TouchableOpacity>
+          <TouchableOpacity className="absolute left-0 top-2 w-7 text-white" onPress={handlePrev}>
+            <FontAwesome6 color="#8500ED" iconStyle="solid" name="arrow-left" />
+          </TouchableOpacity>
+          <View className="mx-5 flex-row justify-center">
             <CategoryCard handleClick={() => handleClick('Game')}>
-              <CasinoIcon sx={{ color: '#8500ED' }} />
+              <FontAwesome6 color="#8500ED" iconStyle="solid" name="gamepad" />
               <Text className="text-center text-sm text-white">Games</Text>
             </CategoryCard>
             <CategoryCard handleClick={() => handleClick('outActivity')}>
-              <SunnyIcon sx={{ color: '#8500ED' }} />
-              <Text className="text-center text-sm text-white">Outdoor Activites</Text>
+              <FontAwesome6 color="#8500ED" iconStyle="solid" name="sun" />
+              <Text className="text-center text-sm text-white">Outdoors</Text>
             </CategoryCard>
             <CategoryCard handleClick={() => handleClick('Classes')}>
-              <SchoolIcon sx={{ color: '#8500ED' }} />
+              <FontAwesome6 color="#8500ED" iconStyle="solid" name="school" />
               <Text className="text-center text-sm text-white">Classes</Text>
             </CategoryCard>
           </View>

@@ -1,10 +1,10 @@
 import { useContext } from 'react';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 import { useState } from 'react';
 import { request } from '../axios';
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAuth from '../../Hooks/authContext';
-import { ArrowLeftIcon, MapIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { Alert, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { DateSelection } from '../DateTimePicker';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -75,7 +75,7 @@ const Share = ({
       <View className="w-[100%] flex-row">
         <View className="flex-1">
           <TouchableOpacity className="w-7" onPress={() => close(false)}>
-            <ArrowLeftIcon className=" text-white" />
+            <FontAwesome6 iconStyle="solid" color="#8500ED" name="arrow-left" />
           </TouchableOpacity>
         </View>
         <Text className="flex-1 text-center text-3xl text-white">Create Event</Text>

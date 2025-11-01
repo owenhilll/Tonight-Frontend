@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity, Image, GestureResponderEvent } from 'react-native';
 import React, { useState } from 'react';
-import SportsBarIcon from '@mui/icons-material/SportsBar';
 
 export default function CategoryCard({
   children,
@@ -11,7 +10,7 @@ export default function CategoryCard({
 }) {
   return (
     <TouchableOpacity onPress={handleClick} className="w-[20%]">
-      <View className="flex-1 items-center">{children}</View>
+      <View className="items-center">{children}</View>
     </TouchableOpacity>
   );
 }
