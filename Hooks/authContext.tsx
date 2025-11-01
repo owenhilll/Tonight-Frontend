@@ -1,6 +1,6 @@
 import { request } from '../utils/axios';
 import React, { createContext, PropsWithChildren, use, useEffect, useState } from 'react';
-import Geolocation from '@react-native-community/geolocation';
+import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Requesting permissions (essential for Android)
@@ -36,25 +36,21 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
     await AsyncStorage.removeItem('user');
   }
 
-  const getLocation = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-      },
-      (error) => {
-        console.error('Error getting location:', error);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-  };
-
+  Location.requestForegroundPermissionsAsync()
+    .then((status) => {
+      if (status) {
+        Location.getCurrentPositionAsync({}).then((location) => {
+          setLatitude(location.coords.latitude);
+          setLongitude(location.coords.longitude);
+        });
+      }
+    })
+    .catch(() => {});
   const setRadiusFromChild = (e: number) => {
     setRadius(e);
   };
 
   useEffect(() => {
-    getLocation();
     const loadAuthData = async () => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
@@ -81,7 +77,6 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
     latitude,
     longitude,
     setRadius,
-    getLocation,
     logout,
     continueAsGuest,
     radius,
