@@ -32,7 +32,7 @@ const Register = () => {
       <View className="w-full px-[10%]">
         <Text className="text-center text-3xl text-white">Sign In</Text>
         <TextInput
-          placeholderTextColor={'grty'}
+          placeholderTextColor={'gray'}
           nativeID="emailField"
           autoCapitalize="none"
           className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
@@ -60,16 +60,16 @@ const Register = () => {
         </View>
       </View>
       <View className="flex-column items-center space-y-10 border-blue-800">
-        <View className="flex-row">
-          <Text className="text-white">Dont have an account?</Text>
+        <View className="my-3 flex-row">
+          <Text className="text-xl text-white">Dont have an Account? </Text>
           <Link href={'/'}>
-            <Text className="mx-2 text-blue-200 underline">Sign up</Text>
+            <Text className="mx-2 text-xl text-blue-200 underline">Create Account</Text>
           </Link>
         </View>
-        <View className="flex-row">
-          <Text className="text-white">Register your business: </Text>
+        <View className="my-3 flex-row">
+          <Text className="text-lg text-white">Register your business: </Text>
           <Link href={'/RegisterBusiness'}>
-            <Text className="mx-2 text-blue-200 underline">Register Business</Text>
+            <Text className="mx-2 text-lg text-blue-200 underline">Register Business</Text>
           </Link>
         </View>
       </View>

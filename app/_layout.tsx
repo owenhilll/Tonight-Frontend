@@ -18,16 +18,18 @@ function RootNavigator() {
   const { user } = useAuth();
 
   return (
-    <Stack>
-      <Stack.Protected guard={!!user}>
-        <Stack.Screen options={{ headerShown: false }} name="(app)" />
-      </Stack.Protected>
+    <SafeAreaView className="flex-1 bg-black">
+      <Stack>
+        <Stack.Protected guard={!!user}>
+          <Stack.Screen options={{ headerShown: false }} name="(app)" />
+        </Stack.Protected>
 
-      <Stack.Protected guard={!user}>
-        <Stack.Screen options={{ headerShown: false }} name="index" />
-        <Stack.Screen options={{ headerShown: false }} name="SignIn" />
-        <Stack.Screen options={{ headerShown: false }} name="RegisterBusiness" />
-      </Stack.Protected>
-    </Stack>
+        <Stack.Protected guard={!user}>
+          <Stack.Screen options={{ headerShown: false }} name="index" />
+          <Stack.Screen options={{ headerShown: false }} name="SignIn" />
+          <Stack.Screen options={{ headerShown: false }} name="RegisterBusiness" />
+        </Stack.Protected>
+      </Stack>
+    </SafeAreaView>
   );
 }
