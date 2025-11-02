@@ -32,7 +32,7 @@ export default function Posts({
   header: string;
 }) {
   const queryClient = useQueryClient();
-  const { longitude, latitude, user, radius } = useAuth();
+  const { longitude, latitude, user, token, radius } = useAuth();
 
   const {
     isLoading: dataLoading,
@@ -47,9 +47,15 @@ export default function Posts({
             y: latitude,
             x: longitude,
           },
+          headers: {
+            Authorization: token,
+          },
         })
         .then((res) => {
           return res.data;
+        })
+        .catch((err) => {
+          console.log(err);
         }),
   });
   const [modifiedHeader, setModifiedHeader] = useState('');
@@ -85,16 +91,16 @@ export default function Posts({
   }, []);
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 ">
       <Text className="mt-0 text-center text-3xl text-white">{modifiedHeader}</Text>
       {data && data.length > 0 ? (
-        <ScrollView>
+        <View>
           <FlatList
             data={data}
             renderItem={({ item }) => <Post item={item} profile={profile} queryKey={queryKey} />}
             keyExtractor={(item) => item.id.toString()}
             initialNumToRender={5}></FlatList>
-        </ScrollView>
+        </View>
       ) : (
         <View className="flex-1 items-center justify-center">
           {profile ? (

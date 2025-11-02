@@ -21,7 +21,7 @@ export const Post = ({
   profile: boolean;
   queryKey: string;
 }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const date = new Date(item.date);
   const options: Intl.DateTimeFormatOptions = {
     hour: 'numeric',
@@ -54,7 +54,12 @@ export const Post = ({
       ]);
     }
     await request
-      .delete('/events/delete?id=', { params: { eventid: e } })
+      .delete('/events/delete?id=', {
+        params: { eventid: e },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         queryClient.invalidateQueries({ queryKey: [queryKey] });
       })
@@ -68,19 +73,33 @@ export const Post = ({
   //anytime it renders, do these things. Fetch profile pic, get the corresponding business details, and increment view.
   useEffect(() => {
     request
-      .get(`/businesses/profilepic?id=${item['businessid']}&fetchtype=getObject`)
+      .get(`/businesses/profilepic?id=${item['businessid']}&fetchtype=getObject`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((json) => {
         setProfileUri(json.data);
       });
 
     request
-      .get(`/events/update/view?eventid=${item['id']}`)
+      .get(`/events/update/view?eventid=${item['id']}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then(() => {})
       .catch(() => {});
 
-    request.get(`/businesses/find/${item['businessid']}`).then((json) => {
-      setBusiness(json.data);
-    });
+    request
+      .get(`/businesses/find/${item['businessid']}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((json) => {
+        setBusiness(json.data);
+      });
   }, []);
 
   const bookmarkItem = async () => {
@@ -88,7 +107,15 @@ export const Post = ({
     const businessid = item.businessid;
     const userid = user['user']['id'];
     await request
-      .post('/bookmarks/add', { eventid, businessid, userid })
+      .post(
+        '/bookmarks/add',
+        { eventid, businessid, userid },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => {
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
@@ -105,7 +132,11 @@ export const Post = ({
     const businessid = item.businessid;
     const userid = user['user']['id'];
     await request
-      .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid)
+      .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
@@ -125,7 +156,11 @@ export const Post = ({
     queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
     queryFn: () =>
       request
-        .get('/bookmarks/get?userid=' + user['user']['id'] + '&eventid=' + item.id)
+        .get('/bookmarks/get?userid=' + user['user']['id'] + '&eventid=' + item.id, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((res) => {
           return res.data.length == 1;
         }),
@@ -138,34 +173,46 @@ export const Post = ({
   } = useQuery({
     queryKey: ['bookmarks' + item.id],
     queryFn: () =>
-      request.get('/bookmarks/get?eventid=' + item.id).then((res) => {
-        return res.data.length;
-      }),
+      request
+        .get('/bookmarks/get?eventid=' + item.id, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          return res.data.length;
+        }),
   });
   return (
     <View
       style={{
-        marginLeft: Platform.OS == 'web' ? innerWidth / 10 : 2,
-        marginRight: Platform.OS == 'web' ? innerWidth / 10 : 2,
+        marginLeft: Platform.OS == 'web' ? innerWidth / 10 : 10,
+        marginRight: Platform.OS == 'web' ? innerWidth / 10 : 10,
       }}
-      className="mt-5 justify-center rounded-2xl border-2 border-purple-300 bg-[#262626] p-2">
+      className="mb-5 justify-center rounded-2xl border-2 border-purple-300 bg-[#262626] p-2">
       <View>
         <View className="flex-row">
-          <View className="flex-column flex-1">
-            <View className="flex-1">
-              {!edit && <Text className="ml-2 text-2xl font-bold text-white">{item.title}</Text>}
+          <View className="flex-column w-[65%] justify-evenly">
+            <View className="">
+              {!edit && <Text className="mx-2 text-2xl font-bold text-white">{item.title}</Text>}
               {edit && (
                 <TextInput
                   onChangeText={setEditTitle}
                   defaultValue={editTitle}
                   style={{ borderColor: 'gray', borderWidth: 1 }}
-                  className=" mb-5 ml-2 p-2 text-base font-bold text-white"
+                  className="mx-2 p-2 text-base font-bold text-white"
                 />
               )}
             </View>
-            <View className="flex-1 flex-row items-center">
-              <FontAwesome6 iconStyle="solid" color="#8500ED" name="info" />
-              {!edit && <Text className="text-s ml-2 text-white">{item.desc}</Text>}
+            <View className="flex-row items-center">
+              <FontAwesome6
+                size={20}
+                style={{ marginLeft: 3 }}
+                iconStyle="solid"
+                color="#00E0FF"
+                name="info"
+              />
+              {!edit && <Text className="text-s mx-2 ml-3 text-white">{item.desc}</Text>}
               {edit && (
                 <TextInput
                   style={{
@@ -182,9 +229,15 @@ export const Post = ({
               )}
             </View>
 
-            <View className="flex-1 flex-row items-center">
-              <FontAwesome6 iconStyle="solid" color="#8500ED" name="calendar" />
-              {!edit && <Text className="text-s mx-2 text-white">{date.toDateString()}</Text>}
+            <View className="flex-row flex-wrap items-center ">
+              <FontAwesome6
+                size={18}
+                className="w-8"
+                iconStyle="solid"
+                color="#00E0FF"
+                name="calendar"
+              />
+              {!edit && <Text className="text-s ml-2 text-white">{date.toLocaleString()}</Text>}
               {edit && (
                 <DateSelection
                   defValue={item.time}
@@ -193,7 +246,6 @@ export const Post = ({
                   type="datetime-local"
                 />
               )}
-              {!edit && <Text className="text-s ml-2 text-white">{time}</Text>}
             </View>
             <View className="flex-row">
               <View className="flex-1 flex-row items-center">
@@ -201,25 +253,73 @@ export const Post = ({
                   disabled={user['business']}
                   onPress={bookmarked ? removeBookmark : bookmarkItem}>
                   <FontAwesome6
-                    color="#8500ED"
+                    color="#00E0FF"
+                    size={20}
                     name="bookmark"
-                    className="h-7 w-7 text-white"
                     selectionColor={bookmarked ? 'white' : 'transparent'}
                   />
                 </TouchableOpacity>
-                <Text className="flex-1 text-white">({bookmarks})</Text>
+                <Text className="mx-2 flex-1 text-white">({bookmarks})</Text>
               </View>
               <View className="flex-1 flex-row items-center">
-                <FontAwesome6 iconStyle="solid" color="#8500ED" name="eye" />
-                <Text className="flex-1 text-white">({item.views})</Text>
+                <FontAwesome6 size={20} iconStyle="solid" color="#00E0FF" name="eye" />
+                <Text className="mx-2 flex-1 text-white">({item.views})</Text>
               </View>
             </View>
+            <View className="flex-row justify-between">
+              <TouchableOpacity className="flex-1 text-white">
+                <Text className="text-[#00E0FF] underline">Share</Text>
+              </TouchableOpacity>
+              {adminRights && (
+                <View className="flex-1 flex-row justify-between text-right">
+                  {!edit && (
+                    <FontAwesome6
+                      iconStyle="solid"
+                      color="#00E0FF"
+                      name="pencil"
+                      onPress={() => setEdit(true)}
+                    />
+                  )}
+                  {edit && (
+                    <View className="rounded-full bg-white p-2 text-purple-900">
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (
+                            editDate != item.date ||
+                            editTitle != item.title ||
+                            editDesc != item.desc
+                          ) {
+                            request
+                              .put('/events/update?id=' + item.id, {
+                                editTitle,
+                                editDesc,
+                                editDate,
+                              })
+                              .then(() => {
+                                queryClient.invalidateQueries({ queryKey: [queryKey] });
+                              });
+                          }
+                          setEdit(false);
+                        }}>
+                        Save
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  <FontAwesome6
+                    color="#00E0FF"
+                    size={20}
+                    name="trash-can"
+                    iconStyle="solid"
+                    onPress={() => deletePost(item.id)}
+                  />
+                </View>
+              )}
+            </View>
           </View>
-
-          <View className="flex-col">
+          <View className=" w-[35%] flex-col border-l-2 border-purple-300 pl-3">
             <View className="mb-3 items-center justify-center overflow-hidden rounded-full border-2 border-purple-800 bg-white shadow-lg shadow-white">
               <Image
-                style={{ width: 150, height: 150, margin: 0, padding: 0 }}
+                style={{ width: 100, height: 100, margin: 0, padding: 0 }}
                 resizeMode="contain"
                 source={{
                   uri: profileUri,
@@ -228,55 +328,6 @@ export const Post = ({
             </View>
             <Text className="text-center text-white">{business?.name}</Text>
             <Text className="text-center text-white">{business?.address}</Text>
-          </View>
-
-          <View className="ml-10 h-[100%]">
-            <TouchableOpacity className="flex-1 text-white">
-              <FontAwesome6 iconStyle="solid" color="#8500ED" name="arrow-up-right-from-square" />
-            </TouchableOpacity>
-            {adminRights && (
-              <View className="flex-column flex-1 justify-between text-right">
-                {!edit && (
-                  <FontAwesome6
-                    iconStyle="solid"
-                    color="#8500ED"
-                    name="pencil"
-                    onPress={() => setEdit(true)}
-                  />
-                )}
-                {edit && (
-                  <View className="rounded-full bg-white p-2 text-purple-900">
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (
-                          editDate != item.date ||
-                          editTitle != item.title ||
-                          editDesc != item.desc
-                        ) {
-                          request
-                            .put('/events/update?id=' + item.id, {
-                              editTitle,
-                              editDesc,
-                              editDate,
-                            })
-                            .then(() => {
-                              queryClient.invalidateQueries({ queryKey: [queryKey] });
-                            });
-                        }
-                        setEdit(false);
-                      }}>
-                      Save
-                    </TouchableOpacity>
-                  </View>
-                )}
-                <FontAwesome6
-                  color="#8500ED"
-                  name="trash-can"
-                  iconStyle="solid"
-                  onPress={() => deletePost(item.id)}
-                />
-              </View>
-            )}
           </View>
         </View>
       </View>

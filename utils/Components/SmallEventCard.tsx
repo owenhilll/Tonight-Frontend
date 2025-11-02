@@ -17,14 +17,21 @@ import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 //for use in rendering events in the home page (the horizontal list)
 export const SmallEventCard = ({ item }: { item: any }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const queryClient = useQueryClient();
   const bookmarkItem = async () => {
     const eventid = item.id;
     const businessid = item.businessid;
     const userid = user['user']['id'];
     await request
-      .post('/bookmarks/add', { eventid, businessid, userid })
+      .post('/bookmarks/add', {
+        headers: {
+          Authorization: token,
+        },
+        eventid,
+        businessid,
+        userid,
+      })
       .then((res) => {
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
@@ -41,7 +48,11 @@ export const SmallEventCard = ({ item }: { item: any }) => {
     const businessid = item.businessid;
     const userid = user['user']['id'];
     await request
-      .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid)
+      .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid, {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
@@ -61,7 +72,11 @@ export const SmallEventCard = ({ item }: { item: any }) => {
     queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
     queryFn: () =>
       request
-        .get('/bookmarks/get?userid=' + user['user']['id'] + '&eventid=' + item.id)
+        .get('/bookmarks/get?userid=' + user['user']['id'] + '&eventid=' + item.id, {
+          headers: {
+            Authorization: token,
+          },
+        })
         .then((res) => {
           return res.data.length == 1;
         }),
@@ -74,9 +89,15 @@ export const SmallEventCard = ({ item }: { item: any }) => {
   } = useQuery({
     queryKey: ['bookmarks' + item.id],
     queryFn: () =>
-      request.get('/bookmarks/get?eventid=' + item.id).then((res) => {
-        return res.data.length;
-      }),
+      request
+        .get('/bookmarks/get?eventid=' + item.id, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          return res.data.length;
+        }),
   });
   const [showProfile, setShowProfile] = useState(false);
   const date = new Date(item.date);
@@ -87,31 +108,45 @@ export const SmallEventCard = ({ item }: { item: any }) => {
   //fetch the profile uri for the business, and increment the view this event got.
   useEffect(() => {
     request
-      .get(`/businesses/profilepic?id=${item['businessid']}&fetchtype=getObject`)
+      .get(`/businesses/profilepic?id=${item['businessid']}&fetchtype=getObject`, {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((json) => {
         setProfileUri(json.data);
       });
-    request.get(`/businesses/find/${item['businessid']}`).then((json) => {
-      setBusiness(json.data);
-    });
     request
-      .put(`/events/update/view?eventid=${item['id']}`)
+      .get(`/businesses/find/${item['businessid']}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((json) => {
+        setBusiness(json.data);
+      });
+    request
+      .put(`/events/update/view?eventid=${item['id']}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then(() => {})
       .catch(() => {});
   }, []);
 
   return (
     <View className="mx-2">
-      <View className="mx-1 w-80 rounded-2xl border-2 border-purple-300 bg-[#4c4c4c] p-2 shadow-orange-50">
+      <View className="mx-1 w-80 rounded-2xl  bg-[#4c4c4c] p-2 shadow-orange-50">
         <View className="flex-row">
           <View className="flex-column h-48 w-44">
             <Text className="mb-5 ml-2 flex-1 text-xl font-bold text-white">{item.title}</Text>
             <View className="mt-4 flex-row items-center justify-center">
-              <FontAwesome6 iconStyle="solid" color="#8500ED" name="info" />
+              <FontAwesome6 iconStyle="solid" size={20} color="#00E0FF" name="circle-info" />
               <Text className="text-s ml-2 flex-1 text-white">{item.desc}</Text>
             </View>
             <View className="mt-4 flex-row items-center justify-center">
-              <FontAwesome6 iconStyle="solid" color="#8500ED" name="calendar" />
+              <FontAwesome6 iconStyle="solid" size={20} color="#00E0FF" name="calendar" />
               <Text className="text-s ml-2 flex-1 text-white">
                 {date.toDateString()} - {time}
               </Text>
@@ -159,7 +194,7 @@ export const SmallEventCard = ({ item }: { item: any }) => {
                       <View className="items-center space-y-4">
                         <Text className="text-xl text-white">{business?.name}</Text>
                         <View className="flex-row">
-                          <FontAwesome6 iconStyle="solid" color="#8500ED" name="map-pin" />
+                          <FontAwesome6 iconStyle="solid" color="#00E0FF" name="map-pin" />
                           <Text className="text-white">{business?.address}</Text>
                         </View>
                         <Text className="text-white">{business?.website}</Text>

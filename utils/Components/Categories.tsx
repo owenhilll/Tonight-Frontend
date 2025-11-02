@@ -29,28 +29,38 @@ export default function Categories() {
 
   return (
     <View className="w-full bg-black">
-      <Modal
-        visible={isModalVisible}
-        style={{
-          backgroundColor: 'black',
-          borderRadius: 10,
-          shadowColor: 'white',
-          shadowRadius: 2,
-          margin: Platform.OS == 'web' ? '10%' : 20,
-          paddingTop: 10,
-        }}>
-        <TouchableOpacity
-          className="absolute left-5 top-5 z-50"
-          onPress={() => setIsModalVisible(false)}>
-          <FontAwesome6 iconStyle="solid" color="#8500ED" name="arrow-left" />
-        </TouchableOpacity>
-        <Posts
-          querystring={'/events/near?category=' + category + '&radius=' + radius}
-          id={user['user']['id']}
-          queryKey={''}
-          header={category}
-          profile={false}
-        />
+      <Modal visible={isModalVisible} transparent={true}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              width: Platform.OS == 'web' ? 300 : '90%',
+              height: Platform.OS == 'web' ? 300 : '85%',
+              justifyContent: 'center',
+              backgroundColor: '#262626',
+              borderRadius: '10%',
+            }}>
+            <View className="mt-2 flex-1 pt-10 ">
+              <TouchableOpacity
+                className="absolute left-5 top-5 z-50"
+                onPress={() => setIsModalVisible(false)}>
+                <FontAwesome6 iconStyle="solid" color="#8500ED" size={25} name="arrow-left" />
+              </TouchableOpacity>
+              <Posts
+                querystring={'/events/near?category=' + category + '&radius=' + radius}
+                id={user['user']['id']}
+                queryKey={''}
+                header={category}
+                profile={false}
+              />
+            </View>
+          </View>
+        </View>
       </Modal>
 
       {index == 0 && (

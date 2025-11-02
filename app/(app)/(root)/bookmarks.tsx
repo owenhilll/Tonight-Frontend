@@ -7,7 +7,7 @@ import Posts from '../../../utils/Modals/Posts';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function BookMarks() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const {
     isLoading: bookmarksLoading,
     error: bookmarksError,
@@ -15,15 +15,27 @@ export default function BookMarks() {
   } = useQuery({
     queryKey: ['bookmarks' + user['user']['id']],
     queryFn: () =>
-      request.get('/bookmarks/get?userid=' + user['user']['id']).then((res) => {
-        let ls: any[] = [];
-        res.data.forEach((event: any) => {
-          request.get('/events/get?eventid=' + event['eventid']).then((res) => {
-            ls.push(res.data[0]);
+      request
+        .get('/bookmarks/get?userid=' + user['user']['id'], {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          let ls: any[] = [];
+          res.data.forEach((event: any) => {
+            request
+              .get('/events/get?eventid=' + event['eventid'], {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then((res) => {
+                ls.push(res.data[0]);
+              });
           });
-        });
-        return ls;
-      }),
+          return ls;
+        }),
   });
 
   return (
