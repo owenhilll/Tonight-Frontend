@@ -105,14 +105,14 @@ const RegisterBusiness = () => {
         <TextInput
           textContentType="emailAddress"
           placeholderTextColor={'gray'}
-          className="my-5 min-w-[50%] rounded-full border-2 border-purple-800 p-2 text-xl text-white"
+          className="my-5 min-w-[50%] rounded-full border-2 border-gray-200 p-2 text-xl text-white"
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
         />
         <TextInput
           placeholderTextColor={'gray'}
-          className="my-5 min-w-[50%] rounded-full border-2 border-purple-800 p-2 text-xl text-white"
+          className="my-5 min-w-[50%] rounded-full border-2 border-gray-200 p-2 text-xl text-white"
           placeholder="Address"
           value={address}
           onChangeText={setAddress}

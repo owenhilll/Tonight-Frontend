@@ -48,7 +48,7 @@ export default function Categories() {
               <TouchableOpacity
                 className="absolute left-5 top-5 z-50"
                 onPress={() => setIsModalVisible(false)}>
-                <FontAwesome6 iconStyle="solid" color="#8500ED" size={25} name="arrow-left" />
+                <FontAwesome6 iconStyle="solid" color="#BBDEFB" size={25} name="arrow-left" />
               </TouchableOpacity>
               <Posts
                 querystring={'/events/near?category=' + category + '&radius=' + radius}

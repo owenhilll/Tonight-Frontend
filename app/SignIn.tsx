@@ -77,15 +77,15 @@ const Register = () => {
               nativeID="emailField"
               textContentType="emailAddress"
               autoCapitalize="none"
-              className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
+              className="my-10 rounded-lg border-2 border-gray-200 p-2 text-xl text-white"
               onChangeText={setEmail}
               placeholder="Email"
             />
             {resetErr && <Text className="text-center text-xl text-red-400">{resetErr}</Text>}
             <TouchableOpacity
-              className="my-10 justify-center rounded-full bg-purple-800 p-2 text-center text-xl"
+              className="my-10 justify-center rounded-full bg-[#BBDEFB] p-2 text-center text-xl"
               onPress={handleReset}>
-              <Text className="text-center text-xl text-white">Reset</Text>
+              <Text className="text-center text-xl text-black">Reset</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -97,7 +97,7 @@ const Register = () => {
           nativeID="emailField"
           textContentType="emailAddress"
           autoCapitalize="none"
-          className="my-10 rounded-xl border-2 border-purple-800 p-2 text-xl text-white"
+          className="my-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
           onChangeText={setEmail}
           placeholder="Email"
         />
@@ -105,7 +105,7 @@ const Register = () => {
           autoCapitalize="none"
           textContentType="password"
           placeholderTextColor={'gray'}
-          className="mt-10 rounded-xl border-2 border-purple-800 p-2 text-xl text-white"
+          className="mt-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
           nativeID="passwordField"
           onChangeText={setPassword}
           placeholder="Password"
@@ -122,9 +122,9 @@ const Register = () => {
         )}
         <View style={{ paddingHorizontal: '10%' }}>
           <TouchableOpacity
-            className="my-10 rounded-2xl bg-purple-800 p-2 text-center text-xl"
+            className="my-10 rounded-2xl bg-[#BBDEFB] p-2 text-center text-xl"
             onPress={handleLogin}>
-            <Text className="text-center text-xl text-white">Login</Text>
+            <Text className="text-center text-xl text-black">Login</Text>
           </TouchableOpacity>
         </View>
       </View>

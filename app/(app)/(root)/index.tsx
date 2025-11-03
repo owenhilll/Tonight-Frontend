@@ -16,7 +16,7 @@ export default function HomeScreen() {
   const queryClient = useQueryClient();
 
   return (
-    <LinearGradient colors={['#000000', '#2979FF', '#000000']} className="flex-1">
+    <LinearGradient colors={['#000000', '#000000', '#2979FF', '#000000']} className="flex-1">
       <View className="m-0 flex-1 p-0">
         <View className="-mt-4 w-full flex-row ">
           <View className="absolute top-5 z-50" style={{ right: Platform.OS == 'web' ? 10 : 0 }}>

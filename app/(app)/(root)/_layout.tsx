@@ -17,7 +17,7 @@ export default function RootLayout() {
       <Tabs
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: '#2f7afb',
+            backgroundColor: '#284574',
             borderTopWidth: 0,
             overflow: 'hidden',
             height: '8%',

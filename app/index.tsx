@@ -6,6 +6,7 @@ import { TextInput } from 'react-native';
 import useAuth from '../Hooks/authContext';
 import { Link, useRouter } from 'expo-router';
 import { request } from '../utils/axios';
+import About from '../utils/Components/About';
 
 export default function LoginScreen() {
   const { continueAsGuest } = useAuth();
@@ -27,6 +28,7 @@ export default function LoginScreen() {
   };
 
   const [err, setErr] = useState(null);
+  const [showAbout, setShowAbout] = useState(false);
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -43,22 +45,22 @@ export default function LoginScreen() {
         <TextInput
           placeholderTextColor={'gray'}
           nativeID="emailField"
-          className="my-10 rounded-xl border-2 border-purple-800 p-2 text-xl text-white"
+          className="my-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
           onChangeText={setEmail}
           placeholder="Email"
         />
         <TextInput
           placeholderTextColor={'gray'}
-          className="my-10 rounded-xl border-2 border-purple-800 p-2 text-xl text-white"
+          className="my-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
           nativeID="passwordField"
           onChangeText={setPassword}
           placeholder="Password"
         />
         <View style={{ paddingHorizontal: '10%' }}>
           <TouchableOpacity
-            className="my-10 rounded-2xl bg-purple-800 p-2 text-center text-xl"
+            className="my-10 rounded-2xl bg-[#BBDEFB] p-2 text-center text-xl"
             onPress={handleClick}>
-            <Text className="text-center text-xl text-white">Create Account</Text>
+            <Text className="text-center text-xl text-black">Create Account</Text>
           </TouchableOpacity>
         </View>
       </View>
