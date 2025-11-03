@@ -1,25 +1,30 @@
 import { Stack, Tabs } from 'expo-router';
 import useAuth from '../../../Hooks/authContext';
-import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
+import { FontAwesome6 } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function RootLayout() {
   const { user } = useAuth();
   return (
-    <SafeAreaView style={{ flex: 1, overflow: 'visible', margin: 0, padding: 0 }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        overflow: 'visible',
+        margin: 0,
+        padding: 0,
+      }}>
       <Tabs
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: '#850dea',
-            marginLeft: '2%',
-            marginRight: '2%',
-            borderTopColor: 'transparent',
+            backgroundColor: '#2f7afb',
+            borderTopWidth: 0,
             overflow: 'hidden',
             height: '8%',
+            maxHeight: 75,
             paddingTop: 10,
             justifyContent: 'center',
             marginBottom: 0,
-            borderRadius: 20,
           },
           tabBarIconStyle: {
             justifyContent: 'center',
@@ -31,7 +36,6 @@ export default function RootLayout() {
           name="index"
           options={{
             headerShown: false,
-            sceneStyle: { flex: 1, margin: 0 },
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"
@@ -48,6 +52,7 @@ export default function RootLayout() {
           name="search"
           options={{
             headerShown: false,
+
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"

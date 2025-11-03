@@ -189,7 +189,7 @@ export const Post = ({
         marginLeft: Platform.OS == 'web' ? innerWidth / 10 : 10,
         marginRight: Platform.OS == 'web' ? innerWidth / 10 : 10,
       }}
-      className="mb-5 justify-center rounded-2xl border-2 border-purple-300 bg-[#262626] p-2">
+      className="mt-5 justify-center rounded-2xl bg-[#4c4c4c] p-2">
       <View>
         <View className="flex-row">
           <View className="flex-column w-[65%] justify-evenly">

@@ -48,7 +48,7 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
     const loadAuthData = async () => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
-        console.log(storedUser);
+
         const storedToken = await AsyncStorage.getItem('token');
         if (storedUser) {
           setUser(JSON.parse(storedUser));
@@ -70,7 +70,6 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
           Location.getCurrentPositionAsync({}).then((location) => {
             setLatitude(location.coords.latitude);
             setLongitude(location.coords.longitude);
-            console.log(location.coords);
           });
         }
       })

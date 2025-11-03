@@ -2,8 +2,9 @@ import Share from '../../../utils/Components/Share';
 import Posts from '../../../utils/Modals/Posts';
 import { request } from '../../../utils/axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useLocation } from 'react-router-dom';
-import React, { SetStateAction, useContext, useState } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
+
+import { useState } from 'react';
 import * as ImagePicker from 'react-native-image-picker';
 import useAuth from '../../../Hooks/authContext';
 import {
@@ -16,8 +17,7 @@ import {
   Modal,
   Platform,
 } from 'react-native';
-import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const { user, logout, token } = useAuth();
@@ -77,20 +77,27 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
     });
   };
 
-  const [website, setWebsite] = useState('');
+  const [website, setWebsite] = useState(business?.website);
+  const [number, setNumber] = useState(business?.cell);
 
-  const updatewebsite = () => {
+  const updateInfo = () => {
     const id = user['user']['id'];
+    if (number === '' || website === '') {
+      return;
+    }
     request
-      .put('/businesses/website', {
+      .put('/businesses/update', {
         headers: {
           Authorization: token,
         },
+
+        number,
         website,
         id,
       })
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['user'] });
+        setShowEdit(false);
       })
       .catch(() => {});
   };
@@ -109,6 +116,7 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
   };
 
   const [showShare, setShowShare] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const {
     isLoading: followersLoading,
@@ -146,110 +154,165 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
   GetProfilePic();
 
   return (
-    <View className="align-center w-[100%] flex-1 justify-center bg-black pt-[5%]">
-      <Modal visible={showShare} transparent={true}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}>
+    <LinearGradient colors={['#000000', '#2979FF', '#000000']} className="flex-1">
+      <View className="align-center w-[100%] flex-1 justify-center pt-[5%]">
+        <Modal visible={showShare} transparent={true}>
           <View
             style={{
-              width: Platform.OS == 'web' ? 300 : '90%',
-              height: Platform.OS == 'web' ? 300 : '70%',
+              flex: 1,
               justifyContent: 'center',
-              backgroundColor: '#262626',
-              borderRadius: '10%',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
             }}>
-            <View className="mt-2 flex-1 items-center justify-center ">
-              <Share close={setShowShare} queryKey={'events' + user['user']['id']} />
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-      {businessLoading || followersLoading ? (
-        <Text className="text-white">Loading</Text>
-      ) : businessError ? (
-        <Text className="text-white">Error</Text>
-      ) : (
-        <View className="flex-column h-full flex-1">
-          <View className="mb-2 flex-row ">
-            <View className=" border-1 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
-              <TouchableOpacity onPress={SetProfilePic}>
-                <Image
-                  style={{ width: 90, height: 90, margin: 0, padding: 0 }}
-                  className="h-auto w-auto"
-                  resizeMode="center"
-                  source={{
-                    uri: profilepic,
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-            <View className="ml-7 flex-1 flex-col justify-center">
-              <Text className="text-3xl font-bold text-white">{business.name}</Text>
-
-              <View className="flex-row">
-                <Text className="text-lg text-white">{business.address}</Text>
+            <View
+              style={{
+                width: Platform.OS == 'web' ? 600 : '90%',
+                height: Platform.OS == 'web' ? 700 : '70%',
+                justifyContent: 'center',
+                backgroundColor: '#262626',
+                borderRadius: '10%',
+              }}>
+              <View className="mt-2 flex-1 items-center justify-center ">
+                <Share close={setShowShare} queryKey={'events' + user['user']['id']} />
               </View>
             </View>
-
-            <View className="ml-4 items-center">
-              <TouchableOpacity className="mb-3 rounded-full bg-[#4c4c4c] p-2" onPress={logout}>
-                <Text className="text-lg text-white">Log out</Text>
-              </TouchableOpacity>
-            </View>
           </View>
+        </Modal>
 
-          <View className="mx-4 mt-4">
-            {business.website == null ? (
-              <View className="ml-1 flex-row justify-center">
-                <TextInput
-                  value={website}
-                  onChangeText={setWebsite}
-                  className="flex-1 rounded-lg border-gray-200 px-2 py-2 text-xl text-white"
-                  placeholder="Business Website"
-                  style={{ borderWidth: 1 }}
-                />
+        <Modal visible={showEdit} transparent={true}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            }}>
+            <View
+              style={{
+                width: Platform.OS == 'web' ? 'auto' : '90%',
+                height: Platform.OS == 'web' ? 'auto' : '70%',
+                justifyContent: 'center',
+                backgroundColor: '#262626',
+                paddingHorizontal: Platform.OS == 'web' ? '10%' : '3%',
+              }}
+              className="rounded-2xl">
+              <TouchableOpacity className="mt-2 w-7" onPress={() => setShowEdit(false)}>
+                <FontAwesome6 iconStyle="solid" size={25} color="#8500ED" name="arrow-left" />
+              </TouchableOpacity>
+              <View className="mt-2 flex-1 items-center">
+                <Text className="text-center text-3xl text-white">Edit Profile</Text>
+                <View className=" border-1 my-2 items-center justify-center rounded-full border-purple-500 bg-white p-2 shadow-sm shadow-white">
+                  <TouchableOpacity onPress={SetProfilePic}>
+                    <Image
+                      style={{ width: 180, height: 180, margin: 0, padding: 0 }}
+                      resizeMode="center"
+                      source={{
+                        uri: profilepic,
+                      }}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View className="my-2 flex-row justify-center">
+                  <TextInput
+                    value={website}
+                    onChangeText={setWebsite}
+                    className="flex-1 rounded-lg border-gray-200 px-2 py-2 text-xl text-white"
+                    placeholder="Business Website"
+                    style={{ borderWidth: 1 }}
+                  />
+                </View>
+                <View className="my-2 flex-row justify-center">
+                  <TextInput
+                    value={number}
+                    onChangeText={setNumber}
+                    className="flex-1 rounded-lg border-gray-200 px-2 py-2 text-xl text-white"
+                    placeholder="Cell Phone"
+                    style={{ borderWidth: 1 }}
+                  />
+                </View>
                 <TouchableOpacity
-                  onPress={updatewebsite}
-                  className="ml-3 items-center justify-center rounded-lg bg-[#4c4c4c] p-2">
+                  onPress={updateInfo}
+                  className="my-2 items-center justify-center rounded-lg bg-[#4c4c4c] p-2">
                   <Text className=" text-white">Save</Text>
                 </TouchableOpacity>
               </View>
-            ) : (
-              <Text
-                onPress={() => Linking.openURL(business.website)}
-                className="text-white underline">
-                {business.website}
-              </Text>
-            )}
+            </View>
           </View>
+        </Modal>
 
-          <View className="mt-7 items-center justify-center">
-            <TouchableOpacity
-              className="flex-row items-center rounded-full bg-[#00E0FF] p-4"
-              onPress={() => setShowShare(true)}>
-              <Text className="mr-2 text-xl text-black">Create</Text>
-              <FontAwesome6 iconStyle="solid" color="black" size={15} name="plus" />
-            </TouchableOpacity>
-          </View>
+        {businessLoading || followersLoading ? (
+          <Text className="text-white">Loading</Text>
+        ) : businessError ? (
+          <Text className="text-white">Error</Text>
+        ) : (
+          <View className="flex-column h-full flex-1">
+            <View
+              style={{ paddingHorizontal: Platform.OS == 'web' ? '20%' : 0 }}
+              className="mb-2 flex-row ">
+              <View className=" border-1 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
+                <TouchableOpacity>
+                  <Image
+                    style={{ width: 90, height: 90, margin: 0, padding: 0 }}
+                    className="h-auto w-auto"
+                    resizeMode="center"
+                    source={{
+                      uri: profilepic,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View className="ml-7 flex-1 flex-col justify-center">
+                <Text className="text-3xl font-bold text-white">{business.name}</Text>
 
-          <View className="mb-2 flex-1">
-            <Posts
-              header=""
-              id={user['user']['id']}
-              queryKey={'events' + user['user']['id']}
-              querystring={'/events/' + user['user']['id']}
-              profile={true}
-            />
+                <View className="flex-row">
+                  <Text className="text-lg text-white">{business.address}</Text>
+                </View>
+
+                <View className="">
+                  <Text
+                    onPress={() => Linking.openURL(business.website)}
+                    className="text-white underline">
+                    {business.website}
+                  </Text>
+                </View>
+              </View>
+              <View className="ml-4 items-center">
+                <TouchableOpacity
+                  className="mb-3 rounded-full bg-[#4c4c4c] p-2"
+                  onPress={() => setShowEdit(true)}>
+                  <Text className="text-lg text-white">Edit Profile</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View className="ml-4 items-center">
+                <TouchableOpacity className="mb-3 rounded-full bg-[#4c4c4c] p-2" onPress={logout}>
+                  <Text className="text-lg text-white">Log out</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View className="my-2 items-center justify-center">
+              <TouchableOpacity
+                className="flex-row items-center rounded-full bg-[#00E0FF] px-4 py-2"
+                onPress={() => setShowShare(true)}>
+                <Text className="mr-2 text-xl text-black">Create</Text>
+                <FontAwesome6 iconStyle="solid" color="black" size={15} name="plus" />
+              </TouchableOpacity>
+            </View>
+
+            <View className="mb-2 flex-1">
+              <Posts
+                header=""
+                id={user['user']['id']}
+                queryKey={'events' + user['user']['id']}
+                querystring={'/events/' + user['user']['id']}
+                profile={true}
+              />
+            </View>
           </View>
-        </View>
-      )}
-    </View>
+        )}
+      </View>
+    </LinearGradient>
   );
 };
 

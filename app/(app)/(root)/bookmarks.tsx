@@ -2,9 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import useAuth from '../../../Hooks/authContext';
 import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { request } from '../../../utils/axios';
-import { Post } from '../../../utils/Components/Post';
 import Posts from '../../../utils/Modals/Posts';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function BookMarks() {
   const { user, token } = useAuth();

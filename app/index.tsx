@@ -1,5 +1,5 @@
-import { View, Text, Button, TouchableOpacity, TouchableHighlight } from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, Button, TouchableOpacity, TouchableHighlight, Platform } from 'react-native';
+import { useState } from 'react';
 
 import { TextInput } from 'react-native';
 
@@ -32,47 +32,52 @@ export default function LoginScreen() {
   const [password, setPassword] = useState<string>('');
 
   return (
-    <View className="flex-1 items-center justify-center bg-black">
+    <View
+      className="items-center justify-center rounded-2xl bg-[#262626]"
+      style={{
+        marginHorizontal: Platform.OS == 'web' ? '15%' : '5%',
+        marginVertical: Platform.OS == 'web' ? '15%' : '5%',
+      }}>
       <View className="w-full px-[10%]">
         <Text className="text-center text-3xl text-white">Sign Up</Text>
         <TextInput
           placeholderTextColor={'gray'}
           nativeID="emailField"
-          className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
+          className="my-10 rounded-xl border-2 border-purple-800 p-2 text-xl text-white"
           onChangeText={setEmail}
           placeholder="Email"
         />
         <TextInput
           placeholderTextColor={'gray'}
-          className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
+          className="my-10 rounded-xl border-2 border-purple-800 p-2 text-xl text-white"
           nativeID="passwordField"
           onChangeText={setPassword}
           placeholder="Password"
         />
-        <View className="items-center">
+        <View style={{ paddingHorizontal: '10%' }}>
           <TouchableOpacity
-            className="my-10 justify-center rounded-full bg-purple-800 p-2 text-center text-center text-xl"
+            className="my-10 rounded-2xl bg-purple-800 p-2 text-center text-xl"
             onPress={handleClick}>
             <Text className="text-center text-xl text-white">Create Account</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      <View className="flex-column items-center space-y-2 border-blue-800">
+      <View className="flex-column items-center border-blue-800">
         <View className="my-3 flex-row">
-          <Text className="text-xl text-white">Already have an account? </Text>
+          <Text className="text-lg text-white">Already have an account? </Text>
           <Link href={'/SignIn'}>
-            <Text className="mx-2 text-xl text-blue-200 underline">Sign in</Text>
+            <Text className="mx-2 text-lg text-blue-200 underline">Login</Text>
           </Link>
         </View>
-        <View className="my-3 flex-row">
+        <View className="mt-3 flex-row">
           <Text className="text-lg text-white">Register your business: </Text>
           <Link href={'/RegisterBusiness'}>
             <Text className="mx-2 text-lg text-blue-200 underline">Register Business</Text>
           </Link>
         </View>
-        <TouchableOpacity className="my-10 rounded-full bg-blue-300 p-2 text-center text-xl">
-          <Text onPress={continueAsGuest} className="text-lg ">
+        <TouchableOpacity className="mt-5 rounded-full bg-blue-300 p-2 text-center text-xl">
+          <Text onPress={continueAsGuest} className="text-s ">
             Continue as guest
           </Text>
         </TouchableOpacity>

@@ -8,8 +8,8 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
+import { useEffect, useState } from 'react';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useAuth from '../../Hooks/authContext';
@@ -17,7 +17,6 @@ import { request } from '../axios';
 import { useRouter } from 'expo-router';
 import Posts from '../Modals/Posts';
 import { SmallEventCard } from './SmallEventCard';
-import { SafeAreaView } from 'react-native-safe-area-context';
 export default function EventList({ title, category }: { title: string; category: string }) {
   const { longitude, latitude, user, radius, token } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -61,8 +60,8 @@ export default function EventList({ title, category }: { title: string; category
           }}>
           <View
             style={{
-              width: Platform.OS == 'web' ? 300 : '95%',
-              height: Platform.OS == 'web' ? 300 : '85%',
+              width: Platform.OS == 'web' ? 600 : '95%',
+              height: Platform.OS == 'web' ? 700 : '85%',
               justifyContent: 'center',
               backgroundColor: '#262626',
               borderRadius: '10%',
@@ -71,7 +70,7 @@ export default function EventList({ title, category }: { title: string; category
               <TouchableOpacity
                 className="absolute left-5 top-5 z-50"
                 onPress={() => setIsModalVisible(false)}>
-                <FontAwesome6 iconStyle="solid" size={25} color="#8500ED" name="arrow-left" />
+                <FontAwesome6 iconStyle="solid" size={25} color="#BBDEFB" name="arrow-left" />
               </TouchableOpacity>
               <Posts
                 header={category}
@@ -85,11 +84,11 @@ export default function EventList({ title, category }: { title: string; category
         </View>
       </Modal>
 
-      <View className="flex-1 overflow-hidden rounded-xl border-2 border-purple-800 bg-[#262626] p-2 text-xl text-white">
+      <View className="flex-1 overflow-hidden rounded-xl  bg-[#262626] p-2 text-xl text-white">
         <View className="m-5 flex-row items-center justify-between">
           <Text className="text-xl font-bold text-white">{title}</Text>
           <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-            <FontAwesome6 iconStyle="solid" size={20} color="#8500ED" name="arrow-right" />
+            <FontAwesome6 iconStyle="solid" size={20} color="#BBDEFB" name="arrow-right" />
           </TouchableOpacity>
         </View>
         {dataError || data == null || data.length == 0 ? (

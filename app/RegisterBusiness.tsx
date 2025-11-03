@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { request } from '../utils/axios';
 import { Alert, Text, TextInput, TouchableOpacity, View, Modal, Platform } from 'react-native';
 import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
 import { isAxiosError } from 'axios';
 import { Link, router } from 'expo-router';
-import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 const RegisterBusiness = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +14,7 @@ const RegisterBusiness = () => {
   const [password, setPassword] = useState('');
 
   const [address, setAddress] = useState('');
+  const [number, setNumber] = useState('');
   const [licenseID, setLicenseID] = useState('');
 
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -115,6 +116,13 @@ const RegisterBusiness = () => {
           placeholder="Address"
           value={address}
           onChangeText={setAddress}
+        />
+        <TextInput
+          placeholderTextColor={'gray'}
+          className="my-5 min-w-[50%] rounded-full border-2 border-purple-800 p-2 text-xl text-white"
+          placeholder="Phone Number"
+          value={number}
+          onChangeText={setNumber}
         />
         <TextInput
           placeholderTextColor={'gray'}

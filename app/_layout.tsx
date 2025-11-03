@@ -19,7 +19,12 @@ function RootNavigator() {
 
   return (
     <SafeAreaView className="flex-1 bg-black">
-      <Stack>
+      <Stack
+        screenOptions={{
+          contentStyle: {
+            backgroundColor: 'black',
+          },
+        }}>
         <Stack.Protected guard={!!user}>
           <Stack.Screen options={{ headerShown: false }} name="(app)" />
         </Stack.Protected>
@@ -28,6 +33,7 @@ function RootNavigator() {
           <Stack.Screen options={{ headerShown: false }} name="index" />
           <Stack.Screen options={{ headerShown: false }} name="SignIn" />
           <Stack.Screen options={{ headerShown: false }} name="RegisterBusiness" />
+          <Stack.Screen options={{ headerShown: false }} name="ResetPassword" />
         </Stack.Protected>
       </Stack>
     </SafeAreaView>

@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, GestureResponderEvent } from 'react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function CategoryCard({
   children,

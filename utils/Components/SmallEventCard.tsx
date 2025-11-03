@@ -187,7 +187,7 @@ export const SmallEventCard = ({ item }: { item: any }) => {
                         <FontAwesome6
                           iconStyle="solid"
                           size={25}
-                          color="#8500ED"
+                          color="#BBDEFB"
                           name="arrow-left"
                         />
                       </TouchableOpacity>
@@ -202,37 +202,59 @@ export const SmallEventCard = ({ item }: { item: any }) => {
                         />
                       </View>
                       <View className="items-center space-y-4">
-                        <Text className="text-xl text-white">{business?.name}</Text>
+                        <Text className="text-center text-xl text-white">{business?.name}</Text>
                         <View className="flex-row">
-                          <FontAwesome6 iconStyle="solid" color="#00E0FF" name="map-pin" />
-                          <Text className="text-white">{business?.address}</Text>
+                          <FontAwesome6
+                            iconStyle="solid"
+                            color="#00E0FF"
+                            size={15}
+                            name="map-pin"
+                          />
+                          <Text className="ml-3 text-white">{business?.address}</Text>
                         </View>
-                        <Text className="text-white">{business?.website}</Text>
+
+                        {business?.number && (
+                          <View className="flex-row">
+                            <FontAwesome6
+                              iconStyle="solid"
+                              color="#00E0FF"
+                              size={15}
+                              name="phone"
+                            />
+                            <Text className="ml-3 text-white">{business?.number}</Text>
+                          </View>
+                        )}
+                        {business?.website && (
+                          <View className="flex-row">
+                            <Text className="ml-3 text-center text-white">{business?.website}</Text>
+                          </View>
+                        )}
                       </View>
                     </View>
                   </View>
                 </View>
               </Modal>
             </TouchableOpacity>
-            {!user['business'] && (
-              <View className="mr-1 w-full flex-1 flex-row items-end justify-end">
+            {!user['business'] && !user['guest'] && (
+              <View className="mr-1 flex-row items-end justify-end">
                 <TouchableOpacity onPress={bookmarked ? removeBookmark : bookmarkItem}>
                   <FontAwesome6
-                    color="#8500ED"
+                    color="#00E0FF"
                     name="bookmark"
+                    size={15}
                     iconStyle="solid"
-                    className="w-6 text-white"
+                    className="text-white"
                     selectionColor={bookmarked ? 'white' : 'transparent'}
                   />
                 </TouchableOpacity>
-                <Text className="ml-1 text-white">({bookmarks})</Text>
+                <Text className="ml-2 text-white">({bookmarks})</Text>
               </View>
             )}
-            <View className="mr-1 w-full flex-row items-end justify-end">
+            <View className="mr-1 flex-row items-end justify-end">
               <TouchableOpacity>
-                <FontAwesome6 iconStyle="solid" color="#8500ED" name="eye" />
+                <FontAwesome6 iconStyle="solid" color="#00E0FF" size={15} name="eye" />
               </TouchableOpacity>
-              <Text className="mb-1 ml-1 text-white">({item.views})</Text>
+              <Text className="ml-1 text-white">({item.views})</Text>
             </View>
           </View>
         </View>
