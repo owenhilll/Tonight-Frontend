@@ -45,6 +45,10 @@ export default function EventList({ title, category }: { title: string; category
         }),
   });
 
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: [category] });
+  }, [token]);
+
   return (
     <View>
       <Modal visible={isModalVisible} transparent={true}>

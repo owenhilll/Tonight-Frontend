@@ -10,7 +10,10 @@ export default function AppLayout() {
     <QueryClientProvider client={queryClient}>
       <Stack>
         <Stack.Screen
-          options={{ headerShown: false, contentStyle: { backgroundColor: 'black' } }}
+          options={{
+            headerShown: false,
+            contentStyle: { backgroundColor: 'black', flex: 1, margin: 0, padding: 0 },
+          }}
           name="(root)"
         />
       </Stack>

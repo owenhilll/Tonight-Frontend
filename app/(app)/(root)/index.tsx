@@ -16,38 +16,32 @@ export default function HomeScreen() {
   const queryClient = useQueryClient();
 
   return (
-    <View className="flex-1 bg-black">
-      <View className="w-full flex-row">
-        <View className="w-[20%]" />
-        <View className="h-20 w-[60%] items-center justify-center p-0">
-          <Image
-            source={require('../../../assets/logo4.png')}
-            resizeMode="contain"
-            style={{ flex: 1, padding: 0, margin: -10 }}
-          />
-        </View>
-        <View className="mt-3 w-[20%] items-center">
-          {!user['guest'] ? (
+    <View className="m-0 flex-1 bg-black p-0">
+      <View className="-mt-4 w-full flex-row ">
+        <View className="absolute right-0 top-5">
+          {user['guest'] && (
             <TouchableOpacity
-              className=" items-center justify-center rounded-full bg-slate-300 p-2"
-              onPress={logout}>
-              <Text className="items-center text-black">Log out</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              className="items-center justify-center rounded-full bg-slate-300 p-2"
+              className="z-50 items-center justify-center rounded-full bg-slate-300 p-2"
               onPress={logout}>
               <Text className="items-center text-black">Sign in</Text>
             </TouchableOpacity>
           )}
         </View>
+        <View className="w-full items-center p-0">
+          <Image
+            source={require('../../../assets/logo4.png')}
+            className="h-24"
+            resizeMode="contain"
+            style={{ padding: 0, margin: 0 }}
+          />
+        </View>
       </View>
 
-      <View className="w-full items-center">
+      <View className="h-10 w-full items-center">
         <Categories />
       </View>
 
-      <View className="flex-col items-center">
+      <View className="h-7 flex-col items-center">
         <Text className="text-center text-lg font-bold text-white">Featured</Text>
       </View>
 

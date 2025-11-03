@@ -273,12 +273,9 @@ export const Post = ({
               {adminRights && (
                 <View className="flex-1 flex-row justify-between text-right">
                   {!edit && (
-                    <FontAwesome6
-                      iconStyle="solid"
-                      color="#00E0FF"
-                      name="pencil"
-                      onPress={() => setEdit(true)}
-                    />
+                    <Text className="text-[#00E0FF] underline" onPress={() => setEdit(true)}>
+                      Edit
+                    </Text>
                   )}
                   {edit && (
                     <View className="rounded-full bg-white p-2 text-purple-900">
@@ -305,13 +302,11 @@ export const Post = ({
                       </TouchableOpacity>
                     </View>
                   )}
-                  <FontAwesome6
-                    color="#00E0FF"
-                    size={20}
-                    name="trash-can"
-                    iconStyle="solid"
-                    onPress={() => deletePost(item.id)}
-                  />
+                  <Text
+                    className="mr-3 text-[#00E0FF] underline"
+                    onPress={() => deletePost(item.id)}>
+                    Delete
+                  </Text>
                 </View>
               )}
             </View>

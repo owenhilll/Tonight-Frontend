@@ -34,12 +34,15 @@ const Register = () => {
         <TextInput
           placeholderTextColor={'gray'}
           nativeID="emailField"
+          textContentType="emailAddress"
           autoCapitalize="none"
           className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           onChangeText={setEmail}
           placeholder="Email"
         />
         <TextInput
+          autoCapitalize="none"
+          textContentType="password"
           placeholderTextColor={'gray'}
           className="my-10 rounded-full border-2 border-purple-800 p-2 text-xl text-white"
           nativeID="passwordField"

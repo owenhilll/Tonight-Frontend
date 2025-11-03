@@ -29,7 +29,7 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
 
     if (res.status == 200) {
       await AsyncStorage.setItem('user', JSON.stringify(res.data.data));
-      await AsyncStorage.setItem('token', JSON.stringify(res.data.token));
+      await AsyncStorage.setItem('token', res.data.token);
       setUser(res.data.data);
       setToken(res.data.token);
     }

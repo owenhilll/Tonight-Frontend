@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function RootLayout() {
   const { user } = useAuth();
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView style={{ flex: 1, overflow: 'visible', margin: 0, padding: 0 }}>
       <Tabs
         screenOptions={{
           tabBarStyle: {
@@ -31,6 +31,7 @@ export default function RootLayout() {
           name="index"
           options={{
             headerShown: false,
+            sceneStyle: { flex: 1, margin: 0 },
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"

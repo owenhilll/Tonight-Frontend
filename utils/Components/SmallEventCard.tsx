@@ -181,6 +181,16 @@ export const SmallEventCard = ({ item }: { item: any }) => {
                       borderRadius: '20%',
                     }}>
                     <View className="mt-2 flex-1 items-center justify-center">
+                      <TouchableOpacity
+                        className="absolute left-5 top-5 z-50"
+                        onPress={() => setShowProfile(false)}>
+                        <FontAwesome6
+                          iconStyle="solid"
+                          size={25}
+                          color="#8500ED"
+                          name="arrow-left"
+                        />
+                      </TouchableOpacity>
                       <View className=" border-1 mb-3 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
                         <Image
                           style={{ width: 90, height: 90, margin: 0, padding: 0 }}
