@@ -27,7 +27,7 @@ export default function Categories() {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
-    <View className="mx-2 w-[95%] flex-1 rounded-lg bg-[#16378f]">
+    <View className="bg-[#16378f5 w-full flex-1 rounded-lg opacity-5">
       <Modal visible={isModalVisible} transparent={true}>
         <View
           style={{
@@ -42,9 +42,11 @@ export default function Categories() {
               height: Platform.OS == 'web' ? 700 : '85%',
               justifyContent: 'center',
               backgroundColor: '#262626',
-              borderRadius: '10%',
-            }}>
-            <View className="mt-2 flex-1 pt-10 ">
+            }}
+            className="rounded-xl">
+            <View
+              className="mt-2 flex-1 pt-10 "
+              style={{ marginHorizontal: Platform.OS == 'web' ? '10%' : '5%', padding: '2%' }}>
               <TouchableOpacity
                 className="absolute left-5 top-5 z-50"
                 onPress={() => setIsModalVisible(false)}>

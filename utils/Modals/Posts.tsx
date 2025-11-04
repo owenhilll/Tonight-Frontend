@@ -17,6 +17,7 @@ import Modal from 'react-native-modal';
 
 import { DateSelection } from '../DateTimePicker';
 import { Post } from '../Components/Post';
+import LoadingIndicator from '../Components/LoadingIndicator';
 
 export default function Posts({
   id,
@@ -93,11 +94,17 @@ export default function Posts({
   return (
     <View className="flex-1 ">
       <Text className="mt-0 text-center text-3xl text-white">{modifiedHeader}</Text>
-      {data && data.length > 0 ? (
+      {dataLoading ? (
+        <View className="h-[100%]">
+          <LoadingIndicator />
+        </View>
+      ) : data && data.length > 0 ? (
         <View>
           <FlatList
             data={data}
-            renderItem={({ item }) => <Post item={item} profile={profile} queryKey={queryKey} />}
+            renderItem={({ item }) => (
+              <Post item={item} profile={profile} queryKey={queryKey + 'full'} />
+            )}
             keyExtractor={(item) => item.id.toString()}
             initialNumToRender={5}></FlatList>
         </View>

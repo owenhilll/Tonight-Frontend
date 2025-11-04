@@ -3,33 +3,34 @@ import useAuth from '../../../Hooks/authContext';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Platform, View } from 'react-native';
 
 export default function RootLayout() {
   const { user } = useAuth();
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        overflow: 'visible',
-        margin: 0,
-        padding: 0,
-      }}>
+    <View style={{ backgroundColor: 'black', flex: 1 }}>
       <Tabs
         screenOptions={{
+          tabBarBackground: () => (
+            <LinearGradient
+              colors={['#031370', '#63b6dd']} // Replace with your desired colors
+              style={{ flex: 1 }}
+            />
+          ),
           tabBarStyle: {
-            backgroundColor: '#284574',
+            borderRadius: 10,
             borderTopWidth: 0,
+            height: Platform.OS == 'web' ? 75 : 50,
+            marginBottom: 10,
             overflow: 'hidden',
-            height: '8%',
-            maxHeight: 75,
-            paddingTop: 10,
-            justifyContent: 'center',
-            marginBottom: 0,
+            marginHorizontal: Platform.OS == 'web' ? '3%' : '2%',
           },
           tabBarIconStyle: {
-            justifyContent: 'center',
-            padding: 0,
-            margin: 0,
+            fontSize: 20,
+          },
+          sceneStyle: {
+            backgroundColor: 'black',
+            flex: 1,
           },
         }}>
         <Tabs.Screen
@@ -40,11 +41,11 @@ export default function RootLayout() {
               <FontAwesome6
                 iconStyle="solid"
                 size={25}
-                style={{ height: '100%' }}
-                color={focused ? 'white' : 'black'}
+                color={focused ? '#20e1fd' : 'black'}
                 name="house"
               />
             ),
+
             title: '',
           }}
         />
@@ -56,9 +57,8 @@ export default function RootLayout() {
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"
-                color={focused ? 'white' : 'black'}
                 size={25}
-                style={{ height: '100%' }}
+                color={focused ? '#20e1fd' : 'black'}
                 name="magnifying-glass"
               />
             ),
@@ -74,9 +74,8 @@ export default function RootLayout() {
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"
-                style={{ height: '100%' }}
-                color={focused ? 'white' : 'black'}
                 size={25}
+                color={focused ? '#20e1fd' : 'black'}
                 name="bookmark"
               />
             ),
@@ -92,7 +91,7 @@ export default function RootLayout() {
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"
-                color={focused ? 'white' : 'black'}
+                color={focused ? '#20e1fd' : 'black'}
                 size={25}
                 name="user"
               />
@@ -101,6 +100,6 @@ export default function RootLayout() {
           }}
         />
       </Tabs>
-    </SafeAreaView>
+    </View>
   );
 }

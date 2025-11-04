@@ -87,7 +87,7 @@ const Share = ({
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1" style={{ paddingHorizontal: '2%' }}>
       <TouchableOpacity className="absolute left-2 top-6 ml-4 w-7" onPress={() => close(false)}>
         <FontAwesome6 iconStyle="solid" size={25} color="#BBDEFB" name="arrow-left" />
       </TouchableOpacity>
@@ -95,7 +95,7 @@ const Share = ({
         <Text className="flex-1 text-center text-3xl text-white">Create Event</Text>
       </View>
       <View className="m-3 flex-1 overflow-visible">
-        <View className="justify-center">
+        <View>
           <Text className="ml-3 mt-5 text-white">Title</Text>
           <TextInput
             numberOfLines={3}
@@ -105,7 +105,7 @@ const Share = ({
           />
         </View>
 
-        <View className=" mt-5 justify-center">
+        <View className=" mt-5 ">
           <Text className="ml-3 text-white">Date</Text>
           {Platform.OS == 'web' ? (
             <DateSelection
@@ -123,7 +123,7 @@ const Share = ({
             />
           )}
         </View>
-        <View className="mt-5 justify-center">
+        <View className="mt-5">
           <Text className="ml-3  text-white">Details</Text>
           <TextInput
             numberOfLines={3}
@@ -148,7 +148,7 @@ const Share = ({
               overflow: 'visible',
               borderColor: 'gray',
             }}
-            textStyle={{ color: 'black', fontSize: 18 }}
+            textStyle={{ color: 'black', fontSize: 18, padding: 0, margin: 0 }}
             containerStyle={{
               borderColor: 'white',
               backgroundColor: 'lightgray',
@@ -170,15 +170,15 @@ const Share = ({
         <View className="mt-5 h-auto flex-col overflow-visible">
           <Text className="ml-3 text-white">Event URL (Optional)</Text>
           <TextInput
-            className="rounded-lg border-2 border-gray-600 p-2 text-2xl text-white "
-            placeholder="Reservation Link or Ticket Purchasing Link."
+            className="rounded-lg border-2 border-gray-600 p-2 text-lg text-white "
+            placeholder="Reservation or Ticket Purchasing Link."
             onChangeText={setSite}
           />
         </View>
         <View className="mt-4 items-center justify-center">
           {err && <Text className="text-xl text-red-200">{err}</Text>}
           <TouchableOpacity
-            className="rounded-full bg-[#BBDEFB] px-10 py-3 text-center text-xl"
+            className="rounded-full bg-[#00E0FF] px-10 py-3 text-center text-xl"
             onPress={handleClick}>
             <Text>Share</Text>
           </TouchableOpacity>

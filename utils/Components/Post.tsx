@@ -134,7 +134,7 @@ export const Post = ({
     await request
       .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       })
       .then((res) => {
@@ -184,23 +184,18 @@ export const Post = ({
         }),
   });
   return (
-    <View
-      style={{
-        marginLeft: Platform.OS == 'web' ? innerWidth / 10 : 10,
-        marginRight: Platform.OS == 'web' ? innerWidth / 10 : 10,
-      }}
-      className="mt-5 justify-center rounded-2xl bg-[#4c4c4c] p-2">
+    <View className="mt-5 justify-center rounded-xl bg-[#4c4c4c] p-2 shadow-lg">
       <View>
         <View className="flex-row">
-          <View className="flex-column w-[65%] justify-evenly">
+          <View className="flex-column mr-2 w-[65%] justify-evenly">
             <View className="">
-              {!edit && <Text className="mx-2 text-2xl font-bold text-white">{item.title}</Text>}
+              {!edit && <Text className="text-2xl font-bold text-white">{item.title}</Text>}
               {edit && (
                 <TextInput
                   onChangeText={setEditTitle}
                   defaultValue={editTitle}
                   style={{ borderColor: 'gray', borderWidth: 1 }}
-                  className="mx-2 p-2 text-base font-bold text-white"
+                  className="m-3 p-2 text-base font-bold text-white"
                 />
               )}
             </View>
@@ -224,7 +219,7 @@ export const Post = ({
                   }}
                   onChangeText={setEditDesc}
                   defaultValue={editDesc}
-                  className="text-s ml-2 py-2 text-white"
+                  className="text-s m-3 py-2 text-white"
                 />
               )}
             </View>
@@ -267,7 +262,7 @@ export const Post = ({
               </View>
             </View>
             <View className="flex-row justify-between">
-              <TouchableOpacity className="flex-1 text-white">
+              <TouchableOpacity className="flex-1 justify-end text-white">
                 <Text className="text-[#00E0FF] underline">Share</Text>
               </TouchableOpacity>
               {adminRights && (
@@ -278,7 +273,7 @@ export const Post = ({
                     </Text>
                   )}
                   {edit && (
-                    <View className="rounded-full bg-white p-2 text-purple-900">
+                    <View className="mt-2 rounded-lg bg-white px-2 text-black">
                       <TouchableOpacity
                         onPress={() => {
                           if (
@@ -287,11 +282,19 @@ export const Post = ({
                             editDesc != item.desc
                           ) {
                             request
-                              .put('/events/update?id=' + item.id, {
-                                editTitle,
-                                editDesc,
-                                editDate,
-                              })
+                              .put(
+                                '/events/update?id=' + item.id,
+                                {
+                                  editTitle,
+                                  editDesc,
+                                  editDate,
+                                },
+                                {
+                                  headers: {
+                                    Authorization: token,
+                                  },
+                                }
+                              )
                               .then(() => {
                                 queryClient.invalidateQueries({ queryKey: [queryKey] });
                               });
@@ -302,19 +305,21 @@ export const Post = ({
                       </TouchableOpacity>
                     </View>
                   )}
-                  <Text
-                    className="mr-3 text-[#00E0FF] underline"
-                    onPress={() => deletePost(item.id)}>
-                    Delete
-                  </Text>
+                  <View className="justify-end">
+                    <Text
+                      className="mr-3 text-[#00E0FF] underline"
+                      onPress={() => deletePost(item.id)}>
+                      Delete
+                    </Text>
+                  </View>
                 </View>
               )}
             </View>
           </View>
-          <View className=" w-[35%] flex-col border-l-2 border-purple-300 pl-3">
-            <View className="mb-3 items-center justify-center overflow-hidden rounded-full border-2 border-purple-800 bg-white shadow-lg shadow-white">
+          <View className=" w-[35%] flex-col border-l-2  pl-3">
+            <View className="mb-3 items-center justify-center overflow-hidden rounded-full  bg-white ">
               <Image
-                style={{ width: 100, height: 100, margin: 0, padding: 0 }}
+                style={{ width: 100, height: 100, margin: 0, padding: 0, backgroundColor: 'white' }}
                 resizeMode="contain"
                 source={{
                   uri: profileUri,

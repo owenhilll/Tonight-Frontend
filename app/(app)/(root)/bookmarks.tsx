@@ -5,7 +5,7 @@ import { request } from '../../../utils/axios';
 import Posts from '../../../utils/Modals/Posts';
 
 export default function BookMarks() {
-  const { user, token } = useAuth();
+  const { user, token, logout } = useAuth();
   const {
     isLoading: bookmarksLoading,
     error: bookmarksError,
@@ -37,7 +37,7 @@ export default function BookMarks() {
   });
 
   return (
-    <View className="h-full bg-black">
+    <View className="flex-1">
       <View className="mt-5 w-[100%] flex-row items-center justify-center">
         <Text className="text-center text-5xl text-white">Bookmarks</Text>
       </View>
@@ -68,6 +68,11 @@ export default function BookMarks() {
           <Text className="text-xm text-center text-white">
             User accounts earn rewards, and get notified when their favorite venues post!
           </Text>
+          <TouchableOpacity
+            className="z-50 items-center justify-center rounded-full bg-slate-300 p-2"
+            onPress={logout}>
+            <Text className="items-center text-black">Sign in</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>

@@ -3,6 +3,8 @@ import useAuth, { AuthContextProvider } from '../Hooks/authContext';
 import '../global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { View } from 'react-native';
 export default function AuthLayout() {
   const queryClient = new QueryClient();
   return (
@@ -18,19 +20,14 @@ function RootNavigator() {
   const { user } = useAuth();
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
-      <Stack
-        screenOptions={{
-          contentStyle: {
-            backgroundColor: 'black',
-          },
-        }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Stack screenOptions={{ contentStyle: { backgroundColor: 'black' } }}>
         <Stack.Protected guard={!!user}>
           <Stack.Screen options={{ headerShown: false }} name="(app)" />
         </Stack.Protected>
 
         <Stack.Protected guard={!user}>
-          <Stack.Screen options={{ headerShown: false }} name="index" />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen options={{ headerShown: false }} name="SignIn" />
           <Stack.Screen options={{ headerShown: false }} name="RegisterBusiness" />
           <Stack.Screen options={{ headerShown: false }} name="ResetPassword" />

@@ -1,5 +1,14 @@
-import { View, Text, Button, TouchableOpacity, TouchableHighlight, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  TouchableHighlight,
+  Platform,
+  Modal,
+} from 'react-native';
 import { useState } from 'react';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 import { TextInput } from 'react-native';
 
@@ -40,6 +49,33 @@ export default function LoginScreen() {
         marginHorizontal: Platform.OS == 'web' ? '15%' : '5%',
         marginVertical: Platform.OS == 'web' ? '15%' : '5%',
       }}>
+      <Modal visible={showAbout} transparent={true}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            className="rounded-xl"
+            style={{
+              width: Platform.OS == 'web' ? 600 : '95%',
+              height: Platform.OS == 'web' ? 700 : '85%',
+              justifyContent: 'center',
+              backgroundColor: '#262626',
+            }}>
+            <View className="mt-2 flex-1 pt-10 ">
+              <TouchableOpacity
+                className="absolute left-5 top-5 z-50"
+                onPress={() => setShowAbout(false)}>
+                <FontAwesome6 iconStyle="solid" size={25} color="#BBDEFB" name="arrow-left" />
+              </TouchableOpacity>
+              <About />
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View className="w-full px-[10%]">
         <Text className="text-center text-3xl text-white">Sign Up</Text>
         <TextInput
@@ -78,10 +114,15 @@ export default function LoginScreen() {
             <Text className="mx-2 text-lg text-blue-200 underline">Register Business</Text>
           </Link>
         </View>
-        <TouchableOpacity className="mt-5 rounded-full bg-blue-300 p-2 text-center text-xl">
+        <TouchableOpacity className="mb-2 mt-5 rounded-full bg-blue-300 p-2 text-center text-xl">
           <Text onPress={continueAsGuest} className="text-s ">
             Continue as guest
           </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setShowAbout(true)}
+          className="mb-2 mt-5 rounded-full bg-blue-300 p-2 text-center text-xl">
+          <Text className="text-s ">Learn More</Text>
         </TouchableOpacity>
       </View>
       <Text>{err}</Text>

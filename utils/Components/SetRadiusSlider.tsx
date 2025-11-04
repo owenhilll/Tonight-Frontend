@@ -15,13 +15,14 @@ export default function SetRadiusSlider() {
       <View className="flex-row">
         <Text className=" text-center text-white">Search Radius</Text>
         <TouchableOpacity
-          className="ml-2 items-center justify-center text-white"
+          className="ml-2 items-center justify-center text-black"
           onPress={() => setShowRadius(!showRadius)}>
           <FontAwesome6
-            color="#8500ED"
+            color="white"
+            size={15}
             name="caret-down"
             iconStyle="solid"
-            className="h-4 text-white"
+            className=" text-white"
           />
         </TouchableOpacity>
       </View>
