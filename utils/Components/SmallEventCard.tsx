@@ -43,6 +43,9 @@ export const SmallEventCard = ({ item }: { item: any }) => {
       .catch((err) => {});
   };
 
+  let endDate = new Date(item.date);
+  endDate.setHours(endDate.getHours() + item.duration);
+
   const removeBookmark = async () => {
     const eventid = item.id;
     const businessid = item.businessid;
@@ -103,6 +106,7 @@ export const SmallEventCard = ({ item }: { item: any }) => {
   const date = new Date(item.date);
   let options: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
   let time = date.toLocaleTimeString('en-US', options);
+  let endTime = endDate.toLocaleTimeString('en-US', options);
   const [profileUri, setProfileUri] = useState('');
   const [business, setBusiness] = useState<any>();
   //fetch the profile uri for the business, and increment the view this event got.
@@ -126,35 +130,27 @@ export const SmallEventCard = ({ item }: { item: any }) => {
         setBusiness(json.data);
       });
     request
-      .put(`/events/update/view?eventid=${item['id']}`, {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .put(
+        `/events/update/view?eventid=${item['id']}`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
       .then(() => {})
       .catch(() => {});
   }, []);
 
   return (
     <View className="mx-2 w-80 rounded-2xl bg-[#4c4c4c] p-2 shadow-lg">
-      <View className="flex-row">
-        <View className="flex-column h-48 w-44">
+      <View className="flex-1 flex-col">
+        <View className="flex-1 flex-row">
           <Text className="mb-5 ml-2 flex-1 text-xl font-bold text-white">{item.title}</Text>
-          <View className="mt-4 flex-row items-center justify-center">
-            <FontAwesome6 iconStyle="solid" size={20} color="#00E0FF" name="circle-info" />
-            <Text className="text-s ml-2 flex-1 text-white">{item.desc}</Text>
-          </View>
-          <View className="mt-4 flex-row items-center justify-center">
-            <FontAwesome6 iconStyle="solid" size={20} color="#00E0FF" name="calendar" />
-            <Text className="text-s ml-2 flex-1 text-white">
-              {date.toDateString()} - {time}
-            </Text>
-          </View>
-        </View>
-        <View className="flex-col">
           <TouchableOpacity
             onPress={() => setShowProfile(!showProfile)}
-            className=" border-1 mb-3 ml-5 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
+            className="ml-5 h-24 w-24 items-center justify-center overflow-hidden rounded-full  bg-white shadow-sm shadow-white">
             <Image
               style={{ width: 90, height: 90, margin: 0, padding: 0 }}
               className="h-auto w-auto"
@@ -219,27 +215,42 @@ export const SmallEventCard = ({ item }: { item: any }) => {
               </View>
             </Modal>
           </TouchableOpacity>
-          {!user['business'] && !user['guest'] && (
-            <View className="mr-1 flex-row items-end justify-end">
-              <TouchableOpacity onPress={bookmarked ? removeBookmark : bookmarkItem}>
-                <FontAwesome6
-                  color="#00E0FF"
-                  name="bookmark"
-                  size={15}
-                  iconStyle="solid"
-                  className="text-white"
-                  selectionColor={bookmarked ? 'white' : 'transparent'}
-                />
-              </TouchableOpacity>
-              <Text className="ml-2 text-white">({bookmarks})</Text>
-            </View>
-          )}
+        </View>
+        <View className="mt-1 flex-row items-center justify-center">
+          <FontAwesome6 iconStyle="solid" size={20} color="#00E0FF" name="circle-info" />
+          <Text className="text-s ml-2 flex-1 text-white">{item.desc}</Text>
+        </View>
+
+        <View className="mt-4 flex-row items-center justify-center">
+          <FontAwesome6 iconStyle="solid" size={20} color="#00E0FF" name="calendar" />
+          <Text className="text-s ml-2 flex-1 text-white">
+            {date.toDateString() == endDate.toDateString()
+              ? `${date.toDateString()} ${time} - ${endTime}`
+              : `${date.toDateString()} ${time} - ${endDate.toDateString()} ${endTime}`}
+          </Text>
+        </View>
+      </View>
+      <View className="flex-col">
+        {!user['business'] && !user['guest'] && (
           <View className="mr-1 flex-row items-end justify-end">
-            <TouchableOpacity>
-              <FontAwesome6 iconStyle="solid" color="#00E0FF" size={15} name="eye" />
+            <TouchableOpacity onPress={bookmarked ? removeBookmark : bookmarkItem}>
+              <FontAwesome6
+                color="#00E0FF"
+                name="bookmark"
+                size={15}
+                iconStyle="solid"
+                className="text-white"
+                selectionColor={bookmarked ? 'white' : 'transparent'}
+              />
             </TouchableOpacity>
-            <Text className="ml-1 text-white">({item.views})</Text>
+            <Text className="ml-2 text-white">({bookmarks})</Text>
           </View>
+        )}
+        <View className="mt-3 flex-row">
+          <TouchableOpacity>
+            <FontAwesome6 iconStyle="solid" color="#00E0FF" size={18} name="eye" />
+          </TouchableOpacity>
+          <Text className="ml-2 text-white">({item.views})</Text>
         </View>
       </View>
     </View>

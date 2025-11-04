@@ -13,7 +13,7 @@ export default function RootLayout() {
         screenOptions={{
           tabBarBackground: () => (
             <LinearGradient
-              colors={['#031370', '#63b6dd']} // Replace with your desired colors
+              colors={['#fb9124', '#fc7023']} // Replace with your desired colors
               style={{ flex: 1 }}
             />
           ),
@@ -37,6 +37,10 @@ export default function RootLayout() {
           name="index"
           options={{
             headerShown: false,
+            sceneStyle: {
+              marginHorizontal: Platform.OS == 'web' ? '3%' : '2%',
+              backgroundColor: 'black',
+            },
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"
@@ -53,13 +57,16 @@ export default function RootLayout() {
           name="search"
           options={{
             headerShown: false,
-
+            sceneStyle: {
+              marginHorizontal: Platform.OS == 'web' ? '3%' : '2%',
+              backgroundColor: 'black',
+            },
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"
                 size={25}
                 color={focused ? '#20e1fd' : 'black'}
-                name="magnifying-glass"
+                name="list"
               />
             ),
             title: '',
@@ -71,6 +78,10 @@ export default function RootLayout() {
           options={{
             href: !user['business'] ? 'bookmarks' : null,
             headerShown: false,
+            sceneStyle: {
+              marginHorizontal: Platform.OS == 'web' ? '3%' : '2%',
+              backgroundColor: 'black',
+            },
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"
@@ -88,6 +99,10 @@ export default function RootLayout() {
           options={{
             href: user['business'] ? 'Profile' : null,
             headerShown: false,
+            sceneStyle: {
+              marginHorizontal: Platform.OS == 'web' ? '3%' : '2%',
+              backgroundColor: 'black',
+            },
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"

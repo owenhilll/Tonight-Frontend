@@ -40,6 +40,7 @@
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-image-picker": "^8.2.1",
     "react-native-modal": "^14.0.0-rc.1",
+    "react-native-neat-date-picker": "^1.6.1",
     "react-native-pager-view": "^6.9.1",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",

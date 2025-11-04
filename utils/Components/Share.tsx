@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import { Alert, Platform, Text, TextInput, TouchableOpacity, View } from 'react-
 import { DateSelection } from '../DateTimePicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { isAxiosError } from 'axios';
 
 const Share = ({
   close,
@@ -22,6 +23,9 @@ const Share = ({
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [site, setSite] = useState('');
+  const [hours, setHours] = useState('');
+  const [days, setDays] = useState('');
+  const [totalHours, setTotalHours] = useState(0);
 
   let [date, setDate] = useState(new Date());
   const [category, setCategory] = useState('');
@@ -34,6 +38,7 @@ const Share = ({
     { label: 'Food', value: 'Food' },
     { label: 'Drink', value: 'Drink' },
     { label: 'Music', value: 'Music' },
+    { label: 'Shop', value: 'Shop' },
     { label: 'Sport', value: 'Sport' },
     { label: 'Show', value: 'Show' },
     { label: 'Game (non-sport)', value: 'Game' },
@@ -49,7 +54,7 @@ const Share = ({
       return request
         .post(
           '/events',
-          { desc, category, title, date, site },
+          { desc, category, title, date, totalHours, site },
           {
             headers: {
               Authorization: token,
@@ -60,16 +65,28 @@ const Share = ({
           if (res.status != 200) {
             Alert.alert('Error creating event.', `Error Creating Event: ${res.data}`);
           } else {
-            queryClient.invalidateQueries({ queryKey: [queryKey] });
+            queryClient.invalidateQueries({ queryKey: [queryKey + 'full'] });
             close(false);
+          }
+        })
+        .catch((err) => {
+          if (isAxiosError(err)) {
+            setErr(err.response?.data.message);
           }
         });
     },
     onSuccess: () => {
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
+
+  useEffect(() => {
+    const e = parseInt(days) * 24 + parseInt(hours);
+    if (!isNaN(e)) {
+      setTotalHours(e);
+    }
+  }, [hours, days]);
 
   function OnDateSelected(event: DateTimePickerEvent, datei?: Date | null) {
     if (datei) setDate(datei);
@@ -83,25 +100,36 @@ const Share = ({
       setErr('Title, Description, DateTime, and Category are required!');
       return;
     }
+    if (isNaN(totalHours) || totalHours == 0) {
+      setErr('Duration is incorrectly set!');
+      return;
+    }
     mutation.mutate();
   };
 
   return (
     <View className="flex-1" style={{ paddingHorizontal: '2%' }}>
       <TouchableOpacity className="absolute left-2 top-6 ml-4 w-7" onPress={() => close(false)}>
-        <FontAwesome6 iconStyle="solid" size={25} color="#BBDEFB" name="arrow-left" />
+        <FontAwesome6 iconStyle="solid" size={25} color="#00E0FF" name="arrow-left" />
       </TouchableOpacity>
       <View className="mt-10 w-[100%] flex-row">
         <Text className="flex-1 text-center text-3xl text-white">Create Event</Text>
       </View>
       <View className="m-3 flex-1 overflow-visible">
         <View>
-          <Text className="ml-3 mt-5 text-white">Title</Text>
           <TextInput
-            numberOfLines={3}
             className="rounded-lg border-2 border-gray-600 p-2 text-2xl text-white"
             placeholder="Title"
             onChangeText={setTitle}
+          />
+        </View>
+        <View className="mt-5">
+          <TextInput
+            multiline={true}
+            numberOfLines={3}
+            className="rounded-lg border-2 border-gray-600 p-2 text-lg text-white"
+            placeholder="Details"
+            onChangeText={setDesc}
           />
         </View>
 
@@ -124,13 +152,37 @@ const Share = ({
           )}
         </View>
         <View className="mt-5">
-          <Text className="ml-3  text-white">Details</Text>
-          <TextInput
-            numberOfLines={3}
-            className="rounded-lg border-2 border-gray-600 p-2 text-lg text-white"
-            placeholder="Details"
-            onChangeText={setDesc}
-          />
+          <Text className="text-white">Duration</Text>
+          <View className="flex-row rounded-lg border-2 border-gray-500">
+            <View className="mx-4 my-4 flex-1">
+              <TextInput
+                style={{
+                  borderColor: 'gray',
+                  borderWidth: 1,
+                  padding: 2,
+                }}
+                placeholder="Days"
+                className="text-white"
+                keyboardType="numeric"
+                inputMode="numeric"
+                onChangeText={setDays}
+              />
+            </View>
+            <View className="mx-4 my-4 flex-1">
+              <TextInput
+                keyboardType="numeric"
+                placeholder="Hours"
+                className="text-white"
+                style={{
+                  borderColor: 'gray',
+                  borderWidth: 1,
+                  padding: 2,
+                }}
+                onChangeText={setHours}
+              />
+              <Text className="text-white">Event Duration (hrs): {totalHours}</Text>
+            </View>
+          </View>
         </View>
 
         <View style={{ zIndex: open ? 1000 : 0 }}>

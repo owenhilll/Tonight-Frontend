@@ -1,46 +1,63 @@
-import {
-  View,
-  Text,
-  Button,
-  TouchableOpacity,
-  TouchableHighlight,
-  Platform,
-  Modal,
-} from 'react-native';
 import { useState } from 'react';
+import { AxiosError, isAxiosError } from 'axios';
+import { request } from '../utils/axios';
+import {
+  Alert,
+  Image,
+  Modal,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
+import { Link, useRouter } from 'expo-router';
+import useAuth from '../Hooks/authContext';
 import { FontAwesome6 } from '@expo/vector-icons';
 
-import { TextInput } from 'react-native';
-
-import useAuth from '../Hooks/authContext';
-import { Link, useRouter } from 'expo-router';
-import { request } from '../utils/axios';
-import About from '../utils/Components/About';
-
-export default function LoginScreen() {
-  const { continueAsGuest } = useAuth();
-
+const Register = () => {
+  const { login } = useAuth();
   const router = useRouter();
-
-  const handleClick = async (e: any) => {
-    e.preventDefault();
-    try {
-      request.post('/auth/register', { email, password });
-      router.navigate('/SignIn');
-    } catch (err: any) {
-      setErr(err);
-    }
-  };
-
-  const guestBrowse = () => {
-    continueAsGuest();
-  };
-
-  const [err, setErr] = useState(null);
-  const [showAbout, setShowAbout] = useState(false);
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [showResetPassword, setShowResetPassword] = useState(false);
+
+  const [err, setErr] = useState('');
+  const [resetErr, setResetErr] = useState('');
+
+  async function handleLogin(e: any) {
+    e.preventDefault();
+
+    try {
+      await login(email, password);
+      router.navigate('/');
+    } catch (e: unknown) {
+      if (isAxiosError(e)) {
+        setErr(e.response?.data.message);
+      }
+    }
+  }
+
+  function handleReset() {
+    request
+      .post('/auth/forgotpassword', { email })
+      .then((res) => {
+        if (Platform.OS == 'web') {
+          window.confirm('Password Reset Sent! Check inbox for password reset link');
+        } else {
+          Alert.alert('Password Reset Sent!', 'Check inbox for password reset link');
+        }
+        setShowResetPassword(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (isAxiosError(err)) {
+          setResetErr(err.response?.data.message);
+        }
+      });
+  }
 
   return (
     <View
@@ -49,7 +66,7 @@ export default function LoginScreen() {
         marginHorizontal: Platform.OS == 'web' ? '15%' : '5%',
         marginVertical: Platform.OS == 'web' ? '15%' : '5%',
       }}>
-      <Modal visible={showAbout} transparent={true}>
+      <Modal visible={showResetPassword} transparent={true}>
         <View
           style={{
             flex: 1,
@@ -58,74 +75,107 @@ export default function LoginScreen() {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
           }}>
           <View
-            className="rounded-xl"
             style={{
-              width: Platform.OS == 'web' ? 600 : '95%',
-              height: Platform.OS == 'web' ? 700 : '85%',
+              width: Platform.OS == 'web' ? 'auto' : '90%',
+              height: Platform.OS == 'web' ? 'auto' : '70%',
               justifyContent: 'center',
+              paddingHorizontal: 10,
               backgroundColor: '#262626',
-            }}>
-            <View className="mt-2 flex-1 pt-10 ">
-              <TouchableOpacity
-                className="absolute left-5 top-5 z-50"
-                onPress={() => setShowAbout(false)}>
-                <FontAwesome6 iconStyle="solid" size={25} color="#BBDEFB" name="arrow-left" />
-              </TouchableOpacity>
-              <About />
-            </View>
+            }}
+            className="rounded-xl">
+            <TouchableOpacity className="my-2" onPress={() => setShowResetPassword(false)}>
+              <FontAwesome6 iconStyle="solid" size={25} color="#00E0FF" name="arrow-left" />
+            </TouchableOpacity>
+            <Text className="text-center text-3xl text-white">Reset Password</Text>
+            <TextInput
+              placeholderTextColor={'gray'}
+              nativeID="emailField"
+              textContentType="emailAddress"
+              autoCapitalize="none"
+              className="my-10 rounded-lg border-2 border-gray-200 p-2 text-xl text-white"
+              onChangeText={setEmail}
+              placeholder="Email"
+            />
+            {resetErr && <Text className="text-center text-xl text-red-400">{resetErr}</Text>}
+            <TouchableOpacity
+              className="my-10 justify-center rounded-full bg-[#00E0FF] p-2 text-center text-xl"
+              onPress={handleReset}>
+              <Text className="text-center text-xl text-black">Reset</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
-      <View className="w-full px-[10%]">
-        <Text className="text-center text-3xl text-white">Sign Up</Text>
-        <TextInput
-          placeholderTextColor={'gray'}
-          nativeID="emailField"
-          className="my-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
-          onChangeText={setEmail}
-          placeholder="Email"
-        />
-        <TextInput
-          placeholderTextColor={'gray'}
-          className="my-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
-          nativeID="passwordField"
-          onChangeText={setPassword}
-          placeholder="Password"
-        />
-        <View style={{ paddingHorizontal: '10%' }}>
-          <TouchableOpacity
-            className="my-10 rounded-2xl bg-[#BBDEFB] p-2 text-center text-xl"
-            onPress={handleClick}>
-            <Text className="text-center text-xl text-black">Create Account</Text>
-          </TouchableOpacity>
+      <View
+        className="w-full"
+        style={{
+          paddingHorizontal: Platform.OS == 'web' ? '10%' : '3%',
+          flexDirection: Platform.OS == 'web' ? 'row' : 'column',
+        }}>
+        <View className="flex-1">
+          <View>
+            <Image
+              source={require('../assets/logo4.png')}
+              resizeMode="contain"
+              style={{
+                width: Platform.OS == 'web' ? 100 : 'auto',
+                height: Platform.OS == 'web' ? 100 : 'auto',
+              }}
+            />
+          </View>
+          <Text className="mr-10 text-wrap text-xl text-white">
+            Discover what’s happening around you — from events and live shows to food deals, drink
+            specials, and more. Explore your city, find your vibe, and make every day unforgettable.
+          </Text>
+        </View>
+        <View className="flex-1">
+          <Text className="text-center text-3xl text-white">Login</Text>
+          <TextInput
+            placeholderTextColor={'gray'}
+            nativeID="emailField"
+            textContentType="emailAddress"
+            autoCapitalize="none"
+            className="my-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+            onChangeText={setEmail}
+            placeholder="Email"
+          />
+          <TextInput
+            autoCapitalize="none"
+            textContentType="password"
+            placeholderTextColor={'gray'}
+            className="mt-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+            nativeID="passwordField"
+            onChangeText={setPassword}
+            placeholder="Password"
+          />
+          <Text
+            onPress={() => setShowResetPassword(true)}
+            className="mt-2 text-right text-white underline">
+            Forgot Password?
+          </Text>
+          {err && (
+            <Text>
+              <Text className="text-center text-xl text-red-400">{err}</Text>
+            </Text>
+          )}
+          <View style={{ paddingHorizontal: '10%' }}>
+            <TouchableOpacity
+              className="my-10 rounded-2xl bg-[#00E0FF] p-2 text-center text-xl"
+              onPress={handleLogin}>
+              <Text className="text-center text-xl text-black">Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-
       <View className="flex-column items-center border-blue-800">
         <View className="my-3 flex-row">
-          <Text className="text-lg text-white">Already have an account? </Text>
-          <Link href={'/SignIn'}>
-            <Text className="mx-2 text-lg text-blue-200 underline">Login</Text>
+          <Text className="text-lg text-white">Dont have an Account? </Text>
+          <Link href={'/SignUp'}>
+            <Text className="mx-2 text-lg text-[#00E0FF] underline">Create Account</Text>
           </Link>
         </View>
-        <View className="mt-3 flex-row">
-          <Text className="text-lg text-white">Register your business: </Text>
-          <Link href={'/RegisterBusiness'}>
-            <Text className="mx-2 text-lg text-blue-200 underline">Register Business</Text>
-          </Link>
-        </View>
-        <TouchableOpacity className="mb-2 mt-5 rounded-full bg-blue-300 p-2 text-center text-xl">
-          <Text onPress={continueAsGuest} className="text-s ">
-            Continue as guest
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setShowAbout(true)}
-          className="mb-2 mt-5 rounded-full bg-blue-300 p-2 text-center text-xl">
-          <Text className="text-s ">Learn More</Text>
-        </TouchableOpacity>
       </View>
-      <Text>{err}</Text>
     </View>
   );
-}
+};
+
+export default Register;

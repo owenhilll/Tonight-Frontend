@@ -71,6 +71,9 @@ export default function Posts({
       case 'Food':
         setModifiedHeader('Food/Meals');
         break;
+      case 'Shop':
+        setModifiedHeader('Local Shopping Offers');
+        break;
       case 'Game':
         setModifiedHeader('Games (non-sporting)');
         break;

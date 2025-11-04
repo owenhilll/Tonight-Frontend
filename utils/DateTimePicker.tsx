@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { createElement, useState } from 'react';
 
 export const DateSelection = ({
@@ -17,13 +17,13 @@ export const DateSelection = ({
     return createElement('input', {
       type: type,
       defaultValue: defValue,
+      min: new Date().toISOString().slice(0, -8),
       style: {
         justifyItems: 'center',
         backgroundColor: 'lightgray',
       },
       value: date,
-      className:
-        'rounded-full items-center text-lg border-purple-300 border-2 p-0 mx-2 justify-center bg-red-300',
+      className: 'rounded-lg items-center text-lg px-2 justify-center',
       onChange: (event) => setDate(event.target.value),
     });
   }

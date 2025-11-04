@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 
-const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const Profile = () => {
   const { user, logout, token } = useAuth();
 
   const queryClient = useQueryClient();
@@ -154,9 +154,7 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
   GetProfilePic();
 
   return (
-    <View
-      style={{ marginHorizontal: Platform.OS == 'web' ? '3%' : '2%' }}
-      className="align-center my-3 flex-1 justify-center rounded-lg bg-[#262626] pt-[5%]">
+    <View className=" my-3 flex-1 ">
       <Modal visible={showShare} transparent={true}>
         <View
           style={{
@@ -167,11 +165,12 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
           }}>
           <View
             style={{
-              width: Platform.OS == 'web' ? 600 : '90%',
-              height: Platform.OS == 'web' ? 700 : '80%',
+              width: Platform.OS == 'web' ? 'auto' : '90%',
+              height: Platform.OS == 'web' ? 'auto' : '80%',
+              padding: Platform.OS == 'web' ? '5%' : 0,
               backgroundColor: 'black',
             }}
-            className="rounded-xl">
+            className="rounded-xl shadow-lg shadow-[#fa7b32]">
             <View className="mt-2 flex-1">
               <Share close={setShowShare} queryKey={'events' + user['user']['id']} />
             </View>
@@ -245,15 +244,12 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
       ) : businessError ? (
         <Text className="text-white">Error</Text>
       ) : (
-        <View
-          className="flex-column h-full flex-1"
-          style={{ marginHorizontal: Platform.OS == 'web' ? '20%' : '5%', padding: '2%' }}>
-          <View className="mb-2 flex-row rounded-lg bg-black " style={{ padding: '4%' }}>
+        <View className="flex-column  flex-1">
+          <View className="mb-2 flex-row items-center justify-center" style={{ padding: '4%' }}>
             <View className=" border-1 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
               <TouchableOpacity>
                 <Image
                   style={{ width: 90, height: 90, margin: 0, padding: 0 }}
-                  className="h-auto w-auto"
                   resizeMode="center"
                   source={{
                     uri: profilepic,
@@ -261,7 +257,7 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
                 />
               </TouchableOpacity>
             </View>
-            <View className="ml-7 flex-1 flex-col justify-center">
+            <View className="ml-7 flex-col justify-center">
               <Text className="text-3xl font-bold text-white">{business.name}</Text>
 
               <View className="flex-row">
@@ -291,16 +287,15 @@ const Profile = ({ close }: { close: React.Dispatch<React.SetStateAction<boolean
             </View>
           </View>
 
-          <View className="my-2 items-center justify-center">
-            <TouchableOpacity
-              className="flex-row items-center rounded-full bg-[#00E0FF] px-4 py-2"
-              onPress={() => setShowShare(true)}>
-              <Text className="mr-2 text-xl text-black">Create</Text>
-              <FontAwesome6 iconStyle="solid" color="black" size={15} name="plus" />
-            </TouchableOpacity>
-          </View>
-
-          <View className="mb-2 flex-1">
+          <View className="mb-2 flex-1 rounded-lg bg-[#262626] p-2">
+            <View className="mb-2 items-center justify-center">
+              <TouchableOpacity
+                className="flex-row items-center rounded-full bg-[#00E0FF] px-4 py-2"
+                onPress={() => setShowShare(true)}>
+                <Text className="mr-2 text-xl text-black">Create</Text>
+                <FontAwesome6 iconStyle="solid" color="black" size={15} name="plus" />
+              </TouchableOpacity>
+            </View>
             <Posts
               header=""
               id={user['user']['id']}
