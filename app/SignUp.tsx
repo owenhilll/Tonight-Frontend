@@ -116,8 +116,8 @@ export default function LoginScreen() {
         </View>
       </View>
 
-      <View className="flex-column items-center border-blue-800">
-        <View className="mb-3 flex-row">
+      <View className="flex-column border-blue-800">
+        <View className="mb-3 flex-row justify-center">
           <Text className="text-lg text-white">Already have an account? </Text>
           <Link href={'/'}>
             <Text className="mx-2 text-lg text-[#00E0FF] underline">Login</Text>
@@ -129,16 +129,18 @@ export default function LoginScreen() {
             <Text className="mx-2 text-lg text-[#00E0FF] underline">Register Business</Text>
           </Link>
         </View>
-        <TouchableOpacity className="mb-2 mt-5 rounded-full bg-[#4c4c4c] p-2 text-center text-xl">
-          <Text onPress={continueAsGuest} className="text-s text-white">
-            Continue as guest
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setShowAbout(true)}
-          className="mb-2 mt-5 rounded-full bg-[#00E0FF] p-2 text-center text-xl">
-          <Text className="text-s ">Learn More</Text>
-        </TouchableOpacity>
+        <View className="flex-row justify-evenly">
+          <TouchableOpacity className="mb-2 mt-5 rounded-full bg-[#4c4c4c] p-2 text-center text-xl">
+            <Text onPress={continueAsGuest} className="text-s text-white">
+              Continue as guest
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setShowAbout(true)}
+            className="mb-2 mt-5 rounded-full bg-[#00E0FF] p-2 text-center text-xl">
+            <Text className="text-s ">Learn More</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

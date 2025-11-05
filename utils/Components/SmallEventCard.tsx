@@ -45,6 +45,15 @@ export const SmallEventCard = ({ item }: { item: any }) => {
 
   let endDate = new Date(item.date);
   endDate.setHours(endDate.getHours() + item.duration);
+  const [showProfile, setShowProfile] = useState(false);
+  const date = new Date(item.date);
+  let options: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+  let time = date.toLocaleTimeString('en-US', options);
+  let endTime = endDate.toLocaleTimeString('en-US', options);
+  const [profileUri, setProfileUri] = useState('');
+  const [business, setBusiness] = useState<any>();
+
+  const [status, setStatus] = useState('');
 
   const removeBookmark = async () => {
     const eventid = item.id;
@@ -102,13 +111,7 @@ export const SmallEventCard = ({ item }: { item: any }) => {
           return res.data.length;
         }),
   });
-  const [showProfile, setShowProfile] = useState(false);
-  const date = new Date(item.date);
-  let options: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
-  let time = date.toLocaleTimeString('en-US', options);
-  let endTime = endDate.toLocaleTimeString('en-US', options);
-  const [profileUri, setProfileUri] = useState('');
-  const [business, setBusiness] = useState<any>();
+
   //fetch the profile uri for the business, and increment the view this event got.
   useEffect(() => {
     request
@@ -129,6 +132,12 @@ export const SmallEventCard = ({ item }: { item: any }) => {
       .then((json) => {
         setBusiness(json.data);
       });
+    //set event status
+    const currDate = new Date();
+    if (currDate > endDate) setStatus('expired');
+    else if (currDate > date) setStatus('live');
+    else setStatus('upcoming');
+
     request
       .put(
         `/events/update/view?eventid=${item['id']}`,
@@ -144,7 +153,12 @@ export const SmallEventCard = ({ item }: { item: any }) => {
   }, []);
 
   return (
-    <View className="mx-2 w-80 rounded-2xl bg-[#4c4c4c] p-2 shadow-lg">
+    <View
+      className="mx-2 w-80 rounded-2xl bg-[#4c4c4c] p-2"
+      style={{
+        shadowColor: 'black',
+        shadowRadius: 15,
+      }}>
       <View className="flex-1 flex-col">
         <View className="flex-1 flex-row">
           <Text className="mb-5 ml-2 flex-1 text-xl font-bold text-white">{item.title}</Text>
@@ -225,8 +239,8 @@ export const SmallEventCard = ({ item }: { item: any }) => {
           <FontAwesome6 iconStyle="solid" size={20} color="#00E0FF" name="calendar" />
           <Text className="text-s ml-2 flex-1 text-white">
             {date.toDateString() == endDate.toDateString()
-              ? `${date.toDateString()} ${time} - ${endTime}`
-              : `${date.toDateString()} ${time} - ${endDate.toDateString()} ${endTime}`}
+              ? `${date.toLocaleDateString()} ${time} - ${endTime}`
+              : `${date.toLocaleDateString()} ${time} - ${endDate.toLocaleDateString()} ${endTime}`}
           </Text>
         </View>
       </View>
@@ -246,11 +260,28 @@ export const SmallEventCard = ({ item }: { item: any }) => {
             <Text className="ml-2 text-white">({bookmarks})</Text>
           </View>
         )}
-        <View className="mt-3 flex-row">
-          <TouchableOpacity>
-            <FontAwesome6 iconStyle="solid" color="#00E0FF" size={18} name="eye" />
-          </TouchableOpacity>
-          <Text className="ml-2 text-white">({item.views})</Text>
+        <View className="flex-row">
+          <View className="mt-3 flex-1 flex-row">
+            <TouchableOpacity>
+              <FontAwesome6 iconStyle="solid" color="#00E0FF" size={18} name="eye" />
+            </TouchableOpacity>
+            <Text className="ml-2 text-white">({item.views})</Text>
+          </View>
+          <View className="flex-row items-center">
+            <Text
+              style={{
+                color: status == 'expired' ? 'red' : status == 'live' ? 'green' : 'purple',
+              }}
+              className="text-lg">
+              {status}
+            </Text>
+            <View
+              className="ml-2 h-4 w-4 rounded-full"
+              style={{
+                backgroundColor:
+                  status == 'expired' ? 'red' : status == 'live' ? 'green' : 'purple',
+              }}></View>
+          </View>
         </View>
       </View>
     </View>

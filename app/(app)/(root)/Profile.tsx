@@ -296,6 +296,7 @@ const Profile = () => {
                 <FontAwesome6 iconStyle="solid" color="black" size={15} name="plus" />
               </TouchableOpacity>
             </View>
+            <Text className="ml-10 text-xl text-white">Your Posts</Text>
             <Posts
               header=""
               id={user['user']['id']}

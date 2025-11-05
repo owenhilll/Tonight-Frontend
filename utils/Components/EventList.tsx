@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesome6 } from '@expo/vector-icons';
 import LoadingIndicator from './LoadingIndicator';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -104,7 +106,7 @@ export default function EventList({ title, category }: { title: string; category
           </Text>
         ) : (
           <FlatList
-            className="flex-1 px-2 pb-2"
+            className="flex-1 px-2 py-2"
             data={data}
             horizontal={true}
             renderItem={({ item }) => <SmallEventCard item={item} />}

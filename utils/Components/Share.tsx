@@ -10,6 +10,7 @@ import { DateSelection } from '../DateTimePicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { isAxiosError } from 'axios';
+import { Picker } from '@react-native-picker/picker'; // Or import { Picker } from 'react-native' for web
 
 const Share = ({
   close,
@@ -23,9 +24,13 @@ const Share = ({
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [site, setSite] = useState('');
-  const [hours, setHours] = useState('');
-  const [days, setDays] = useState('');
+  const [hours, setHours] = useState('0');
+  const [days, setDays] = useState('0');
   const [totalHours, setTotalHours] = useState(0);
+
+  const daysMap = Array.from({ length: 30 }, (v, i) => i.toString()); // 1 to 10
+
+  const hoursMap = Array.from({ length: 24 }, (v, i) => i.toString()); // 1 to 10
 
   let [date, setDate] = useState(new Date());
   const [category, setCategory] = useState('');
@@ -35,15 +40,51 @@ const Share = ({
   const [err, setErr] = useState('');
   const { user, token } = useAuth();
   const [items, setItems] = useState([
-    { label: 'Food', value: 'Food' },
-    { label: 'Drink', value: 'Drink' },
-    { label: 'Music', value: 'Music' },
-    { label: 'Shop', value: 'Shop' },
-    { label: 'Sport', value: 'Sport' },
-    { label: 'Show', value: 'Show' },
-    { label: 'Game (non-sport)', value: 'Game' },
-    { label: 'Outdoor Activity', value: 'outActivity' },
-    { label: 'Classes (Yoga, Pilates, Mahjong, etc...)', value: 'Classes' },
+    {
+      label: 'Food',
+      value: 'Food',
+      icon: () => <FontAwesome6 color="orange" iconStyle="solid" name="utensils" size={15} />,
+    },
+    {
+      label: 'Drink',
+      value: 'Drink',
+      icon: () => <FontAwesome6 color="blue" iconStyle="solid" name="glass-water" size={15} />,
+    },
+    {
+      label: 'Music',
+      value: 'Music',
+      icon: () => <FontAwesome6 color="lightblue" iconStyle="solid" name="music" size={15} />,
+    },
+    {
+      label: 'Shop',
+      value: 'Shop',
+      icon: () => <FontAwesome6 color="purple" iconStyle="solid" name="shop" size={15} />,
+    },
+    {
+      label: 'Sport',
+      value: 'Sport',
+      icon: () => <FontAwesome6 color="green" iconStyle="solid" name="football" size={15} />,
+    },
+    {
+      label: 'Show',
+      value: 'Show',
+      icon: () => <FontAwesome6 color="red" iconStyle="solid" name="film" size={15} />,
+    },
+    {
+      label: 'Game (non-sport)',
+      value: 'Game',
+      icon: () => <FontAwesome6 color="violet" iconStyle="solid" name="gamepad" size={15} />,
+    },
+    {
+      label: 'Outdoor Activity',
+      value: 'outActivity',
+      icon: () => <FontAwesome6 color="yellow" iconStyle="solid" name="sun" size={15} />,
+    },
+    {
+      label: 'Classes (Yoga, Pilates, Mahjong, etc...)',
+      value: 'Classes',
+      icon: () => <FontAwesome6 color="pink" iconStyle="solid" name="school" size={15} />,
+    },
   ]);
   const [timeItems, setTimeItems] = useState([
     { label: 'AM', value: 'AM' },
@@ -90,7 +131,6 @@ const Share = ({
 
   function OnDateSelected(event: DateTimePickerEvent, datei?: Date | null) {
     if (datei) setDate(datei);
-    console.log(datei);
   }
 
   const handleClick = (e: any) => {
@@ -151,38 +191,34 @@ const Share = ({
             />
           )}
         </View>
-        <View className="mt-5">
-          <Text className="text-white">Duration</Text>
-          <View className="flex-row rounded-lg border-2 border-gray-500">
+        <View className="mt-5 rounded-lg border-2 border-gray-500">
+          <Text className="ml-4 text-white">Duration</Text>
+          <View className="flex-row">
             <View className="mx-4 my-4 flex-1">
-              <TextInput
-                style={{
-                  borderColor: 'gray',
-                  borderWidth: 1,
-                  padding: 2,
-                }}
-                placeholder="Days"
-                className="text-white"
-                keyboardType="numeric"
-                inputMode="numeric"
-                onChangeText={setDays}
-              />
+              <Text className="text-white">Days</Text>
+              <Picker
+                style={{ backgroundColor: '#292d3d', color: '#bfc7d4' }}
+                selectedValue={days}
+                onValueChange={(itemvalue, itemIndex) => setDays(itemvalue)}>
+                {daysMap.map((number) => (
+                  <Picker.Item key={number} label={number} value={number} />
+                ))}
+              </Picker>
             </View>
             <View className="mx-4 my-4 flex-1">
-              <TextInput
-                keyboardType="numeric"
-                placeholder="Hours"
-                className="text-white"
-                style={{
-                  borderColor: 'gray',
-                  borderWidth: 1,
-                  padding: 2,
-                }}
-                onChangeText={setHours}
-              />
-              <Text className="text-white">Event Duration (hrs): {totalHours}</Text>
+              <Text className="text-white">Hours</Text>
+              <Picker
+                style={{ backgroundColor: '#292d3d', color: '#bfc7d4' }}
+                selectedValue={hours}
+                numberOfLines={5}
+                onValueChange={(itemvalue, itemIndex) => setHours(itemvalue)}>
+                {hoursMap.map((number) => (
+                  <Picker.Item key={number} label={number} value={number} />
+                ))}
+              </Picker>
             </View>
           </View>
+          <Text className="ml-4 text-white">Total Duration (hrs): {totalHours}</Text>
         </View>
 
         <View style={{ zIndex: open ? 1000 : 0 }}>
@@ -190,28 +226,8 @@ const Share = ({
 
           <DropDownPicker
             placeholder="Select event Category"
-            style={{
-              backgroundColor: 'transparent',
-              width: 'auto',
-              borderWidth: 0,
-            }}
-            dropDownContainerStyle={{
-              backgroundColor: 'white',
-              overflow: 'visible',
-              borderColor: 'gray',
-            }}
-            textStyle={{ color: 'black', fontSize: 18, padding: 0, margin: 0 }}
-            containerStyle={{
-              borderColor: 'white',
-              backgroundColor: 'lightgray',
-              overflow: 'visible',
-              borderRadius: 20,
-            }}
-            listItemContainerStyle={{
-              borderBottomColor: 'gray',
-              borderBottomWidth: 1,
-              overflow: 'visible',
-            }}
+            theme="DARK"
+            mode="BADGE"
             open={open}
             setOpen={setOpen}
             items={items}

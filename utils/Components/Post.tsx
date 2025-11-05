@@ -2,6 +2,7 @@ import { request } from '../axios';
 import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 import React, { SetStateAction, useContext, useEffect, useState } from 'react';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 import useAuth from '../../Hooks/authContext';
 import {
@@ -18,6 +19,7 @@ import {
 import { DateSelection } from '../DateTimePicker';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Picker } from '@react-native-picker/picker';
 
 export const Post = ({
   item,
@@ -40,12 +42,32 @@ export const Post = ({
 
   const adminRights = user['user']['id'] === item['businessid'];
   const [editDate, setEditDate] = useState(item.date);
+
   const [editHours, setEditHours] = useState((item.duration % 24).toString());
   const [editDays, setEditDays] = useState((item.duration / 24).toString());
+  const [profileUri, setProfileUri] = useState('');
+  const [business, setBusiness] = useState<any>(null);
+  const [err, setErr] = useState<string>('');
+
+  let endDate = new Date(item.date);
+  endDate.setHours(endDate.getHours() + item.duration);
+
+  const [totalHours, setTotalHours] = useState(0);
+
+  const daysMap = Array.from({ length: 30 }, (v, i) => i.toString()); // 1 to 10
+
+  const hoursMap = Array.from({ length: 24 }, (v, i) => i.toString()); // 1 to 10
+  let endTime = endDate.toLocaleTimeString('en-US', options);
+  const [status, setStatus] = useState('');
+
   const [editTitle, setEditTitle] = useState(item.title);
   const [editDesc, setEditDesc] = useState(item.desc);
   const queryClient = useQueryClient();
   const [showProfile, setShowProfile] = useState(false);
+
+  function OnDateSelected(event: DateTimePickerEvent, datei?: Date | null) {
+    if (datei) setEditDate(datei);
+  }
 
   const deletePost = async () => {
     if (Platform.OS === 'web') {
@@ -77,9 +99,6 @@ export const Post = ({
         Alert.alert(err);
       });
   };
-  const [profileUri, setProfileUri] = useState('');
-  const [business, setBusiness] = useState<any>(null);
-  const [err, setErr] = useState<string>('');
 
   //anytime it renders, do these things. Fetch profile pic, get the corresponding business details, and increment view.
   useEffect(() => {
@@ -102,6 +121,11 @@ export const Post = ({
       .then(() => {})
       .catch(() => {});
 
+    const currDate = new Date();
+    if (currDate > endDate) setStatus('expired');
+    else if (currDate > date) setStatus('live');
+    else setStatus('upcoming');
+
     request
       .get(`/businesses/find/${item['businessid']}`, {
         headers: {
@@ -119,8 +143,6 @@ export const Post = ({
       setTotalHours(e);
     }
   }, [editDays, editHours]);
-
-  const [totalHours, setTotalHours] = useState(0);
 
   const bookmarkItem = async () => {
     const eventid = item.id;
@@ -203,8 +225,9 @@ export const Post = ({
           return res.data.length;
         }),
   });
+
   return (
-    <View className="mt-5 justify-center rounded-xl bg-[#4c4c4c] p-2 shadow-lg">
+    <View className="m-5 rounded-xl bg-[#4c4c4c] p-2">
       <View>
         <View className="flex-row">
           <View className="flex-column mr-2 w-[65%] justify-evenly">
@@ -238,7 +261,7 @@ export const Post = ({
               )}
             </View>
 
-            <View className="flex-row flex-wrap items-start">
+            <View className="flex-row flex-wrap items-center">
               <FontAwesome6
                 size={18}
                 className="w-8"
@@ -246,58 +269,63 @@ export const Post = ({
                 color="#00E0FF"
                 name="calendar"
               />
-              {!edit && <Text className="text-s ml-2 text-white">{date.toLocaleString()}</Text>}
+              {!edit && (
+                <Text className="text-s ml-2 flex-1 text-white">
+                  {date.toDateString() == endDate.toDateString()
+                    ? `${date.toLocaleDateString()} ${time} - ${endTime}`
+                    : `${date.toLocaleDateString()} ${time} - ${endDate.toLocaleDateString()} ${endTime}`}
+                </Text>
+              )}
               {edit && (
-                <View className="flex-col items-start">
-                  <DateSelection
-                    defValue={item.time}
-                    date={editDate}
-                    setDate={setEditDate}
-                    type="datetime-local"
-                  />
-                  <View>
+                <View className="mx-3 flex-col items-start">
+                  {Platform.OS == 'web' ? (
+                    <DateSelection
+                      defValue={item.time}
+                      date={editDate}
+                      setDate={setEditDate}
+                      type="datetime-local"
+                    />
+                  ) : (
+                    <DateTimePicker
+                      mode="datetime"
+                      style={{ marginLeft: 3 }}
+                      onChange={OnDateSelected}
+                      value={date}
+                    />
+                  )}
+                  <View className="my-2 flex-1 border-2 border-gray-500">
                     <Text className="text-white">Duration</Text>
-                    <View className="flex-row border-2 border-gray-500 p-3">
-                      <View>
+                    <View className="flex-row">
+                      <View className="mx-2 flex-1">
                         <Text className="text-white">Days</Text>
-                        <TextInput
-                          style={{
-                            borderColor: 'gray',
-                            borderWidth: 1,
-                            paddingLeft: 2,
-                            paddingBottom: 2,
-                            marginRight: 2,
-                            paddingTop: 2,
-                          }}
-                          className="text-white"
-                          keyboardType="numeric"
-                          inputMode="numeric"
-                          onChangeText={setEditDays}
-                        />
+                        <Picker
+                          style={{ backgroundColor: '#292d3d', color: '#bfc7d4' }}
+                          selectedValue={editDays}
+                          onValueChange={(itemvalue, itemIndex) => setEditDays(itemvalue)}>
+                          {daysMap.map((number) => (
+                            <Picker.Item key={number} label={number} value={number} />
+                          ))}
+                        </Picker>
                       </View>
-                      <View>
+                      <View className="mx-2 flex-1">
                         <Text className="text-white">Hours</Text>
-                        <TextInput
-                          keyboardType="numeric"
-                          className="text-white"
-                          style={{
-                            borderColor: 'gray',
-                            borderWidth: 1,
-                            paddingLeft: 2,
-                            paddingBottom: 2,
-                            paddingTop: 2,
-                          }}
-                          onChangeText={setEditHours}
-                        />
-                        <Text className="text-white">Event Duration (hrs): {totalHours}</Text>
+                        <Picker
+                          style={{ backgroundColor: '#292d3d', color: '#bfc7d4' }}
+                          selectedValue={editHours}
+                          onValueChange={(itemvalue, itemIndex) => setEditHours(itemvalue)}>
+                          {hoursMap.map((number) => (
+                            <Picker.Item key={number} label={number} value={number} />
+                          ))}
+                        </Picker>
                       </View>
                     </View>
+                    <Text className="text-white">Event Duration (hrs): {totalHours}</Text>
                   </View>
                 </View>
               )}
             </View>
-            <View className="my-2 flex-row">
-              <View className="flex-1 flex-row items-center">
+            <View className="mt-2 flex-row">
+              <View className="flex-row items-center">
                 <TouchableOpacity
                   disabled={user['business']}
                   onPress={bookmarked ? removeBookmark : bookmarkItem}>
@@ -311,8 +339,27 @@ export const Post = ({
                 <Text className="mx-2 flex-1 text-white">({bookmarks})</Text>
               </View>
               <View className="flex-1 flex-row items-center">
-                <FontAwesome6 size={20} iconStyle="solid" color="#00E0FF" name="eye" />
-                <Text className="mx-2 flex-1 text-white">({item.views})</Text>
+                <View className="mr-4 flex-1 flex-row items-center">
+                  <TouchableOpacity>
+                    <FontAwesome6 iconStyle="solid" color="#00E0FF" size={18} name="eye" />
+                  </TouchableOpacity>
+                  <Text className="ml-2 text-white">({item.views})</Text>
+                </View>
+                <View className="flex-row items-center">
+                  <Text
+                    style={{
+                      color: status == 'expired' ? 'red' : status == 'live' ? 'green' : 'purple',
+                    }}
+                    className="text-lg">
+                    {status}
+                  </Text>
+                  <View
+                    className="ml-2 h-4 w-4 rounded-full"
+                    style={{
+                      backgroundColor:
+                        status == 'expired' ? 'red' : status == 'live' ? 'green' : 'purple',
+                    }}></View>
+                </View>
               </View>
             </View>
             <View className="mt-2 flex-row justify-between">

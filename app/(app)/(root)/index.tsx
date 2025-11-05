@@ -28,7 +28,7 @@ export default function HomeScreen() {
         </View>
         <View className="flex-1 flex-col justify-center">
           <View className=" h-7 flex-col">
-            <Text className="text-center text-lg font-bold text-white">Featured</Text>
+            <Text className="text-center text-lg font-bold text-white">Featured Events</Text>
           </View>
 
           <View className="flex-row ">

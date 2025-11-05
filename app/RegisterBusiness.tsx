@@ -15,6 +15,7 @@ import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
 import { isAxiosError } from 'axios';
 import { Link, router } from 'expo-router';
 import { FontAwesome6 } from '@expo/vector-icons';
+import LoadingIndicator from '../utils/Components/LoadingIndicator';
 
 const RegisterBusiness = () => {
   const [email, setEmail] = useState('');
@@ -29,30 +30,42 @@ const RegisterBusiness = () => {
 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [err, setErr] = useState(null);
+  const [err, setErr] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
+    setLoading(true);
     try {
+      setErr('');
       if (confirmPassword != password) {
-        Alert.alert('Incorrect Input', 'Passwords do not Match!');
+        setErr('Passwords do not Match!');
         return;
       }
-      await request.post('/auth/registerbusiness', { name, password, address, email, licenseID });
-      setShowModal(true);
+      await request
+        .post('/auth/registerbusiness', { name, password, address, email, licenseID })
+        .then((res) => {
+          setShowModal(true);
+        })
+        .catch((err) => {
+          if (isAxiosError(err)) {
+            setErr(err.response?.data.message);
+          }
+        });
     } catch (e: unknown) {
       console.log(e);
       if (isAxiosError(e)) {
         setErr(e.response?.data.message);
       }
     }
+    setLoading(false);
   };
 
   return (
     <View
       className="rounded-2xl bg-[#262626] p-2"
       style={{
-        marginHorizontal: Platform.OS == 'web' ? '15%' : '5%',
-        marginVertical: Platform.OS == 'web' ? '15%' : '5%',
+        marginHorizontal: Platform.OS == 'web' ? '10%' : '5%',
+        marginVertical: Platform.OS == 'web' ? '10%' : '5%',
       }}>
       <Modal visible={showModal} transparent={true}>
         <View
@@ -64,12 +77,12 @@ const RegisterBusiness = () => {
           }}>
           <View
             style={{
-              width: Platform.OS == 'web' ? 300 : '90%',
-              height: Platform.OS == 'web' ? 300 : '70%',
+              width: Platform.OS == 'web' ? '60%' : '90%',
+              height: Platform.OS == 'web' ? 'auto' : '70%',
               justifyContent: 'center',
-              backgroundColor: '#262626',
-              borderRadius: '10%',
-            }}>
+              backgroundColor: 'black',
+            }}
+            className="rounded-xl">
             <Text className=" mt-5 text-center text-3xl text-white">Business Request Sent!</Text>
             <View className="my-3 h-1 w-full bg-white fill-white" />
 
@@ -90,7 +103,7 @@ const RegisterBusiness = () => {
               will provide you with insights into how to market your events to your local populus!
             </Text>
             <TouchableOpacity
-              className="rounded-full bg-white p-2"
+              className="m-[5%] rounded-full bg-white p-2"
               onPress={() => setShowModal(false)}>
               <Text className="text-center text-lg">Close</Text>
             </TouchableOpacity>
@@ -134,7 +147,7 @@ const RegisterBusiness = () => {
           <View className="mt-7 flex-1 flex-row flex-wrap justify-center">
             <TextInput
               placeholderTextColor={'gray'}
-              className="mx-2 my-3 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+              className="mx-2 my-2 rounded-xl border-2 border-gray-200 p-2 text-lg text-white"
               placeholder="Business name"
               value={name}
               onChangeText={setName}
@@ -143,28 +156,28 @@ const RegisterBusiness = () => {
             <TextInput
               textContentType="emailAddress"
               placeholderTextColor={'gray'}
-              className="mx-2 my-3 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+              className="mx-2 my-2 rounded-xl border-2 border-gray-200 p-2 text-lg text-white"
               placeholder="Email"
               value={email}
               onChangeText={setEmail}
             />
             <TextInput
               placeholderTextColor={'gray'}
-              className="mx-2 my-3 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+              className="mx-2 my-2 rounded-xl border-2 border-gray-200 p-2 text-lg text-white"
               placeholder="Address"
               value={address}
               onChangeText={setAddress}
             />
             <TextInput
               placeholderTextColor={'gray'}
-              className="mx-2 my-3 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+              className="mx-2 my-2 rounded-xl border-2 border-gray-200 p-2 text-lg text-white"
               placeholder="Phone Number"
               value={number}
               onChangeText={setNumber}
             />
             <TextInput
               placeholderTextColor={'gray'}
-              className="mx-2 my-3 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+              className="mx-2 my-2 rounded-xl border-2 border-gray-200 p-2 text-lg text-white"
               placeholder="Business License ID"
               value={licenseID}
               onChangeText={setLicenseID}
@@ -173,7 +186,7 @@ const RegisterBusiness = () => {
               autoCapitalize="none"
               textContentType="password"
               placeholderTextColor={'gray'}
-              className="mx-2 my-3 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+              className="mx-2 my-2 rounded-xl border-2 border-gray-200 p-2 text-lg text-white"
               placeholder="Password"
               value={password}
               onChangeText={setPassword}
@@ -181,15 +194,21 @@ const RegisterBusiness = () => {
             <TextInput
               autoCapitalize="none"
               placeholderTextColor={'gray'}
-              className="mx-2 my-3 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+              className="mx-2 my-2 rounded-xl border-2 border-gray-200 p-2 text-lg text-white"
               placeholder="Confirm Password"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
             {err && <Text className="text-center text-xl text-red-300">{err}</Text>}
           </View>
+          {loading && (
+            <View className="items-center justify-center">
+              <LoadingIndicator></LoadingIndicator>
+            </View>
+          )}
           <View className="items-center justify-center">
             <TouchableOpacity
+              disabled={loading}
               className="my-10 justify-center rounded-full bg-[#00E0FF] px-5 py-2 text-center text-xl text-white"
               onPress={handleClick}>
               <Text className="text-center text-xl">Register</Text>

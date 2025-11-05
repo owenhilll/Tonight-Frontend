@@ -95,7 +95,7 @@ export default function Posts({
   }, []);
 
   return (
-    <View className="flex-1 ">
+    <View className="flex-1">
       <Text className="mt-0 text-center text-3xl text-white">{modifiedHeader}</Text>
       {dataLoading ? (
         <View className="h-[100%]">

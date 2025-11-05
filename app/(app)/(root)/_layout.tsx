@@ -54,7 +54,7 @@ export default function RootLayout() {
           }}
         />
         <Tabs.Screen
-          name="search"
+          name="browse"
           options={{
             headerShown: false,
             sceneStyle: {
