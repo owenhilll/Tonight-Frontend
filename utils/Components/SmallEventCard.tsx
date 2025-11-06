@@ -14,6 +14,7 @@ import {
   Platform,
 } from 'react-native';
 import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
+import { FontAwesome } from '@expo/vector-icons';
 
 //for use in rendering events in the home page (the horizontal list)
 export const SmallEventCard = ({ item }: { item: any }) => {
@@ -24,14 +25,15 @@ export const SmallEventCard = ({ item }: { item: any }) => {
     const businessid = item.businessid;
     const userid = user['user']['id'];
     await request
-      .post('/bookmarks/add', {
-        headers: {
-          Authorization: token,
-        },
-        eventid,
-        businessid,
-        userid,
-      })
+      .post(
+        '/bookmarks/add',
+        { eventid, businessid, userid },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
       .then((res) => {
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
@@ -248,13 +250,12 @@ export const SmallEventCard = ({ item }: { item: any }) => {
         {!user['business'] && !user['guest'] && (
           <View className="mr-1 flex-row items-end justify-end">
             <TouchableOpacity onPress={bookmarked ? removeBookmark : bookmarkItem}>
-              <FontAwesome6
-                color="#00E0FF"
+              <FontAwesome
                 name="bookmark"
                 size={15}
                 iconStyle="solid"
                 className="text-white"
-                selectionColor={bookmarked ? 'white' : 'transparent'}
+                color={bookmarked ? 'blue' : 'gray'}
               />
             </TouchableOpacity>
             <Text className="ml-2 text-white">({bookmarks})</Text>

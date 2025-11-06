@@ -45,6 +45,13 @@ export default function HomeScreen() {
               <Text className="items-center text-black">Sign in</Text>
             </TouchableOpacity>
           )}
+          {!user['guest'] && !user['business'] && (
+            <TouchableOpacity
+              className="z-50 items-center justify-center rounded-full bg-[#00E0FF] p-2"
+              onPress={logout}>
+              <Text className="items-center text-black">Log out</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 

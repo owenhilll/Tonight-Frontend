@@ -13,7 +13,7 @@ export default function RootLayout() {
         screenOptions={{
           tabBarBackground: () => (
             <LinearGradient
-              colors={['#fb9124', '#fc7023']} // Replace with your desired colors
+              colors={['#ffffff', '#fffff0']} // Replace with your desired colors
               style={{ flex: 1 }}
             />
           ),
@@ -45,7 +45,7 @@ export default function RootLayout() {
               <FontAwesome6
                 iconStyle="solid"
                 size={25}
-                color={focused ? '#20e1fd' : 'black'}
+                color={focused ? 'black' : 'lightgray'}
                 name="house"
               />
             ),
@@ -65,8 +65,27 @@ export default function RootLayout() {
               <FontAwesome6
                 iconStyle="solid"
                 size={25}
-                color={focused ? '#20e1fd' : 'black'}
+                color={focused ? 'black' : 'lightgray'}
                 name="list"
+              />
+            ),
+            title: '',
+          }}
+        />
+        <Tabs.Screen
+          name="map"
+          options={{
+            headerShown: false,
+            sceneStyle: {
+              marginHorizontal: Platform.OS == 'web' ? '3%' : '2%',
+              backgroundColor: 'black',
+            },
+            tabBarIcon: ({ color, focused }) => (
+              <FontAwesome6
+                iconStyle="solid"
+                size={25}
+                color={focused ? 'black' : 'lightgray'}
+                name="map-pin"
               />
             ),
             title: '',
@@ -86,7 +105,7 @@ export default function RootLayout() {
               <FontAwesome6
                 iconStyle="solid"
                 size={25}
-                color={focused ? '#20e1fd' : 'black'}
+                color={focused ? 'black' : 'lightgray'}
                 name="bookmark"
               />
             ),
@@ -106,7 +125,7 @@ export default function RootLayout() {
             tabBarIcon: ({ color, focused }) => (
               <FontAwesome6
                 iconStyle="solid"
-                color={focused ? '#20e1fd' : 'black'}
+                color={focused ? 'black' : 'lightgray'}
                 size={25}
                 name="user"
               />

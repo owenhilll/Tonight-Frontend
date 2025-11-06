@@ -16,6 +16,7 @@ import {
   Linking,
   Modal,
   Platform,
+  ScrollView,
 } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 
@@ -86,15 +87,19 @@ const Profile = () => {
       return;
     }
     request
-      .put('/businesses/update', {
-        headers: {
-          Authorization: token,
+      .put(
+        '/businesses/update',
+        {
+          number,
+          website,
+          id,
         },
-
-        number,
-        website,
-        id,
-      })
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['user'] });
         setShowEdit(false);
@@ -297,13 +302,15 @@ const Profile = () => {
               </TouchableOpacity>
             </View>
             <Text className="ml-10 text-xl text-white">Your Posts</Text>
-            <Posts
-              header=""
-              id={user['user']['id']}
-              queryKey={'events' + user['user']['id']}
-              querystring={'/events/' + user['user']['id']}
-              profile={true}
-            />
+            <ScrollView showsHorizontalScrollIndicator={false}>
+              <Posts
+                header=""
+                id={user['user']['id']}
+                queryKey={'events' + user['user']['id']}
+                querystring={'/events/' + user['user']['id']}
+                profile={true}
+              />
+            </ScrollView>
           </View>
         </View>
       )}

@@ -3,35 +3,41 @@ import useAuth from '../../../Hooks/authContext';
 import { FlatList, Image, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { request } from '../../../utils/axios';
 import Posts from '../../../utils/Modals/Posts';
+import { Post } from 'utils/Components/Post';
 
 export default function BookMarks() {
   const { user, token, logout } = useAuth();
+
+  const queryKey = 'bookmarks' + user['user']['id'];
+
   const {
     isLoading: bookmarksLoading,
     error: bookmarksError,
     data: bookmarks,
   } = useQuery({
-    queryKey: ['bookmarks' + user['user']['id']],
+    queryKey: [queryKey],
     queryFn: () =>
       request
         .get('/bookmarks/get?userid=' + user['user']['id'], {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
           },
         })
-        .then((res) => {
+        .then(async (res) => {
           let ls: any[] = [];
-          res.data.forEach((event: any) => {
-            request
+          const promises = res.data.map(async (event: any) => {
+            await request
               .get('/events/get?eventid=' + event['eventid'], {
                 headers: {
-                  Authorization: `Bearer ${token}`,
+                  Authorization: token,
                 },
               })
               .then((res) => {
                 ls.push(res.data[0]);
               });
           });
+          const final = await Promise.all(promises);
+
           return ls;
         }),
   });
@@ -57,23 +63,11 @@ export default function BookMarks() {
         <View className="flex-1" />
       </View>
       {!user['guest'] ? (
-        <View className="h-full flex-1 items-center justify-center">
-          {bookmarks && bookmarks.length > 0 ? (
-            <Posts
-              id={user['user']['id']}
-              header={''}
-              querystring={'/bookmarks/get?userid=' + user['user']['id']}
-              profile={false}
-              queryKey={user['user']['id']}
-            />
-          ) : (
-            <View className="">
-              <Text className="text-center text-2xl text-white">Nothing bookmarked.</Text>
-              <Text className="text-center text-sm text-white">
-                Start discovering events in the home page!
-              </Text>
-            </View>
-          )}
+        <View className="h-full flex-1">
+          <FlatList
+            data={bookmarks}
+            renderItem={({ item }) => <Post item={item} profile={false} queryKey={queryKey} />}
+          />
         </View>
       ) : (
         <View className="flex-1 items-center justify-center">

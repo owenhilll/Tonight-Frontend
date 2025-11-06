@@ -20,6 +20,7 @@ import { DateSelection } from '../DateTimePicker';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Picker } from '@react-native-picker/picker';
+import { FontAwesome } from '@expo/vector-icons';
 
 export const Post = ({
   item,
@@ -37,6 +38,7 @@ export const Post = ({
     minute: 'numeric',
     hour12: true,
   };
+  console.log(item);
   let time = date.toLocaleTimeString('en-US', options);
   const [edit, setEdit] = useState(false);
 
@@ -329,12 +331,7 @@ export const Post = ({
                 <TouchableOpacity
                   disabled={user['business']}
                   onPress={bookmarked ? removeBookmark : bookmarkItem}>
-                  <FontAwesome6
-                    color="#00E0FF"
-                    size={20}
-                    name="bookmark"
-                    selectionColor={bookmarked ? 'white' : 'transparent'}
-                  />
+                  <FontAwesome color={bookmarked ? 'blue' : 'gray'} size={20} name="bookmark" />
                 </TouchableOpacity>
                 <Text className="mx-2 flex-1 text-white">({bookmarks})</Text>
               </View>

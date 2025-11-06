@@ -9,6 +9,7 @@ import { request } from '../../../utils/axios';
 import { SmallEventCard } from '../../../utils/Components/SmallEventCard';
 import { Checkbox } from 'expo-checkbox';
 import LoadingIndicator from 'utils/Components/LoadingIndicator';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Browse() {
   const [value, setvalue] = useState('');
@@ -23,79 +24,68 @@ export default function Browse() {
     {
       label: 'Drinks',
       value: 'Drink',
-      icon: <FontAwesome6 iconStyle="solid" size={20} color="blue" name="glass-water" />,
+      icon: <FontAwesome6 iconStyle="solid" size={30} color="#0000CC" name="glass-water" />,
     },
     {
       label: 'Food',
       value: 'Food',
-      icon: <FontAwesome6 color="orange" size={20} iconStyle="solid" name="utensils" />,
+      icon: <FontAwesome6 color="#FF8000" size={30} iconStyle="solid" name="utensils" />,
     },
     {
       label: 'Shows',
       value: 'Show',
-      icon: <FontAwesome6 iconStyle="solid" size={20} color="red" name="film" />,
+      icon: <FontAwesome6 iconStyle="solid" size={30} color="#FF0000" name="film" />,
     },
     {
       label: 'Shop',
       value: 'Shop',
-      icon: <FontAwesome6 color="purple" size={20} iconStyle="solid" name="shop" />,
+      icon: <FontAwesome6 color="#6600CC" size={30} iconStyle="solid" name="shop" />,
     },
 
     {
       label: 'Sports',
       value: 'Sport',
-      icon: <FontAwesome6 iconStyle="solid" size={20} color="green" name="football" />,
+      icon: <FontAwesome6 iconStyle="solid" size={30} color="#009900" name="football" />,
     },
     {
       label: 'Games',
       checked: false,
       value: 'Game',
-      icon: <FontAwesome6 color="violet" size={20} iconStyle="solid" name="gamepad" />,
+      icon: <FontAwesome6 color="#009999" size={30} iconStyle="solid" name="gamepad" />,
     },
 
     {
       label: 'Music',
       value: 'Music',
-      icon: <FontAwesome6 color="lightblue" size={20} iconStyle="solid" name="music" />,
+      icon: <FontAwesome6 color="#66ffb2" size={30} iconStyle="solid" name="music" />,
     },
     {
       label: 'Outdoors',
       value: 'outActivity',
-      icon: <FontAwesome6 color="yellow" size={20} iconStyle="solid" name="sun" />,
+      icon: <FontAwesome6 color="#999900" size={30} iconStyle="solid" name="sun" />,
     },
     {
       label: 'Classes',
       value: 'Classes',
-      icon: <FontAwesome6 color="pink" size={20} iconStyle="solid" name="school" />,
+      icon: <FontAwesome6 color="#9999FF" size={30} iconStyle="solid" name="school" />,
     },
   ];
-  const [category, setCategory] = useState('Drink');
-
-  const {
-    isLoading: dataLoading,
-    error: dataError,
-    data: data,
-  } = useQuery({
-    queryKey: ['browse'],
-    queryFn: () =>
-      request
-        .get('/events/near?category=' + category + '&radius=' + radius, {
-          params: {
-            y: latitude,
-            x: longitude,
-          },
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        }),
-  });
+  const [category, setCategory] = useState('');
 
   useEffect(() => {
     if (category != '') queryClient.invalidateQueries({ queryKey: ['browse'] });
   }, [category]);
+
+  function changeColor(color: string, amount: number) {
+    const clamp = (val: number) => Math.min(Math.max(val, 0), 0xff);
+    const fill = (str: string) => ('00' + str).slice(-2);
+
+    const num = parseInt(color.substr(1), 16);
+    const red = clamp((num >> 16) + amount);
+    const green = clamp(((num >> 8) & 0x00ff) + amount);
+    const blue = clamp((num & 0x0000ff) + amount);
+    return '#' + fill(red.toString(16)) + fill(green.toString(16)) + fill(blue.toString(16));
+  }
 
   return (
     <View className="flex-1">
@@ -125,24 +115,17 @@ export default function Browse() {
             alignItems: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
           }}>
-          <View
-            style={{
-              width: Platform.OS == 'web' ? 600 : '90%',
-              height: Platform.OS == 'web' ? 700 : '85%',
-              justifyContent: 'center',
-              backgroundColor: 'black',
-            }}
-            className="rounded-xl">
+          <View className="w-full flex-1 bg-black">
             <View
               className="mt-2 flex-1 pt-10 "
-              style={{ marginHorizontal: Platform.OS == 'web' ? '10%' : '5%', padding: '2%' }}>
+              style={{ marginHorizontal: Platform.OS == 'web' ? '5%' : '2%', padding: '2%' }}>
               <TouchableOpacity
-                className="absolute left-5 top-5 z-50"
+                className="absolute left-5 top-3 z-50"
                 onPress={() => setIsModalVisible(false)}>
                 <FontAwesome6 iconStyle="solid" color="#BBDEFB" size={25} name="arrow-left" />
               </TouchableOpacity>
               <Posts
-                querystring={'/events/near?value=' + value + '&radius=' + radius}
+                querystring={'/events/near?category=' + category + '&radius=' + radius}
                 id={user['user']['id']}
                 queryKey={''}
                 header={value}
@@ -153,7 +136,7 @@ export default function Browse() {
         </View>
       </Modal>
 
-      <View className="mb-2 flex-1 items-center overflow-visible rounded-lg bg-[#262626]">
+      <View className="mb-2 h-full flex-1 items-center overflow-visible rounded-lg bg-[#262626]">
         <Text className="w-[50%] text-wrap text-center text-lg text-white">
           Find exactly what you’re looking for —{' '}
           <Text className="font-bold">
@@ -162,59 +145,42 @@ export default function Browse() {
           , and more.
         </Text>
 
-        <View className="w-[100%] flex-1" style={{ flexDirection: 'row' }}>
-          <View>
-            <FlatList
-              className="flex-none rounded-lg "
-              data={DATA}
-              numColumns={1}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => {
-                const color = item.icon.props['color'];
+        <View className="w-full flex-1">
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            className="flex-1 items-center justify-items-center"
+            data={DATA}
+            numColumns={2}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
+              let color = item.icon.props['color'];
 
-                return (
+              return (
+                <LinearGradient
+                  colors={[changeColor(color, 0.001), color]}
+                  className="m-2 items-center rounded-lg">
                   <TouchableOpacity
-                    onPress={() => setCategory(item.value)}
+                    onPress={() => {
+                      setCategory(item.value);
+                      setIsModalVisible(true);
+                    }}
                     style={{
                       padding: 10,
                       margin: 5,
-                      borderWidth: category == item.value ? 5 : 1,
-                      borderColor: color,
+                      height: 150,
+                      width: 300,
                     }}
-                    className="flex-1 flex-row items-center rounded-lg bg-[#000000]">
-                    <View>{item.icon}</View>
-                    <Text className="mx-2 flex-1 text-center text-lg" style={{ color: color }}>
+                    className="flex-row items-center rounded-lg">
+                    <View className="absolute right-2 top-2">{item.icon}</View>
+                    <Text className="mx-2 flex-1 text-center text-2xl font-bold text-white">
                       {item.label}
                     </Text>
                     {/* <CheckBox value={item?.checked} onValueChange={() => test(index)} /> */}
                   </TouchableOpacity>
-                );
-              }}
-            />
-          </View>
-          <View className="flex-1">
-            {data?.length == 0 && !dataLoading ? (
-              <View className="flex-1 justify-center">
-                <Text className=" text-center text-xl text-white">
-                  No {category} Events in your Area!
-                </Text>
-              </View>
-            ) : dataLoading ? (
-              <LoadingIndicator />
-            ) : (
-              <FlatList
-                className="flex-1"
-                numColumns={2}
-                data={data}
-                renderItem={({ item }) => (
-                  <View className="my-[2%] w-[50%] items-center justify-center">
-                    <SmallEventCard item={item} />
-                  </View>
-                )}
-                keyExtractor={(item) => item.id.toString()}
-              />
-            )}
-          </View>
+                </LinearGradient>
+              );
+            }}
+          />
         </View>
       </View>
     </View>
