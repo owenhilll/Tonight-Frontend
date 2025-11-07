@@ -20,7 +20,7 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
 
   async function login(email: string, password: string) {
     const res = await request.post(
-      'http://localhost:8800/api/auth/login',
+      '/auth/login',
       { email, password },
       {
         withCredentials: true,

@@ -238,6 +238,9 @@ export default function map() {
         const final = await Promise.all(promises);
         setData(tmpdata);
         setKey(key + 1);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch Map Data');
       });
   }, []);
 
@@ -306,6 +309,9 @@ export default function map() {
         .then((res) => {
           console.log(res.data);
           return res.data;
+        })
+        .catch((err) => {
+          console.error('Failed to get Bookmarks');
         }),
   });
 

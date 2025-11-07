@@ -44,6 +44,9 @@ export default function EventList({ title, category }: { title: string; category
         })
         .then((res) => {
           return res.data;
+        })
+        .catch((err) => {
+          console.error('Failed to get featured local events');
         }),
   });
 
