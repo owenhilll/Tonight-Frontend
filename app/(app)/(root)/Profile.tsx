@@ -17,6 +17,7 @@ import {
   Modal,
   Platform,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 
@@ -39,15 +40,14 @@ const Profile = () => {
           },
         })
         .then((res) => {
+          console.log('FOund business');
           return res.data;
         })
         .catch(() => {}),
   });
 
   const [index, setIndex] = useState(0);
-  const [profilepic, setProfilePic] = useState(
-    `https://tonight-profiles.s3.us-east-1.amazonaws.com/business_${user['user']['id']}_profile_pic`
-  );
+  const [profilepic, setProfilePic] = useState('');
 
   const SetProfilePic = () => {
     ImagePicker.launchImageLibrary({ mediaType: 'photo' }, async (response) => {
@@ -71,6 +71,9 @@ const Profile = () => {
               'Content-Type': 'image/png',
             },
           });
+        })
+        .finally(() => {
+          GetProfilePic();
         })
         .catch((err) => {
           console.log(err);
@@ -205,15 +208,17 @@ const Profile = () => {
             </TouchableOpacity>
             <View className="flex-1 items-center">
               <Text className="text-center text-3xl text-white">Edit Profile</Text>
-              <View className=" border-1 my-2 items-center justify-center rounded-full border-purple-500 bg-white p-2 shadow-sm shadow-white">
+              <View className=" border-1 my-2 items-center justify-center overflow-hidden rounded-full  bg-white p-2">
                 <TouchableOpacity onPress={SetProfilePic}>
-                  <Image
+                  <ImageBackground
                     style={{ width: 180, height: 180, margin: 0, padding: 0 }}
                     resizeMode="center"
+                    className="items-center justify-center"
                     source={{
                       uri: profilepic,
-                    }}
-                  />
+                    }}>
+                    <FontAwesome6 name="pencil" size={20} color="black" />
+                  </ImageBackground>
                 </TouchableOpacity>
               </View>
               <View className="my-2 flex-row justify-center">

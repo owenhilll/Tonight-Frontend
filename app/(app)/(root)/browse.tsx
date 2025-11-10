@@ -1,6 +1,6 @@
 import { FontAwesome6 } from '@expo/vector-icons';
 import useAuth from '../../../Hooks/authContext';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, Modal, Platform, Text, TouchableOpacity, View } from 'react-native';
 import Posts from '../../../utils/Modals/Posts';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -72,6 +72,16 @@ export default function Browse() {
     },
   ];
   const [category, setCategory] = useState('');
+  const [label, setLabel] = useState('');
+  const flatlistRef = useRef<FlatList>(null);
+
+  const centerItem = (index: number) => {
+    flatlistRef.current?.scrollToIndex({
+      index: index,
+      animated: true,
+      viewPosition: 0.5,
+    });
+  };
 
   useEffect(() => {
     if (category != '') queryClient.invalidateQueries({ queryKey: ['browse'] });
@@ -90,7 +100,7 @@ export default function Browse() {
 
   return (
     <View className="flex-1">
-      <View className="w-[100%] flex-row">
+      <View className="w-full flex-row">
         <View className="flex-1 p-0">
           <Image
             source={require('../../../assets/logo4.png')}
@@ -108,36 +118,8 @@ export default function Browse() {
         </View>
         <View className="flex-1" />
       </View>
-      <Modal visible={isModalVisible} transparent={true}>
-        <SafeAreaView
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}>
-          <View className="w-full flex-1 bg-black">
-            <View
-              className="mt-2 flex-1 pt-10 "
-              style={{ marginHorizontal: Platform.OS == 'web' ? '5%' : '2%', padding: '2%' }}>
-              <TouchableOpacity
-                className="absolute left-5 top-3 z-50"
-                onPress={() => setIsModalVisible(false)}>
-                <FontAwesome6 iconStyle="solid" color="#BBDEFB" size={25} name="arrow-left" />
-              </TouchableOpacity>
-              <Posts
-                querystring={'/events/near?category=' + category + '&radius=' + radius}
-                id={user['user']['id']}
-                queryKey={''}
-                header={value}
-                profile={false}
-              />
-            </View>
-          </View>
-        </SafeAreaView>
-      </Modal>
 
-      <View className="mb-2 flex-1 items-center overflow-visible rounded-lg bg-[#262626]">
+      <View className="mb-2 flex-1 items-center rounded-lg bg-[#262626]">
         <Text
           style={{ width: Platform.OS == 'web' ? '50%' : '90%' }}
           className=" text-wrap text-center text-lg text-white">
@@ -148,46 +130,62 @@ export default function Browse() {
           , and more.
         </Text>
 
-        <View className="flex-1 ">
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            className="flex-1 "
-            data={DATA}
-            numColumns={2}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => {
-              let color = item.icon.props['color'];
+        <FlatList
+          className="w-full flex-none"
+          data={DATA}
+          horizontal
+          ref={flatlistRef}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => {
+            let color = item.icon.props['color'];
 
-              return (
-                <LinearGradient
-                  colors={[changeColor(color, 0.001), color]}
+            return (
+              <LinearGradient
+                colors={[changeColor(color, 0.001), color]}
+                style={{
+                  margin: 2,
+                  marginVertical: 10,
+                  borderRadius: 12,
+                  width: Platform.OS == 'web' ? 200 : 150,
+                  height: Platform.OS == 'web' ? 100 : 100,
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setCategory(item.value);
+                    setLabel(item.label);
+                    setIsModalVisible(true);
+                    centerItem(index);
+                  }}
                   style={{
-                    margin: 2,
-                    marginVertical: 10,
-                    borderRadius: 12,
-                    width: Platform.OS == 'web' ? 300 : 150,
-                    height: Platform.OS == 'web' ? 200 : 100,
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setCategory(item.value);
-                      setIsModalVisible(true);
-                    }}
-                    style={{
-                      padding: 10,
-                      margin: 5,
-                    }}
-                    className="flex-1 flex-row items-center rounded-lg">
-                    <View className="absolute right-2 top-2">{item.icon}</View>
-                    <Text className="mx-2 flex-1 text-center text-2xl font-bold text-white">
-                      {item.label}
-                    </Text>
-                    {/* <CheckBox value={item?.checked} onValueChange={() => test(index)} /> */}
-                  </TouchableOpacity>
-                </LinearGradient>
-              );
-            }}
-          />
+                    padding: 10,
+                    margin: 5,
+                  }}
+                  className="flex-1 flex-row items-center rounded-lg">
+                  <View className="absolute right-2 top-2">{item.icon}</View>
+                  <Text className="mx-2 flex-1 text-center text-2xl font-bold text-white">
+                    {item.label}
+                  </Text>
+                  {/* <CheckBox value={item?.checked} onValueChange={() => test(index)} /> */}
+                </TouchableOpacity>
+              </LinearGradient>
+            );
+          }}
+        />
+        <View className="w-full flex-1">
+          {category && (
+            <View
+              className="mt-2 flex-1 pt-10 "
+              style={{ marginHorizontal: Platform.OS == 'web' ? '5%' : '2%', padding: '2%' }}>
+              <Text className="mx-4 text-2xl font-bold text-white">{label}</Text>
+              <Posts
+                querystring={'/events/near?category=' + category + '&radius=' + radius}
+                id={user['user']['id']}
+                queryKey={''}
+                header={value}
+                profile={false}
+              />
+            </View>
+          )}
         </View>
       </View>
     </View>
