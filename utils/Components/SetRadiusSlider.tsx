@@ -11,8 +11,8 @@ export default function SetRadiusSlider() {
   const [showRadius, setShowRadius] = useState(false);
   const queryClient = useQueryClient();
   return (
-    <View className="w-full flex-col items-center justify-center">
-      <View className="flex-row">
+    <View className="h-auto flex-col">
+      <View className="flex-row items-center justify-center">
         <Text className=" text-center text-white">Search Radius</Text>
         <TouchableOpacity
           className="ml-2 items-center justify-center text-black"
@@ -37,7 +37,7 @@ export default function SetRadiusSlider() {
             minimumValue={1}
             maximumValue={25}
             onValueChange={setTempRadius}
-            style={{ margin: '5%', marginRight: 0, flex: 1 }}
+            style={{ margin: '5%', marginRight: 0, flex: 1, height: 'auto' }}
           />
           <Text className="mx-5 text-lg text-white">{tempRadius} mi.</Text>
           <TouchableOpacity

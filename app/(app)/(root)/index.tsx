@@ -15,43 +15,43 @@ export default function HomeScreen() {
 
   return (
     <View className="m-0 flex-1 p-0">
-      <View className="w-[100%] flex-row">
-        <View className="flex-1 p-0">
-          <Image
-            source={require('../../../assets/logo4.png')}
-            resizeMode="contain"
-            style={{
-              width: Platform.OS == 'web' ? 100 : 'auto',
-              height: Platform.OS == 'web' ? 100 : 'auto',
-            }}
-          />
-        </View>
-        <View className="flex-1 flex-col justify-center">
+      <View className="flex-col">
+        <View className="flex-row items-center justify-center">
+          <View className="flex-1 p-0">
+            <Image
+              source={require('../../../assets/logo4.png')}
+              resizeMode="contain"
+              style={{
+                width: Platform.OS == 'web' ? 100 : 100,
+                height: Platform.OS == 'web' ? 100 : 100,
+              }}
+            />
+          </View>
           <View className=" h-7 flex-col">
             <Text className="text-center text-lg font-bold text-white">Featured Events</Text>
           </View>
 
-          <View className="flex-row ">
-            <SetRadiusSlider />
+          <View
+            className="z-50 flex-1 items-end justify-center"
+            style={{ right: Platform.OS == 'web' ? 10 : 0 }}>
+            {user['guest'] && (
+              <TouchableOpacity
+                className="z-50 items-center justify-center rounded-full bg-[#00E0FF] p-2"
+                onPress={logout}>
+                <Text className="items-center text-black">Sign in</Text>
+              </TouchableOpacity>
+            )}
+            {!user['guest'] && !user['business'] && (
+              <TouchableOpacity
+                className="z-50 items-center justify-center rounded-full bg-[#00E0FF] p-2"
+                onPress={logout}>
+                <Text className="items-center text-black">Log out</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
-        <View
-          className="z-50 flex-1 items-end justify-center"
-          style={{ right: Platform.OS == 'web' ? 10 : 0 }}>
-          {user['guest'] && (
-            <TouchableOpacity
-              className="z-50 items-center justify-center rounded-full bg-[#00E0FF] p-2"
-              onPress={logout}>
-              <Text className="items-center text-black">Sign in</Text>
-            </TouchableOpacity>
-          )}
-          {!user['guest'] && !user['business'] && (
-            <TouchableOpacity
-              className="z-50 items-center justify-center rounded-full bg-[#00E0FF] p-2"
-              onPress={logout}>
-              <Text className="items-center text-black">Log out</Text>
-            </TouchableOpacity>
-          )}
+        <View>
+          <SetRadiusSlider />
         </View>
       </View>
 

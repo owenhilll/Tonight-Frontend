@@ -34,7 +34,6 @@ export default function Posts({
 }) {
   const queryClient = useQueryClient();
   const { longitude, latitude, user, token, radius } = useAuth();
-
   const {
     isLoading: dataLoading,
     error: dataError,

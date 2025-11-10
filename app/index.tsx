@@ -63,8 +63,8 @@ const Register = () => {
     <View
       className="items-center justify-center rounded-2xl bg-[#262626]"
       style={{
-        marginHorizontal: Platform.OS == 'web' ? '15%' : '5%',
-        marginVertical: Platform.OS == 'web' ? '15%' : '5%',
+        width: Platform.OS == 'web' ? 'auto' : '100%',
+        height: Platform.OS == 'web' ? 'auto' : '100%',
       }}>
       <Modal visible={showResetPassword} transparent={true}>
         <View
@@ -106,19 +106,19 @@ const Register = () => {
         </View>
       </Modal>
       <View
-        className="w-full"
+        className="flex-1"
         style={{
           paddingHorizontal: Platform.OS == 'web' ? '10%' : '3%',
           flexDirection: Platform.OS == 'web' ? 'row' : 'column',
         }}>
-        <View className="flex-1">
+        <View style={{ flex: Platform.OS == 'web' ? 1 : undefined }}>
           <View>
             <Image
               source={require('../assets/logo4.png')}
               resizeMode="contain"
               style={{
-                width: Platform.OS == 'web' ? 100 : 'auto',
-                height: Platform.OS == 'web' ? 100 : 'auto',
+                width: Platform.OS == 'web' ? 100 : 100,
+                height: Platform.OS == 'web' ? 100 : 100,
               }}
             />
           </View>
@@ -159,19 +159,19 @@ const Register = () => {
           )}
           <View style={{ paddingHorizontal: '10%' }}>
             <TouchableOpacity
-              className="my-10 rounded-2xl bg-[#00E0FF] p-2 text-center text-xl"
+              className="mt-10 rounded-2xl bg-[#00E0FF] p-2 text-center text-xl"
               onPress={handleLogin}>
               <Text className="text-center text-xl text-black">Login</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </View>
-      <View className="flex-column items-center border-blue-800">
-        <View className="my-3 flex-row">
-          <Text className="text-lg text-white">Dont have an Account? </Text>
-          <Link href={'/SignUp'}>
-            <Text className="mx-2 text-lg text-[#00E0FF] underline">Create Account</Text>
-          </Link>
+          <View className="flex-column mb-2 items-center border-blue-800">
+            <View className="my-3 flex-row">
+              <Text className="text-lg text-white">Dont have an Account? </Text>
+              <Link href={'/SignUp'}>
+                <Text className="ml-2 text-lg text-[#00E0FF] underline">Create Account</Text>
+              </Link>
+            </View>
+          </View>
         </View>
       </View>
     </View>

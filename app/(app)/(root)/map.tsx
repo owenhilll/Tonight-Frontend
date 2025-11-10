@@ -1,6 +1,6 @@
 import useAuth from '../../../Hooks/authContext';
 
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { request } from '../../../utils/axios';
 
@@ -317,8 +317,10 @@ export default function map() {
 
   return (
     <View className="flex-1">
-      <View className="absolute left-1 top-1 z-50 rounded-lg border-2 border-white bg-[#38414e] p-2 shadow-lg">
-        <Text className="text-2xl font-bold text-white">Legend</Text>
+      <View
+        style={{ flexDirection: Platform.OS == 'web' ? 'column' : 'row', flexWrap: 'wrap' }}
+        className="absolute left-1 top-1 z-50 rounded-lg border-2 border-white bg-[#38414e] p-2 shadow-lg">
+        <Text className="mr-4 text-2xl font-bold text-white">Legend</Text>
         <View className="my-1 flex-row items-center">
           <FontAwesome6 name="location-dot" size={30} color="#0000CC" />
           <Text className="mx-4 text-xl text-gray-300 ">Drinks</Text>

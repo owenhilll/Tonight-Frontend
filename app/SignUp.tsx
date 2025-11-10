@@ -56,8 +56,8 @@ export default function LoginScreen() {
     <View
       className="items-center justify-center rounded-2xl bg-[#262626]"
       style={{
-        marginHorizontal: Platform.OS == 'web' ? '15%' : '5%',
-        marginVertical: Platform.OS == 'web' ? '15%' : '5%',
+        width: Platform.OS == 'web' ? 'auto' : '100%',
+        height: Platform.OS == 'web' ? 'auto' : '100%',
       }}>
       <Modal visible={showAbout} transparent={true}>
         <View

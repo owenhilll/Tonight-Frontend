@@ -159,7 +159,7 @@ const Profile = () => {
   GetProfilePic();
 
   return (
-    <View className=" my-3 flex-1 ">
+    <View className="my-3 flex-1 ">
       <Modal visible={showShare} transparent={true}>
         <View
           style={{
@@ -247,7 +247,14 @@ const Profile = () => {
       {businessLoading || followersLoading ? (
         <Text className="text-white">Loading</Text>
       ) : businessError ? (
-        <Text className="text-white">Error</Text>
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-white">Error loading user profile</Text>
+          <View className="ml-4 items-center">
+            <TouchableOpacity className="mb-3 rounded-full bg-[#4c4c4c] p-2" onPress={logout}>
+              <Text className="text-lg text-white">Log out</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       ) : (
         <View className="flex-column  flex-1">
           <View className="mb-2 flex-row items-center justify-center" style={{ padding: '4%' }}>

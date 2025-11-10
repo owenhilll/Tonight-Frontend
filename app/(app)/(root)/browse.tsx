@@ -10,6 +10,7 @@ import { SmallEventCard } from '../../../utils/Components/SmallEventCard';
 import { Checkbox } from 'expo-checkbox';
 import LoadingIndicator from 'utils/Components/LoadingIndicator';
 import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Browse() {
   const [value, setvalue] = useState('');
@@ -108,7 +109,7 @@ export default function Browse() {
         <View className="flex-1" />
       </View>
       <Modal visible={isModalVisible} transparent={true}>
-        <View
+        <SafeAreaView
           style={{
             flex: 1,
             justifyContent: 'center',
@@ -133,11 +134,13 @@ export default function Browse() {
               />
             </View>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
 
-      <View className="mb-2 h-full flex-1 items-center overflow-visible rounded-lg bg-[#262626]">
-        <Text className="w-[50%] text-wrap text-center text-lg text-white">
+      <View className="mb-2 flex-1 items-center overflow-visible rounded-lg bg-[#262626]">
+        <Text
+          style={{ width: Platform.OS == 'web' ? '50%' : '90%' }}
+          className=" text-wrap text-center text-lg text-white">
           Find exactly what you’re looking for —{' '}
           <Text className="font-bold">
             restaurant offers, drink deals, shows, live music, watch parties, classes, shopping
@@ -145,10 +148,10 @@ export default function Browse() {
           , and more.
         </Text>
 
-        <View className="w-full flex-1">
+        <View className="flex-1 ">
           <FlatList
             showsVerticalScrollIndicator={false}
-            className="flex-1 items-center justify-items-center"
+            className="flex-1 "
             data={DATA}
             numColumns={2}
             keyExtractor={(item, index) => index.toString()}
@@ -158,7 +161,13 @@ export default function Browse() {
               return (
                 <LinearGradient
                   colors={[changeColor(color, 0.001), color]}
-                  className="m-2 items-center rounded-lg">
+                  style={{
+                    margin: 2,
+                    marginVertical: 10,
+                    borderRadius: 12,
+                    width: Platform.OS == 'web' ? 300 : 150,
+                    height: Platform.OS == 'web' ? 200 : 100,
+                  }}>
                   <TouchableOpacity
                     onPress={() => {
                       setCategory(item.value);
@@ -167,10 +176,8 @@ export default function Browse() {
                     style={{
                       padding: 10,
                       margin: 5,
-                      height: 150,
-                      width: 300,
                     }}
-                    className="flex-row items-center rounded-lg">
+                    className="flex-1 flex-row items-center rounded-lg">
                     <View className="absolute right-2 top-2">{item.icon}</View>
                     <Text className="mx-2 flex-1 text-center text-2xl font-bold text-white">
                       {item.label}

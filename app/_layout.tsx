@@ -20,15 +20,37 @@ function RootNavigator() {
   const { user } = useAuth();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
       <Stack screenOptions={{ contentStyle: { backgroundColor: 'black' } }}>
         <Stack.Protected guard={!!user}>
           <Stack.Screen options={{ headerShown: false }} name="(app)" />
         </Stack.Protected>
 
         <Stack.Protected guard={!user}>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen options={{ headerShown: false }} name="SignUp" />
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: false,
+
+              contentStyle: {
+                backgroundColor: 'black',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            }}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: false,
+
+              contentStyle: {
+                backgroundColor: 'black',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            }}
+            name="SignUp"
+          />
           <Stack.Screen options={{ headerShown: false }} name="RegisterBusiness" />
           <Stack.Screen options={{ headerShown: false }} name="ResetPassword" />
         </Stack.Protected>
