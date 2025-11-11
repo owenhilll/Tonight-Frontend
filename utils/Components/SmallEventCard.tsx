@@ -41,6 +41,9 @@ export const SmallEventCard = ({ item }: { item: any }) => {
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id],
         });
+        queryClient.invalidateQueries({
+          queryKey: ['bookmarks' + user['user']['id']],
+        });
       })
       .catch((err) => {});
   };
@@ -73,6 +76,9 @@ export const SmallEventCard = ({ item }: { item: any }) => {
         });
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['bookmarks' + user['user']['id']],
         });
       })
       .catch((err) => {});

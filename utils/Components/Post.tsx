@@ -167,6 +167,9 @@ export const Post = ({
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id],
         });
+        queryClient.invalidateQueries({
+          queryKey: ['bookmarks' + user['user']['id']],
+        });
       })
       .catch((err) => {});
   };
@@ -187,6 +190,9 @@ export const Post = ({
         });
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['bookmarks' + user['user']['id']],
         });
       })
       .catch((err) => {});

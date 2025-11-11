@@ -35,7 +35,7 @@ export default function LoginScreen() {
     }
     try {
       request.post('/auth/register', { email, password });
-      router.navigate('/SignIn');
+      router.navigate('/');
     } catch (err: any) {
       setErr(err);
     }

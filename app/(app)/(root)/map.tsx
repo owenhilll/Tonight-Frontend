@@ -266,7 +266,7 @@ export default function map() {
           queryKey: ['bookmarks'],
         });
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks'],
+          queryKey: ['bookmarks' + user['user']['id']],
         });
       })
       .catch((err) => {});
@@ -286,7 +286,7 @@ export default function map() {
           queryKey: ['bookmarks'],
         });
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks'],
+          queryKey: ['bookmarks' + user['user']['id']],
         });
       })
       .catch((err) => {});
