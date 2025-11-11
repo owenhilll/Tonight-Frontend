@@ -74,6 +74,7 @@ export default function Browse() {
   const [category, setCategory] = useState('');
   const [label, setLabel] = useState('');
   const flatlistRef = useRef<FlatList>(null);
+  const [queryString, setQueryString] = useState('');
 
   const centerItem = (index: number) => {
     flatlistRef.current?.scrollToIndex({
@@ -153,8 +154,9 @@ export default function Browse() {
                   onPress={() => {
                     setCategory(item.value);
                     setLabel(item.label);
-                    setIsModalVisible(true);
+                    if (!isModalVisible) setIsModalVisible(true);
                     centerItem(index);
+                    setQueryString('/events/near?category=' + category + '&radius=' + radius);
                   }}
                   style={{
                     padding: 10,
@@ -176,12 +178,11 @@ export default function Browse() {
             <View
               className="mt-2 flex-1 pt-10 "
               style={{ marginHorizontal: Platform.OS == 'web' ? '5%' : '2%', padding: '2%' }}>
-              <Text className="mx-4 text-2xl font-bold text-white">{label}</Text>
               <Posts
                 querystring={'/events/near?category=' + category + '&radius=' + radius}
                 id={user['user']['id']}
                 queryKey={''}
-                header={value}
+                header={category}
                 profile={false}
               />
             </View>

@@ -25,34 +25,31 @@ export default function EventList({ title, category }: { title: string; category
   const [isModalVisible, setIsModalVisible] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
-  const {
-    isLoading: dataLoading,
-    error: dataError,
-    data: data,
-  } = useQuery({
-    queryKey: [category],
-    queryFn: () =>
-      request
-        .get('/events/near?category=' + category + '&radius=' + radius + '&limit=' + true, {
-          params: {
-            y: latitude,
-            x: longitude,
-          },
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        })
-        .catch((err) => {
-          console.error('Failed to get featured local events');
-        }),
-  });
+  const [data, setData] = useState([]);
+  const [dataLoading, setDataLoading] = useState(true);
 
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: [category] });
-  }, [token]);
+  if (longitude != undefined && latitude != undefined) {
+    request
+      .get(`/events/near?category=${category}&radius=${radius}&limit=${true}`, {
+        params: {
+          y: latitude,
+          x: longitude,
+        },
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        setData(res.data);
+        setDataLoading(false);
+      })
+      .catch((err) => {
+        console.error('Failed to get featured local events');
+        setDataLoading(false);
+      });
+  } else {
+    return [];
+  }
 
   return (
     <View>
@@ -103,7 +100,7 @@ export default function EventList({ title, category }: { title: string; category
           <View>
             <LoadingIndicator />
           </View>
-        ) : dataError || data == null || data.length == 0 ? (
+        ) : data == null || data.length == 0 ? (
           <Text className="align-center justify-center text-center text-xl text-white">
             No {title} events near you!
           </Text>
@@ -113,7 +110,7 @@ export default function EventList({ title, category }: { title: string; category
             data={data}
             horizontal={true}
             renderItem={({ item }) => <SmallEventCard item={item} />}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item: any) => item.id.toString()}
             initialNumToRender={5}></FlatList>
         )}
       </View>

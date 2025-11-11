@@ -40,7 +40,6 @@ const Profile = () => {
           },
         })
         .then((res) => {
-          console.log('FOund business');
           return res.data;
         })
         .catch(() => {}),

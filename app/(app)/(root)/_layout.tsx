@@ -20,13 +20,14 @@ export default function RootLayout() {
           tabBarStyle: {
             borderRadius: 10,
             borderTopWidth: 0,
-            height: Platform.OS == 'web' ? 75 : 50,
+            height: 'auto',
+            padding: 10,
             marginBottom: 10,
             overflow: 'hidden',
             marginHorizontal: Platform.OS == 'web' ? '3%' : '2%',
           },
           tabBarIconStyle: {
-            fontSize: 20,
+            width: '30%',
           },
           sceneStyle: {
             backgroundColor: 'black',

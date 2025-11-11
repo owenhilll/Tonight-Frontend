@@ -18,6 +18,8 @@ import Modal from 'react-native-modal';
 import { DateSelection } from '../DateTimePicker';
 import { Post } from '../Components/Post';
 import LoadingIndicator from '../Components/LoadingIndicator';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { Picker } from '@react-native-picker/picker';
 
 export default function Posts({
   id,
@@ -32,33 +34,11 @@ export default function Posts({
   queryKey: string;
   header: string;
 }) {
-  const queryClient = useQueryClient();
   const { longitude, latitude, user, token, radius } = useAuth();
-  const {
-    isLoading: dataLoading,
-    error: dataError,
-    data: data,
-  } = useQuery({
-    queryKey: [queryKey + 'full'],
-    queryFn: () =>
-      request
-        .get(querystring, {
-          params: {
-            y: latitude,
-            x: longitude,
-          },
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        }),
-  });
-  const [modifiedHeader, setModifiedHeader] = useState('');
+  const [data, setData] = useState([]);
+  const [dataLoading, setDataLoading] = useState(true);
+
+  const [modifiedHeader, setModifiedHeader] = useState(header);
   useEffect(() => {
     switch (header) {
       case 'Show':
@@ -91,11 +71,61 @@ export default function Posts({
       default:
         break;
     }
-  }, []);
+    request
+      .get(querystring, {
+        params: {
+          y: latitude,
+          x: longitude,
+        },
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        return setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setDataLoading(false);
+  }, [header]);
+
+  const [sortBy, setSortBy] = useState('Views');
+  const [open, setOpen] = useState(false);
 
   return (
     <View className="flex-1">
-      <Text className="mt-0 text-center text-3xl text-white">{modifiedHeader}</Text>
+      <View className="z-50 flex-row items-center">
+        <Text className="flex-1 text-3xl text-white">{modifiedHeader}</Text>
+
+        <Text className="mr-2 text-lg text-white">Sort By</Text>
+
+        <DropDownPicker
+          open={open}
+          placeholder=""
+          style={{
+            width: 'auto',
+            flex: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          containerStyle={{
+            width: 'auto',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          setOpen={setOpen}
+          items={[
+            { label: 'Views', value: 'Views' },
+            { label: 'Bookmarks', value: 'Bookmarks' },
+          ]}
+          multiple={false}
+          value={sortBy}
+          setValue={setSortBy}
+          theme="DARK"
+        />
+      </View>
+      <hr />
       {dataLoading ? (
         <View className="h-[100%]">
           <LoadingIndicator />

@@ -13,6 +13,7 @@ export default function map() {
   const [data, setData] = useState<any[]>([]);
   const [key, setKey] = useState(0);
   const queryClient = useQueryClient();
+
   const mapStyle = [
     {
       elementType: 'geometry',
@@ -202,7 +203,6 @@ export default function map() {
         },
       })
       .then(async (res) => {
-        console.log('events returned');
         let tmpdata: any[] = [];
         const promises = res.data.map(async (val: any) => {
           await request
@@ -221,6 +221,7 @@ export default function map() {
                 .then((json) => {
                   return json.data;
                 });
+
               tmpdata.push({
                 coords: res.data.coordinates,
                 label: val.title,
@@ -231,10 +232,9 @@ export default function map() {
                 eventid: val.id,
                 businessid: res.data.id,
               });
-              console.log('pushed item');
             });
         });
-        console.log('finsihed mapping');
+
         const final = await Promise.all(promises);
         setData(tmpdata);
         setKey(key + 1);
@@ -246,7 +246,7 @@ export default function map() {
 
   const bookmarkItem = async (eventid: number, businessid: number) => {
     const userid = user['user']['id'];
-    console.log(`bookmarking ${eventid} ${businessid}`);
+
     await request
       .post(
         '/bookmarks/add',
@@ -274,7 +274,6 @@ export default function map() {
 
   const removeBookmark = async (eventid: number) => {
     const userid = user['user']['id'];
-    console.log('removed bookmark');
 
     await request
       .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid, {
@@ -307,7 +306,6 @@ export default function map() {
           },
         })
         .then((res) => {
-          console.log(res.data);
           return res.data;
         })
         .catch((err) => {

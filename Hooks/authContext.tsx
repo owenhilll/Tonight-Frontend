@@ -50,11 +50,12 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
         const storedUser = await AsyncStorage.getItem('user');
 
         const storedToken = await AsyncStorage.getItem('token');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
         if (storedToken) {
           setToken(storedToken);
+        }
+
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
         }
       } catch (error) {
         console.error('Failed to load user data:', error);
@@ -62,18 +63,20 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
         setIsLoading(false);
       }
     };
-    loadAuthData();
+    const getlocation = async () => {
+      const status = await Location.requestForegroundPermissionsAsync();
 
-    Location.requestForegroundPermissionsAsync()
-      .then((status) => {
-        if (status) {
-          Location.getCurrentPositionAsync({}).then((location) => {
-            setLatitude(location.coords.latitude);
-            setLongitude(location.coords.longitude);
-          });
-        }
-      })
-      .catch(() => {});
+      if (status) {
+        const location = await Location.getCurrentPositionAsync({});
+
+        setLatitude(location.coords.latitude);
+        setLongitude(location.coords.longitude);
+
+        loadAuthData();
+      }
+    };
+
+    getlocation();
   }, []);
 
   const continueAsGuest = () => {

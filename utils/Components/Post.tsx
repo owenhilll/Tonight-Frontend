@@ -38,7 +38,7 @@ export const Post = ({
     minute: 'numeric',
     hour12: true,
   };
-  console.log(item);
+
   let time = date.toLocaleTimeString('en-US', options);
   const [edit, setEdit] = useState(false);
 
