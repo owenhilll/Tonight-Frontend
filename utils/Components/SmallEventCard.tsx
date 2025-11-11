@@ -189,13 +189,13 @@ export const SmallEventCard = ({ item }: { item: any }) => {
                     height: Platform.OS == 'web' ? 300 : '50%',
                     justifyContent: 'center',
                     backgroundColor: 'black',
-                    borderRadius: '20%',
-                  }}>
+                  }}
+                  className="rounded-xl">
                   <View className="mt-2 flex-1 items-center justify-center">
                     <TouchableOpacity
                       className="absolute left-5 top-5 z-50"
                       onPress={() => setShowProfile(false)}>
-                      <FontAwesome6 iconStyle="solid" size={25} color="#BBDEFB" name="arrow-left" />
+                      <FontAwesome6 iconStyle="solid" size={25} color="#00E0FF" name="arrow-left" />
                     </TouchableOpacity>
                     <View className=" border-1 mb-3 h-24 w-24 items-center justify-center overflow-hidden rounded-full border-purple-500 bg-white shadow-sm shadow-white">
                       <Image
@@ -207,24 +207,26 @@ export const SmallEventCard = ({ item }: { item: any }) => {
                         }}
                       />
                     </View>
-                    <View className="items-center space-y-4">
+                    <View className="flex-1">
                       <Text className="text-center text-xl text-white">{business?.name}</Text>
-                      <View className="flex-row">
+                      <View className="my-2 flex-row">
                         <FontAwesome6 iconStyle="solid" color="#00E0FF" size={15} name="map-pin" />
-                        <Text className="ml-3 text-white">{business?.address}</Text>
+                        <Text className="ml-3 flex-1 text-white">{business?.address}</Text>
                       </View>
 
-                      {business?.number && (
-                        <View className="flex-row">
-                          <FontAwesome6 iconStyle="solid" color="#00E0FF" size={15} name="phone" />
-                          <Text className="ml-3 text-white">{business?.number}</Text>
-                        </View>
-                      )}
-                      {business?.website && (
-                        <View className="flex-row">
-                          <Text className="ml-3 text-center text-white">{business?.website}</Text>
-                        </View>
-                      )}
+                      <View className="my-2 flex-row">
+                        <FontAwesome6 iconStyle="solid" color="#00E0FF" size={14} name="phone" />
+                        <Text className="ml-3 flex-1 text-center text-white">
+                          {business?.number ?? '- -'}
+                        </Text>
+                      </View>
+
+                      <View className="my-2 flex-row">
+                        <FontAwesome6 iconStyle="solid" color="#00E0FF" size={13} name="link" />
+                        <Text className="ml-3 flex-1 text-center text-white">
+                          {business?.website ?? '- -'}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>

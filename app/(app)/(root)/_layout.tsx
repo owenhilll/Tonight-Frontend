@@ -4,9 +4,9 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Platform, View } from 'react-native';
-
 export default function RootLayout() {
   const { user } = useAuth();
+
   return (
     <View style={{ backgroundColor: 'black', flex: 1 }}>
       <Tabs

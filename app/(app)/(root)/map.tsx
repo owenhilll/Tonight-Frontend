@@ -7,7 +7,7 @@ import { request } from '../../../utils/axios';
 import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-
+import Collapsible from 'react-native-collapsible';
 export default function map() {
   const { latitude, longitude, user, token } = useAuth();
   const [data, setData] = useState<any[]>([]);
@@ -312,48 +312,65 @@ export default function map() {
           console.error('Failed to get Bookmarks');
         }),
   });
-
+  const [legendCollapsed, setLegendCollapsed] = useState(true);
   return (
-    <View className="flex-1">
-      <View
-        style={{ flexDirection: Platform.OS == 'web' ? 'column' : 'row', flexWrap: 'wrap' }}
-        className="absolute left-1 top-1 z-50 rounded-lg border-2 border-white bg-[#38414e] p-2 shadow-lg">
-        <Text className="mr-4 text-2xl font-bold text-white">Legend</Text>
-        <View className="my-1 flex-row items-center">
-          <FontAwesome6 name="location-dot" size={30} color="#0000CC" />
-          <Text className="mx-4 text-xl text-gray-300 ">Drinks</Text>
+    <View className="relative flex-1">
+      <TouchableOpacity
+        onPress={() => setLegendCollapsed(!legendCollapsed)}
+        className="absolute left-3 top-5 z-50 rounded-lg bg-[#00E0FF] px-4 py-2">
+        <View className="flex-row items-center">
+          <Text className="z-50 mr-2 text-center text-2xl ">Legend</Text>
+          <FontAwesome6
+            name="caret-down"
+            classname="mr-5"
+            size={15}
+            iconstyle="solid"
+            color="black"
+          />
         </View>
-        <View className="my-1 flex-row items-center">
-          <FontAwesome6 name="location-dot" size={30} color="#ff8000" />
-          <Text className="mx-4 text-xl text-gray-300 ">Food</Text>
-        </View>
-        <View className="my-1 flex-row items-center">
-          <FontAwesome6 name="location-dot" size={30} color="#ff0000" />
-          <Text className="mx-4 text-xl text-gray-300 ">Show</Text>
-        </View>
-        <View className="my-1 flex-row items-center">
-          <FontAwesome6 name="location-dot" size={30} color="#6600cc" />
-          <Text className="mx-4 text-xl text-gray-300 ">Shop</Text>
-        </View>
-        <View className="my-1 flex-row items-center">
-          <FontAwesome6 name="location-dot" size={30} color="#009900" />
-          <Text className="mx-4 text-xl text-gray-300 ">Sports</Text>
-        </View>
-        <View className="my-1 flex-row items-center">
-          <FontAwesome6 name="location-dot" size={30} color="#009999" />
-          <Text className="mx-4 text-xl text-gray-300 ">Games</Text>
-        </View>
-        <View className="my-1 flex-row items-center">
-          <FontAwesome6 name="location-dot" size={30} color="#66ffb2" />
-          <Text className="mx-4 text-xl text-gray-300 ">Music</Text>
-        </View>
-        <View className="my-1 flex-row items-center">
-          <FontAwesome6 name="location-dot" size={30} color="#999900" />
-          <Text className="mx-4 text-xl text-gray-300">Outdoor Activity</Text>
-        </View>
-        <Text className="text-s my-1 text-white" numberOfLines={2}>
-          Clink pin to get more information
-        </Text>
+      </TouchableOpacity>
+      <View className="absolute left-3 top-16 z-50">
+        <Collapsible collapsed={legendCollapsed}>
+          <View
+            style={{ flexDirection: Platform.OS == 'web' ? 'column' : 'row', flexWrap: 'wrap' }}
+            className="rounded-lg border-2 border-white bg-[#38414e] p-2 shadow-lg">
+            <View className="my-1 flex-row items-center">
+              <FontAwesome6 name="location-dot" size={30} color="#0000CC" />
+              <Text className="mx-4 text-xl text-gray-300 ">Drinks</Text>
+            </View>
+            <View className="my-1 flex-row items-center">
+              <FontAwesome6 name="location-dot" size={30} color="#ff8000" />
+              <Text className="mx-4 text-xl text-gray-300 ">Food</Text>
+            </View>
+            <View className="my-1 flex-row items-center">
+              <FontAwesome6 name="location-dot" size={30} color="#ff0000" />
+              <Text className="mx-4 text-xl text-gray-300 ">Show</Text>
+            </View>
+            <View className="my-1 flex-row items-center">
+              <FontAwesome6 name="location-dot" size={30} color="#6600cc" />
+              <Text className="mx-4 text-xl text-gray-300 ">Shop</Text>
+            </View>
+            <View className="my-1 flex-row items-center">
+              <FontAwesome6 name="location-dot" size={30} color="#009900" />
+              <Text className="mx-4 text-xl text-gray-300 ">Sports</Text>
+            </View>
+            <View className="my-1 flex-row items-center">
+              <FontAwesome6 name="location-dot" size={30} color="#009999" />
+              <Text className="mx-4 text-xl text-gray-300 ">Games</Text>
+            </View>
+            <View className="my-1 flex-row items-center">
+              <FontAwesome6 name="location-dot" size={30} color="#66ffb2" />
+              <Text className="mx-4 text-xl text-gray-300 ">Music</Text>
+            </View>
+            <View className="my-1 flex-row items-center">
+              <FontAwesome6 name="location-dot" size={30} color="#999900" />
+              <Text className="mx-4 text-xl text-gray-300">Outdoor Activity</Text>
+            </View>
+            <Text className="text-s my-1 text-white" numberOfLines={2}>
+              Clink pin to get more information
+            </Text>
+          </View>
+        </Collapsible>
       </View>
       <MapView
         provider="google"
@@ -362,6 +379,9 @@ export default function map() {
         customMapStyle={mapStyle}
         minZoomLevel={13}
         maxZoomLevel={17}
+        options={{
+          disableDefaultUI: true,
+        }}
         initialRegion={{
           latitude: latitude,
           longitude: longitude,

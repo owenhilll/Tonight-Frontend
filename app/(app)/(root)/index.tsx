@@ -8,6 +8,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import SetRadiusSlider from '../../../utils/Components/SetRadiusSlider';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import { useEffect, useLayoutEffect } from 'react';
+
 export default function HomeScreen() {
   const { radius, setRadius, logout, user } = useAuth();
 
@@ -60,6 +62,7 @@ export default function HomeScreen() {
         className="my-[1%] mb-2 flex-1 rounded-lg bg-[#262626]"
         contentContainerStyle={{ flexGrow: 1 }}>
         {/* Sports*/}
+
         <View className="my-[1%] h-auto">
           <EventList title={'Sports'} category={'Sport'} />
         </View>

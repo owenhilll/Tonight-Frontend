@@ -144,12 +144,12 @@ export default function Browse() {
               <LinearGradient
                 colors={[changeColor(color, 0.001), color]}
                 style={{
-                  margin: 2,
-                  marginVertical: 10,
+                  marginHorizontal: 3,
                   borderRadius: 12,
                   width: Platform.OS == 'web' ? 200 : 150,
-                  height: Platform.OS == 'web' ? 100 : 100,
-                }}>
+                  height: Platform.OS == 'web' ? 100 : 75,
+                }}
+                className="m-3">
                 <TouchableOpacity
                   onPress={() => {
                     setCategory(item.value);
@@ -160,9 +160,8 @@ export default function Browse() {
                   }}
                   style={{
                     padding: 10,
-                    margin: 5,
                   }}
-                  className="flex-1 flex-row items-center rounded-lg">
+                  className="mx-2 flex-1 flex-row items-center rounded-lg">
                   <View className="absolute right-2 top-2">{item.icon}</View>
                   <Text className="mx-2 flex-1 text-center text-2xl font-bold text-white">
                     {item.label}

@@ -75,7 +75,7 @@ export default function EventList({ title, category }: { title: string; category
               <TouchableOpacity
                 className="absolute left-5 top-5 z-50"
                 onPress={() => setIsModalVisible(false)}>
-                <FontAwesome6 iconStyle="solid" size={25} color="#BBDEFB" name="arrow-left" />
+                <FontAwesome6 iconStyle="solid" size={25} color="#00E0FF" name="arrow-left" />
               </TouchableOpacity>
               <Posts
                 header={category}
@@ -93,7 +93,7 @@ export default function EventList({ title, category }: { title: string; category
         <View className="m-5 flex-row items-center justify-between">
           <Text className="text-xl font-bold text-white">{title}</Text>
           <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-            <FontAwesome6 iconStyle="solid" size={20} color="#BBDEFB" name="arrow-right" />
+            <FontAwesome6 iconStyle="solid" size={20} color="#00E0FF" name="arrow-right" />
           </TouchableOpacity>
         </View>
         {dataLoading ? (
