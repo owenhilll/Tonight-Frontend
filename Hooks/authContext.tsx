@@ -7,14 +7,42 @@ import { store } from 'expo-router/build/global-state/router-store';
 // Requesting permissions (essential for Android)
 // Add necessary permissions to AndroidManifest.xml (e.g., ACCESS_FINE_LOCATION)
 // For iOS, add NSLocationWhenInUseUsageDescription to Info.plist
+interface User {
+  user: {
+    id: number;
+    name?: string;
+    category?: string;
+    email?: string;
+    address?: string;
+    city?: string;
+    number?: string;
+    profilepic?: string;
+    state?: string;
+    coordinates?: { x: string; y: string };
+    website?: string;
+  };
+  business: boolean;
+  guest?: boolean;
+}
+interface AuthContextProps {
+  user: User | null;
+  login: (email: string, password: string) => Promise<void>;
+  latitude: number;
+  longitude: number;
+  setRadius: React.Dispatch<React.SetStateAction<number>>;
+  logout: () => Promise<void>;
+  continueAsGuest: () => void;
+  radius: number;
+  token: string;
+}
 
-const AuthContext = createContext(null);
+const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
-export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) => {
-  const [latitude, setLatitude] = useState<number | undefined>(undefined);
-  const [longitude, setLongitude] = useState<number | undefined>(undefined);
+export const AuthContextProvider = ({ children }: PropsWithChildren) => {
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
   const [radius, setRadius] = useState<number>(5);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -39,10 +67,6 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
     setUser(null);
     await AsyncStorage.removeItem('user');
   }
-
-  const setRadiusFromChild = (e: number) => {
-    setRadius(e);
-  };
 
   useEffect(() => {
     const loadAuthData = async () => {
@@ -80,23 +104,26 @@ export const AuthContextProvider: React.FC = ({ children }: PropsWithChildren) =
   }, []);
 
   const continueAsGuest = () => {
-    let u = { user: { id: null }, guest: true };
+    let u: User = { user: { id: 0 }, guest: true, business: false };
     setUser(u);
   };
 
-  const contextValue = {
-    user,
-    login,
-    latitude,
-    longitude,
-    setRadius,
-    logout,
-    continueAsGuest,
-    radius,
-    token,
-  };
-
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        latitude,
+        longitude,
+        setRadius,
+        logout,
+        continueAsGuest,
+        radius,
+        token,
+      }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default function useAuth() {

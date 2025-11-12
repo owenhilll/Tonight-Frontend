@@ -16,7 +16,7 @@ import { Link, useRouter } from 'expo-router';
 import useAuth from '../Hooks/authContext';
 import { FontAwesome6 } from '@expo/vector-icons';
 
-const Register = () => {
+const SignIn = () => {
   const { login } = useAuth();
   const router = useRouter();
 
@@ -152,11 +152,7 @@ const Register = () => {
             className="mt-2 text-right text-white underline">
             Forgot Password?
           </Text>
-          {err && (
-            <Text>
-              <Text className="text-center text-xl text-red-400">{err}</Text>
-            </Text>
-          )}
+          {err != '' && <Text className="text-center text-xl text-red-400">{err}</Text>}
           <View style={{ paddingHorizontal: '10%' }}>
             <TouchableOpacity
               className="mt-10 rounded-2xl bg-[#00E0FF] p-2 text-center text-xl"
@@ -178,4 +174,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default SignIn;

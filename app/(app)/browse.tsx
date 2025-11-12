@@ -1,21 +1,19 @@
 import { FontAwesome6 } from '@expo/vector-icons';
-import useAuth from '../../../Hooks/authContext';
+import useAuth from '../../Hooks/authContext';
 import { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, Modal, Platform, Text, TouchableOpacity, View } from 'react-native';
-import Posts from '../../../utils/Modals/Posts';
+import Posts from '../../utils/Modals/Posts';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { request } from '../../../utils/axios';
-import { SmallEventCard } from '../../../utils/Components/SmallEventCard';
+import { request } from '../../utils/axios';
+import { SmallEventCard } from '../../utils/Components/SmallEventCard';
 import { Checkbox } from 'expo-checkbox';
 import LoadingIndicator from 'utils/Components/LoadingIndicator';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Browse() {
-  const [value, setvalue] = useState('');
-
-  const { user, radius, latitude, longitude, token } = useAuth();
+  const { radius } = useAuth();
 
   const [open, setOpen] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -104,7 +102,7 @@ export default function Browse() {
       <View className="w-full flex-row">
         <View className="flex-1 p-0">
           <Image
-            source={require('../../../assets/logo4.png')}
+            source={require('../../assets/logo4.png')}
             resizeMode="contain"
             style={{
               width: Platform.OS == 'web' ? 100 : 'auto',
@@ -179,7 +177,6 @@ export default function Browse() {
               style={{ marginHorizontal: Platform.OS == 'web' ? '5%' : '2%', padding: '2%' }}>
               <Posts
                 querystring={'/events/near?category=' + category + '&radius=' + radius}
-                id={user['user']['id']}
                 queryKey={''}
                 header={category}
                 profile={false}

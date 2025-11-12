@@ -1,14 +1,14 @@
-import useAuth from '../../../Hooks/authContext';
+import useAuth from '../../Hooks/authContext';
 
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { request } from '../../../utils/axios';
+import { request } from '../../utils/axios';
 
 import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Collapsible from 'react-native-collapsible';
-export default function map() {
+export default function Map() {
   const { latitude, longitude, user, token } = useAuth();
   const [data, setData] = useState<any[]>([]);
   const [key, setKey] = useState(0);
@@ -245,7 +245,7 @@ export default function map() {
   }, []);
 
   const bookmarkItem = async (eventid: number, businessid: number) => {
-    const userid = user['user']['id'];
+    const userid = user?.user.id;
 
     await request
       .post(
@@ -266,14 +266,14 @@ export default function map() {
           queryKey: ['bookmarks'],
         });
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + user['user']['id']],
+          queryKey: ['bookmarks' + user?.user.id],
         });
       })
       .catch((err) => {});
   };
 
   const removeBookmark = async (eventid: number) => {
-    const userid = user['user']['id'];
+    const userid = user?.user.id;
 
     await request
       .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid, {
@@ -286,7 +286,7 @@ export default function map() {
           queryKey: ['bookmarks'],
         });
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + user['user']['id']],
+          queryKey: ['bookmarks' + user?.user.id],
         });
       })
       .catch((err) => {});
@@ -300,7 +300,7 @@ export default function map() {
     queryKey: ['bookmarks'],
     queryFn: () =>
       request
-        .get('/bookmarks/get?userid=' + user['user']['id'], {
+        .get('/bookmarks/get?userid=' + user?.user.id, {
           headers: {
             Authorization: token,
           },
@@ -438,7 +438,7 @@ export default function map() {
                       }}
                     />
                   </View>
-                  {!user['business'] && !user['guest'] && (
+                  {!user?.business && !user?.guest && (
                     <View className="mr-1 flex-row">
                       <TouchableOpacity
                         onPress={() =>

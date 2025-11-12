@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import useAuth from '../../../Hooks/authContext';
+import useAuth from '../../Hooks/authContext';
 import { FlatList, Image, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { request } from '../../../utils/axios';
-import Posts from '../../../utils/Modals/Posts';
+import { request } from '../../utils/axios';
+import Posts from '../../utils/Modals/Posts';
 import { Post } from 'utils/Components/Post';
 
-export default function BookMarks() {
+export default function Bookmarks() {
   const { user, token, logout } = useAuth();
 
-  const queryKey = 'bookmarks' + user['user']['id'];
+  const queryKey = 'bookmarks' + user?.user.id;
 
   const {
     isLoading: bookmarksLoading,
@@ -18,7 +18,7 @@ export default function BookMarks() {
     queryKey: [queryKey],
     queryFn: () =>
       request
-        .get('/bookmarks/get?userid=' + user['user']['id'], {
+        .get('/bookmarks/get?userid=' + user?.user.id, {
           headers: {
             Authorization: token,
           },
@@ -47,7 +47,7 @@ export default function BookMarks() {
       <View className="w-[100%] flex-row">
         <View className="flex-1 p-0">
           <Image
-            source={require('../../../assets/logo4.png')}
+            source={require('../../assets/logo4.png')}
             resizeMode="contain"
             style={{
               width: Platform.OS == 'web' ? 100 : 'auto',
@@ -62,7 +62,7 @@ export default function BookMarks() {
         </View>
         <View className="flex-1" />
       </View>
-      {!user['guest'] ? (
+      {!user?.guest ? (
         <View className="h-full flex-1">
           <FlatList
             data={bookmarks}

@@ -22,13 +22,11 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { Picker } from '@react-native-picker/picker';
 
 export default function Posts({
-  id,
   querystring,
   queryKey,
   profile,
   header,
 }: {
-  id: string;
   profile: boolean;
   querystring: any | undefined;
   queryKey: string;
@@ -137,7 +135,7 @@ export default function Posts({
             renderItem={({ item }) => (
               <Post item={item} profile={profile} queryKey={queryKey + 'full'} />
             )}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item}
             initialNumToRender={5}></FlatList>
         </View>
       ) : (

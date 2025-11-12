@@ -203,7 +203,7 @@ const RegisterBusiness = () => {
           </View>
           {loading && (
             <View className="items-center justify-center">
-              <LoadingIndicator></LoadingIndicator>
+              <LoadingIndicator />
             </View>
           )}
           <View className="items-center justify-center">

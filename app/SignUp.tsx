@@ -17,7 +17,7 @@ import { Link, useRouter } from 'expo-router';
 import { request } from '../utils/axios';
 import About from '../utils/Components/About';
 
-export default function LoginScreen() {
+export default function SignUp() {
   const { continueAsGuest } = useAuth();
 
   const router = useRouter();

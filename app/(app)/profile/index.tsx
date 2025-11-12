@@ -4,7 +4,7 @@ import { request } from '../../../utils/axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as ImagePicker from 'react-native-image-picker';
 import useAuth from '../../../Hooks/authContext';
 import {
@@ -34,7 +34,7 @@ const Profile = () => {
     queryKey: ['user'],
     queryFn: () =>
       request
-        .get('/businesses/find/' + user['user']['id'], {
+        .get('/businesses/find/' + user?.user.id, {
           headers: {
             Authorization: token,
           },
@@ -53,7 +53,7 @@ const Profile = () => {
       if (response.didCancel || response.errorCode) return;
 
       await request
-        .get(`/businesses/profilepic?id=${user['user']['id']}&fetchtype=putObject`, {
+        .get(`/businesses/profilepic?id=${user?.user.id}&fetchtype=putObject`, {
           headers: {
             Authorization: token,
           },
@@ -84,7 +84,7 @@ const Profile = () => {
   const [number, setNumber] = useState(business?.cell);
 
   const updateInfo = () => {
-    const id = user['user']['id'];
+    const id = user?.user.id;
     if (number === '' || website === '') {
       return;
     }
@@ -111,7 +111,7 @@ const Profile = () => {
 
   const GetProfilePic = () => {
     request
-      .get(`/businesses/profilepic?id=${user['user']['id']}&fetchtype=getObject`, {
+      .get(`/businesses/profilepic?id=${user?.user.id}&fetchtype=getObject`, {
         headers: {
           Authorization: token,
         },
@@ -133,7 +133,7 @@ const Profile = () => {
     queryKey: ['followersQuery'],
     queryFn: () =>
       request
-        .get('/relationship?id=' + user['user']['id'], {
+        .get('/relationship?id=' + user?.user.id, {
           headers: {
             Authorization: token,
           },
@@ -145,8 +145,8 @@ const Profile = () => {
 
   const followMutation = useMutation({
     mutationFn: (following: any) => {
-      if (following) return request.delete('/relationship?id=' + user['user']['id']);
-      return request.post('/relationship?id=' + user['user']['id']);
+      if (following) return request.delete('/relationship?id=' + user?.user.id);
+      return request.post('/relationship?id=' + user?.user.id);
     },
     onSuccess: () => {
       // Invalidate and refetch
@@ -157,8 +157,9 @@ const Profile = () => {
   const handleFollow = () => {
     followMutation.mutate(followers?.includes(user));
   };
-
-  GetProfilePic();
+  useEffect(() => {
+    GetProfilePic();
+  }, []);
 
   return (
     <View className="my-3 flex-1 ">
@@ -179,7 +180,7 @@ const Profile = () => {
             }}
             className="rounded-xl shadow-lg shadow-[#fa7b32]">
             <View className="mt-2 flex-1">
-              <Share close={setShowShare} queryKey={'events' + user['user']['id']} />
+              <Share close={setShowShare} queryKey={'events' + user?.user.id} />
             </View>
           </View>
         </View>
@@ -316,9 +317,8 @@ const Profile = () => {
             <ScrollView showsHorizontalScrollIndicator={false}>
               <Posts
                 header=""
-                id={user['user']['id']}
-                queryKey={'events' + user['user']['id']}
-                querystring={'/events/' + user['user']['id']}
+                queryKey={'events' + user?.user.id}
+                querystring={'/events/' + user?.user.id}
                 profile={true}
               />
             </ScrollView>

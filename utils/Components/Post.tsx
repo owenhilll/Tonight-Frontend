@@ -21,6 +21,8 @@ import { DateSelection } from '../DateTimePicker';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome } from '@expo/vector-icons';
+import { Payment } from './Payment';
+import { Link } from 'expo-router';
 
 export const Post = ({
   item,
@@ -42,7 +44,7 @@ export const Post = ({
   let time = date.toLocaleTimeString('en-US', options);
   const [edit, setEdit] = useState(false);
 
-  const adminRights = user['user']['id'] === item['businessid'];
+  const adminRights = user?.user.id === item['businessid'];
   const [editDate, setEditDate] = useState(item.date);
 
   const [editHours, setEditHours] = useState((item.duration % 24).toString());
@@ -55,7 +57,7 @@ export const Post = ({
   endDate.setHours(endDate.getHours() + item.duration);
 
   const [totalHours, setTotalHours] = useState(0);
-
+  const [showPayment, setShowPayment] = useState(false);
   const daysMap = Array.from({ length: 30 }, (v, i) => i.toString()); // 1 to 10
 
   const hoursMap = Array.from({ length: 24 }, (v, i) => i.toString()); // 1 to 10
@@ -149,7 +151,7 @@ export const Post = ({
   const bookmarkItem = async () => {
     const eventid = item.id;
     const businessid = item.businessid;
-    const userid = user['user']['id'];
+    const userid = user?.user.id;
     await request
       .post(
         '/bookmarks/add',
@@ -162,13 +164,13 @@ export const Post = ({
       )
       .then((res) => {
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
+          queryKey: ['bookmarks' + item.id + '' + user?.user.id],
         });
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id],
         });
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + user['user']['id']],
+          queryKey: ['bookmarks' + user?.user.id],
         });
       })
       .catch((err) => {});
@@ -177,7 +179,7 @@ export const Post = ({
   const removeBookmark = async () => {
     const eventid = item.id;
     const businessid = item.businessid;
-    const userid = user['user']['id'];
+    const userid = user?.user.id;
     await request
       .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid, {
         headers: {
@@ -186,13 +188,13 @@ export const Post = ({
       })
       .then((res) => {
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
+          queryKey: ['bookmarks' + item.id + '' + user?.user.id],
         });
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id],
         });
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + user['user']['id']],
+          queryKey: ['bookmarks' + user?.user.id],
         });
       })
       .catch((err) => {});
@@ -203,10 +205,10 @@ export const Post = ({
     error: bookmarkedError,
     data: bookmarked,
   } = useQuery({
-    queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
+    queryKey: ['bookmarks' + item.id + '' + user?.user.id],
     queryFn: () =>
       request
-        .get('/bookmarks/get?userid=' + user['user']['id'] + '&eventid=' + item.id, {
+        .get('/bookmarks/get?userid=' + user?.user.id + '&eventid=' + item.id, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -236,18 +238,52 @@ export const Post = ({
 
   return (
     <View className="m-5 rounded-xl bg-[#4c4c4c] p-2">
+      <Modal visible={showPayment} transparent={true}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              width: Platform.OS == 'web' ? 'auto' : '90%',
+              height: Platform.OS == 'web' ? 'auto' : '80%',
+              padding: Platform.OS == 'web' ? '5%' : 0,
+              backgroundColor: 'black',
+            }}
+            className="rounded-xl shadow-lg shadow-[#fa7b32]">
+            <View className="mt-2 flex-1">
+              <TouchableOpacity className="mt-2 w-7" onPress={() => setShowPayment(false)}>
+                <FontAwesome6 iconStyle="solid" size={25} color="#BBDEFB" name="arrow-left" />
+              </TouchableOpacity>
+              <Payment item={item} />
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View>
         <View className="flex-row">
           <View className="flex-column mr-2 w-[65%] justify-evenly">
-            <View className="">
-              {!edit && <Text className="mb-2 text-2xl font-bold text-white">{item.title}</Text>}
+            <View className="flex-row items-center">
+              {!edit && (
+                <Text className="mb-2 flex-1 text-2xl font-bold text-white">{item.title}</Text>
+              )}
               {edit && (
                 <TextInput
                   onChangeText={setEditTitle}
                   defaultValue={editTitle}
                   style={{ borderColor: 'gray', borderWidth: 1 }}
-                  className="m-3 p-2 text-base font-bold text-white"
+                  className="m-3 flex-1 p-2 text-base font-bold text-white"
                 />
+              )}
+              {!edit && adminRights && (
+                <TouchableOpacity
+                  className="rounded-lg bg-[#00E0FF] p-2 font-bold"
+                  onPress={() => setShowPayment(!showPayment)}>
+                  <Text className="font-bold">Promote</Text>
+                </TouchableOpacity>
               )}
             </View>
             <View className="flex-row items-center">
@@ -335,7 +371,7 @@ export const Post = ({
             <View className="mt-2 flex-row">
               <View className="flex-row items-center">
                 <TouchableOpacity
-                  disabled={user['business']}
+                  disabled={user?.business}
                   onPress={bookmarked ? removeBookmark : bookmarkItem}>
                   <FontAwesome color={bookmarked ? 'blue' : 'gray'} size={20} name="bookmark" />
                 </TouchableOpacity>
@@ -361,7 +397,8 @@ export const Post = ({
                     style={{
                       backgroundColor:
                         status == 'expired' ? 'red' : status == 'live' ? 'green' : 'purple',
-                    }}></View>
+                    }}
+                  />
                 </View>
               </View>
             </View>

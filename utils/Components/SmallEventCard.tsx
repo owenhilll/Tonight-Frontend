@@ -17,13 +17,13 @@ import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 import { FontAwesome } from '@expo/vector-icons';
 
 //for use in rendering events in the home page (the horizontal list)
-export const SmallEventCard = ({ item }: { item: any }) => {
-  const { user, token } = useAuth();
+export const SmallEventCard = ({ item, nearest = false }: { item: any; nearest?: boolean }) => {
+  const { user, token, latitude, longitude } = useAuth();
   const queryClient = useQueryClient();
   const bookmarkItem = async () => {
     const eventid = item.id;
     const businessid = item.businessid;
-    const userid = user['user']['id'];
+    const userid = user?.user.id;
     await request
       .post(
         '/bookmarks/add',
@@ -36,17 +36,40 @@ export const SmallEventCard = ({ item }: { item: any }) => {
       )
       .then((res) => {
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
+          queryKey: ['bookmarks' + item.id + '' + user?.user.id],
         });
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id],
         });
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + user['user']['id']],
+          queryKey: ['bookmarks' + user?.user.id],
         });
       })
       .catch((err) => {});
   };
+
+  const [proximity, setProximity] = useState(0);
+
+  useEffect(() => {
+    if (nearest) {
+      request
+        .get(`/events/proximity?id=${item.id}`, {
+          params: {
+            y: latitude,
+            x: longitude,
+            eventid: item.id,
+          },
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          if (res.data.length == 0) return;
+          setProximity(Math.ceil(res.data[0].distance * 100) / 100);
+        })
+        .catch((err) => {});
+    }
+  }, []);
 
   let endDate = new Date(item.date);
   endDate.setHours(endDate.getHours() + item.duration);
@@ -63,7 +86,7 @@ export const SmallEventCard = ({ item }: { item: any }) => {
   const removeBookmark = async () => {
     const eventid = item.id;
     const businessid = item.businessid;
-    const userid = user['user']['id'];
+    const userid = user?.user.id;
     await request
       .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid, {
         headers: {
@@ -72,13 +95,13 @@ export const SmallEventCard = ({ item }: { item: any }) => {
       })
       .then((res) => {
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
+          queryKey: ['bookmarks' + item.id + '' + user?.user.id],
         });
         queryClient.invalidateQueries({
           queryKey: ['bookmarks' + item.id],
         });
         queryClient.invalidateQueries({
-          queryKey: ['bookmarks' + user['user']['id']],
+          queryKey: ['bookmarks' + user?.user.id],
         });
       })
       .catch((err) => {});
@@ -89,10 +112,10 @@ export const SmallEventCard = ({ item }: { item: any }) => {
     error: bookmarkedError,
     data: bookmarked,
   } = useQuery({
-    queryKey: ['bookmarks' + item.id + '' + user['user']['id']],
+    queryKey: ['bookmarks' + item.id + '' + user?.user.id],
     queryFn: () =>
       request
-        .get('/bookmarks/get?userid=' + user['user']['id'] + '&eventid=' + item.id, {
+        .get('/bookmarks/get?userid=' + user?.user.id + '&eventid=' + item.id, {
           headers: {
             Authorization: token,
           },
@@ -255,7 +278,7 @@ export const SmallEventCard = ({ item }: { item: any }) => {
         </View>
       </View>
       <View className="flex-col">
-        {!user['business'] && !user['guest'] && (
+        {!user?.business && !user?.guest && (
           <View className="mr-1 flex-row items-end justify-end">
             <TouchableOpacity onPress={bookmarked ? removeBookmark : bookmarkItem}>
               <FontAwesome
@@ -270,12 +293,18 @@ export const SmallEventCard = ({ item }: { item: any }) => {
           </View>
         )}
         <View className="flex-row">
-          <View className="mt-3 flex-1 flex-row">
-            <TouchableOpacity>
-              <FontAwesome6 iconStyle="solid" color="#00E0FF" size={18} name="eye" />
-            </TouchableOpacity>
-            <Text className="ml-2 text-white">({item.views})</Text>
-          </View>
+          {nearest ? (
+            <View className="mt-3 flex-1 flex-row">
+              <Text className="ml-2 font-bold text-white">{proximity} mi.</Text>
+            </View>
+          ) : (
+            <View className="mt-3 flex-1 flex-row">
+              <TouchableOpacity>
+                <FontAwesome6 iconStyle="solid" color="#00E0FF" size={18} name="eye" />
+              </TouchableOpacity>
+              <Text className="ml-2 text-white">({item.views})</Text>
+            </View>
+          )}
           <View className="flex-row items-center">
             <Text
               style={{
@@ -289,7 +318,8 @@ export const SmallEventCard = ({ item }: { item: any }) => {
               style={{
                 backgroundColor:
                   status == 'expired' ? 'red' : status == 'live' ? 'green' : 'purple',
-              }}></View>
+              }}
+            />
           </View>
         </View>
       </View>
