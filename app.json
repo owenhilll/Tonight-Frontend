@@ -3,7 +3,7 @@
     "name": "my-expo-app",
     "slug": "my-expo-app",
     "version": "1.0.0",
-    "scheme": "my-scheme",
+    "scheme": "locale",
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -12,17 +12,10 @@
     "experiments": {
       "tsconfigPaths": true
     },
-    "expo": {
-      "plugins": [
-        [
-          "expo-location",
-          {
-            "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-          }
-        ]
-      ]
-    },
-    "plugins": [],
+    
+    "plugins": [
+      "expo-font"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -31,10 +24,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.my-expo-app"
+      "bundleIdentifier": "com.app.locale"
     },
     "android": {
       "adaptiveIcon": {

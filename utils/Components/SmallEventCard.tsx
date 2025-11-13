@@ -18,7 +18,11 @@ import { FontAwesome } from '@expo/vector-icons';
 
 //for use in rendering events in the home page (the horizontal list)
 export const SmallEventCard = ({ item, nearest = false }: { item: any; nearest?: boolean }) => {
-  const { user, token, latitude, longitude } = useAuth();
+  const { session, latitude, longitude } = useAuth();
+  const ses = JSON.parse(session ?? '');
+  const user = ses.user;
+  const token = ses.token;
+
   const queryClient = useQueryClient();
   const bookmarkItem = async () => {
     const eventid = item.id;
@@ -85,7 +89,7 @@ export const SmallEventCard = ({ item, nearest = false }: { item: any; nearest?:
 
   const removeBookmark = async () => {
     const eventid = item.id;
-    const businessid = item.businessid;
+
     const userid = user?.user.id;
     await request
       .delete('/bookmarks/delete?userid=' + userid + '&eventid=' + eventid, {

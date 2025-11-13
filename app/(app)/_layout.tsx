@@ -1,11 +1,24 @@
-import { Stack, Tabs } from 'expo-router';
+import { Redirect, Stack, Tabs } from 'expo-router';
 import useAuth from '../../Hooks/authContext';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Platform, View } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 export default function RootLayout() {
-  const { user } = useAuth();
+  const { session, isLoading } = useAuth();
+
+  // You can keep the splash screen open, or render a loading screen like we do here.
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!session) {
+    // On web, static rendering will stop here as the user is not authenticated
+    // in the headless Node process that the pages are rendered in.
+    return <Redirect href="/signIn" />;
+  }
+
+  const user = JSON.parse(session ?? '').user;
 
   return (
     <View style={{ backgroundColor: 'black', flex: 1 }}>

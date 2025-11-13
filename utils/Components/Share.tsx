@@ -38,7 +38,10 @@ const Share = ({
   const [open, setOpen] = useState(false);
 
   const [err, setErr] = useState('');
-  const { user, token } = useAuth();
+  const { session } = useAuth();
+  const ses = JSON.parse(session ?? '');
+
+  const token = ses.token;
   const [items, setItems] = useState([
     {
       label: 'Food',

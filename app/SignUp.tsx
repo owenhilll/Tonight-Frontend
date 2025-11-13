@@ -119,7 +119,7 @@ export default function SignUp() {
       <View className="flex-column border-blue-800">
         <View className="mb-3 flex-row justify-center">
           <Text className="text-lg text-white">Already have an account? </Text>
-          <Link href={'/'}>
+          <Link href={'/signIn'}>
             <Text className="mx-2 text-lg text-[#00E0FF] underline">Login</Text>
           </Link>
         </View>

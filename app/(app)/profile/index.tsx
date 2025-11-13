@@ -22,7 +22,10 @@ import {
 import { FontAwesome6 } from '@expo/vector-icons';
 
 const Profile = () => {
-  const { user, logout, token } = useAuth();
+  const { logout, session } = useAuth();
+  const ses = JSON.parse(session ?? '');
+  const user = ses.user;
+  const token = ses.token;
 
   const queryClient = useQueryClient();
 
@@ -45,7 +48,6 @@ const Profile = () => {
         .catch(() => {}),
   });
 
-  const [index, setIndex] = useState(0);
   const [profilepic, setProfilePic] = useState('');
 
   const SetProfilePic = () => {

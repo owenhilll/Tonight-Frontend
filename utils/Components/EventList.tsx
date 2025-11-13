@@ -29,12 +29,15 @@ export default function EventList({
   queryKey: string;
   nearest?: boolean;
 }) {
-  const { longitude, latitude, user, radius, token } = useAuth();
+  const { longitude, latitude, session, radius } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
   const [data, setData] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
+  const ses = JSON.parse(session ?? '');
+  const user = ses.user;
+  const token = ses.token;
 
   if (longitude != undefined && latitude != undefined) {
     request

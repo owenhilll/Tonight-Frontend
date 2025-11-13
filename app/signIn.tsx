@@ -163,7 +163,7 @@ const SignIn = () => {
           <View className="flex-column mb-2 items-center border-blue-800">
             <View className="my-3 flex-row">
               <Text className="text-lg text-white">Dont have an Account? </Text>
-              <Link href={'/SignUp'}>
+              <Link href={'/signUp'}>
                 <Text className="ml-2 text-lg text-[#00E0FF] underline">Create Account</Text>
               </Link>
             </View>

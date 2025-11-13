@@ -23,6 +23,7 @@ import { Picker } from '@react-native-picker/picker';
 import { FontAwesome } from '@expo/vector-icons';
 import { Payment } from './Payment';
 import { Link } from 'expo-router';
+import Checkout from '../../app/(app)/profile/checkout';
 
 export const Post = ({
   item,
@@ -33,7 +34,11 @@ export const Post = ({
   profile: boolean;
   queryKey: string;
 }) => {
-  const { user, token } = useAuth();
+  const { session } = useAuth();
+  const ses = JSON.parse(session ?? '');
+  const user = ses.user;
+  const token = ses.token;
+
   const date = new Date(item.date);
   const options: Intl.DateTimeFormatOptions = {
     hour: 'numeric',
@@ -210,7 +215,25 @@ export const Post = ({
       request
         .get('/bookmarks/get?userid=' + user?.user.id + '&eventid=' + item.id, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          return res.data.length == 1;
+        }),
+  });
+
+  const {
+    isLoading: promotedLoading,
+    error: promotedError,
+    data: promoted,
+  } = useQuery({
+    queryKey: ['promoted' + item.id + '' + user?.user.id],
+    queryFn: () =>
+      request
+        .get(`/events/promoted/${item.id}`, {
+          headers: {
+            Authorization: token,
           },
         })
         .then((res) => {
@@ -228,7 +251,7 @@ export const Post = ({
       request
         .get('/bookmarks/get?eventid=' + item.id, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
           },
         })
         .then((res) => {
@@ -255,10 +278,11 @@ export const Post = ({
             }}
             className="rounded-xl shadow-lg shadow-[#fa7b32]">
             <View className="mt-2 flex-1">
-              <TouchableOpacity className="mt-2 w-7" onPress={() => setShowPayment(false)}>
+              <TouchableOpacity className="w-7" onPress={() => setShowPayment(false)}>
                 <FontAwesome6 iconStyle="solid" size={25} color="#BBDEFB" name="arrow-left" />
               </TouchableOpacity>
-              <Payment item={item} />
+
+              <Checkout eventid={item.id} />
             </View>
           </View>
         </View>
@@ -278,12 +302,15 @@ export const Post = ({
                   className="m-3 flex-1 p-2 text-base font-bold text-white"
                 />
               )}
-              {!edit && adminRights && (
+              {!edit && adminRights && !promoted && (
                 <TouchableOpacity
                   className="rounded-lg bg-[#00E0FF] p-2 font-bold"
                   onPress={() => setShowPayment(!showPayment)}>
                   <Text className="font-bold">Promote</Text>
                 </TouchableOpacity>
+              )}
+              {!edit && adminRights && promoted && (
+                <Text className="text-2xl font-bold text-green-400">Promoted</Text>
               )}
             </View>
             <View className="flex-row items-center">

@@ -3,29 +3,13 @@ import React, { createContext, PropsWithChildren, use, useEffect, useState } fro
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { store } from 'expo-router/build/global-state/router-store';
+import { useStorageState } from './useStorageState';
 
 // Requesting permissions (essential for Android)
 // Add necessary permissions to AndroidManifest.xml (e.g., ACCESS_FINE_LOCATION)
 // For iOS, add NSLocationWhenInUseUsageDescription to Info.plist
-interface User {
-  user: {
-    id: number;
-    name?: string;
-    category?: string;
-    email?: string;
-    address?: string;
-    city?: string;
-    number?: string;
-    profilepic?: string;
-    state?: string;
-    coordinates?: { x: string; y: string };
-    website?: string;
-  };
-  business: boolean;
-  guest?: boolean;
-}
+
 interface AuthContextProps {
-  user: User | null;
   login: (email: string, password: string) => Promise<void>;
   latitude: number;
   longitude: number;
@@ -33,18 +17,18 @@ interface AuthContextProps {
   logout: () => Promise<void>;
   continueAsGuest: () => void;
   radius: number;
-  token: string;
+  session?: string | null;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
+  const [[isLoading, session], setSession] = useStorageState('session');
+
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [radius, setRadius] = useState<number>(5);
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
 
   async function login(email: string, password: string) {
     const res = await request.post(
@@ -56,37 +40,15 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     );
 
     if (res.status == 200) {
-      await AsyncStorage.setItem('user', JSON.stringify(res.data.data));
-      await AsyncStorage.setItem('token', res.data.token);
-      setUser(res.data.data);
-      setToken(res.data.token);
+      setSession(JSON.stringify({ user: res.data.data, token: res.data.token }));
     }
   }
 
   async function logout() {
-    setUser(null);
-    await AsyncStorage.removeItem('user');
+    setSession(null);
   }
 
   useEffect(() => {
-    const loadAuthData = async () => {
-      try {
-        const storedUser = await AsyncStorage.getItem('user');
-
-        const storedToken = await AsyncStorage.getItem('token');
-        if (storedToken) {
-          setToken(storedToken);
-        }
-
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error('Failed to load user data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     const getlocation = async () => {
       const status = await Location.requestForegroundPermissionsAsync();
 
@@ -95,8 +57,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
         setLatitude(location.coords.latitude);
         setLongitude(location.coords.longitude);
-
-        loadAuthData();
       }
     };
 
@@ -104,14 +64,13 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   const continueAsGuest = () => {
-    let u: User = { user: { id: 0 }, guest: true, business: false };
-    setUser(u);
+    let u = JSON.stringify({ user: { id: 0 }, guest: true, business: false });
+    setSession(u);
   };
 
   return (
     <AuthContext.Provider
       value={{
-        user,
         login,
         latitude,
         longitude,
@@ -119,7 +78,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         logout,
         continueAsGuest,
         radius,
-        token,
+        session,
+        isLoading,
       }}>
       {children}
     </AuthContext.Provider>

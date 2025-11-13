@@ -32,7 +32,10 @@ export default function Posts({
   queryKey: string;
   header: string;
 }) {
-  const { longitude, latitude, user, token, radius } = useAuth();
+  const { longitude, latitude, session, radius } = useAuth();
+  const ses = JSON.parse(session ?? '');
+  const user = ses.user;
+  const token = ses.token;
   const [data, setData] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
 

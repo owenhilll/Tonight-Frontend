@@ -15,7 +15,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function Browse() {
   const { radius } = useAuth();
 
-  const [open, setOpen] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const queryClient = useQueryClient();
 
@@ -171,7 +170,7 @@ export default function Browse() {
           }}
         />
         <View className="w-full flex-1">
-          {category && (
+          {category != '' && (
             <View
               className="mt-2 flex-1 pt-10 "
               style={{ marginHorizontal: Platform.OS == 'web' ? '5%' : '2%', padding: '2%' }}>

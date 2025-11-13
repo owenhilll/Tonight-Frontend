@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { Alert, Button, TouchableOpacity } from 'react-native';
 import { request } from 'utils/axios';
 
-export const Payment = ({ item }: { item: any }) => {
-  const { token } = useAuth();
+export const Payment = ({ eventid, duration }: { eventid: any; duration: number }) => {
+  const { session } = useAuth();
+  const ses = JSON.parse(session ?? '');
+  const token = ses.token;
 
   const [publishableKey, setPublishableKey] = useState('');
 
@@ -23,7 +25,7 @@ export const Payment = ({ item }: { item: any }) => {
   };
 
   const fetchPaymentSheetParams = async () => {
-    const response = await request.post(`/payments/payment-sheet`, {
+    const response = await request.post(`/payments/paymentsheet?duration=${duration}`, {
       headers: {
         authorization: token,
       },

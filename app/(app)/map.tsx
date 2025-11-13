@@ -9,7 +9,10 @@ import MapView, { Callout, Marker } from 'react-native-maps';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Collapsible from 'react-native-collapsible';
 export default function Map() {
-  const { latitude, longitude, user, token } = useAuth();
+  const { latitude, longitude, session } = useAuth();
+  const ses = JSON.parse(session ?? '');
+  const user = ses.user;
+  const token = ses.token;
   const [data, setData] = useState<any[]>([]);
   const [key, setKey] = useState(0);
   const queryClient = useQueryClient();

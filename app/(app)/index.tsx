@@ -11,9 +11,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useLayoutEffect } from 'react';
 
 export default function HomeScreen() {
-  const { radius, setRadius, logout, user } = useAuth();
+  const { radius, setRadius, logout, session } = useAuth();
 
   const queryClient = useQueryClient();
+
+  const ses = JSON.parse(session ?? '');
+  const user = ses.user;
 
   return (
     <View className="m-0 flex-1 p-0">

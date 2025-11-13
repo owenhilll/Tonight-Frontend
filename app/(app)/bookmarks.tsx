@@ -6,7 +6,10 @@ import Posts from '../../utils/Modals/Posts';
 import { Post } from 'utils/Components/Post';
 
 export default function Bookmarks() {
-  const { user, token, logout } = useAuth();
+  const { session, logout } = useAuth();
+  const ses = JSON.parse(session ?? '');
+  const user = ses.user;
+  const token = ses.token;
 
   const queryKey = 'bookmarks' + user?.user.id;
 
