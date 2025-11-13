@@ -60,112 +60,115 @@ const SignIn = () => {
   }
 
   return (
-    <View
-      className="items-center justify-center rounded-2xl bg-[#262626]"
-      style={{
-        width: Platform.OS == 'web' ? 'auto' : '100%',
-        height: Platform.OS == 'web' ? 'auto' : '100%',
-      }}>
-      <Modal visible={showResetPassword} transparent={true}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}>
+    <View className="flex-1 items-center justify-center bg-black">
+      <View
+        className="items-center justify-center rounded-2xl bg-[#262626]"
+        style={{
+          width: Platform.OS == 'web' ? 'auto' : '100%',
+          height: Platform.OS == 'web' ? 'auto' : '100%',
+        }}>
+        <Modal visible={showResetPassword} transparent={true}>
           <View
             style={{
-              width: Platform.OS == 'web' ? 'auto' : '90%',
-              height: Platform.OS == 'web' ? 'auto' : '70%',
+              flex: 1,
               justifyContent: 'center',
-              paddingHorizontal: 10,
-              backgroundColor: '#262626',
-            }}
-            className="rounded-xl">
-            <TouchableOpacity className="my-2" onPress={() => setShowResetPassword(false)}>
-              <FontAwesome6 iconStyle="solid" size={25} color="#00E0FF" name="arrow-left" />
-            </TouchableOpacity>
-            <Text className="text-center text-3xl text-white">Reset Password</Text>
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            }}>
+            <View
+              style={{
+                width: Platform.OS == 'web' ? 'auto' : '90%',
+                height: Platform.OS == 'web' ? 'auto' : '70%',
+                justifyContent: 'center',
+                paddingHorizontal: 10,
+                backgroundColor: '#262626',
+              }}
+              className="rounded-xl">
+              <TouchableOpacity className="my-2" onPress={() => setShowResetPassword(false)}>
+                <FontAwesome6 iconStyle="solid" size={25} color="#00E0FF" name="arrow-left" />
+              </TouchableOpacity>
+              <Text className="text-center text-3xl text-white">Reset Password</Text>
+              <TextInput
+                placeholderTextColor={'gray'}
+                nativeID="emailField"
+                textContentType="emailAddress"
+                autoCapitalize="none"
+                className="my-10 rounded-lg border-2 border-gray-200 p-2 text-xl text-white"
+                onChangeText={setEmail}
+                placeholder="Email"
+              />
+              {resetErr && <Text className="text-center text-xl text-red-400">{resetErr}</Text>}
+              <TouchableOpacity
+                className="my-10 justify-center rounded-full bg-[#00E0FF] p-2 text-center text-xl"
+                onPress={handleReset}>
+                <Text className="text-center text-xl text-black">Reset</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <View
+          className="flex-1"
+          style={{
+            paddingHorizontal: Platform.OS == 'web' ? '10%' : '3%',
+            flexDirection: Platform.OS == 'web' ? 'row' : 'column',
+          }}>
+          <View style={{ flex: Platform.OS == 'web' ? 1 : undefined }}>
+            <View>
+              <Image
+                source={require('../assets/logo4.png')}
+                resizeMode="contain"
+                style={{
+                  width: Platform.OS == 'web' ? 100 : 100,
+                  height: Platform.OS == 'web' ? 100 : 100,
+                }}
+              />
+            </View>
+            <Text className="mr-10 text-wrap text-xl text-white">
+              Discover what’s happening around you — from events and live shows to food deals, drink
+              specials, and more. Explore your city, find your vibe, and make every day
+              unforgettable.
+            </Text>
+          </View>
+          <View className="flex-1">
+            <Text className="text-center text-3xl text-white">Login</Text>
             <TextInput
               placeholderTextColor={'gray'}
               nativeID="emailField"
               textContentType="emailAddress"
               autoCapitalize="none"
-              className="my-10 rounded-lg border-2 border-gray-200 p-2 text-xl text-white"
+              className="my-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
               onChangeText={setEmail}
               placeholder="Email"
             />
-            {resetErr && <Text className="text-center text-xl text-red-400">{resetErr}</Text>}
-            <TouchableOpacity
-              className="my-10 justify-center rounded-full bg-[#00E0FF] p-2 text-center text-xl"
-              onPress={handleReset}>
-              <Text className="text-center text-xl text-black">Reset</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-      <View
-        className="flex-1"
-        style={{
-          paddingHorizontal: Platform.OS == 'web' ? '10%' : '3%',
-          flexDirection: Platform.OS == 'web' ? 'row' : 'column',
-        }}>
-        <View style={{ flex: Platform.OS == 'web' ? 1 : undefined }}>
-          <View>
-            <Image
-              source={require('../assets/logo4.png')}
-              resizeMode="contain"
-              style={{
-                width: Platform.OS == 'web' ? 100 : 100,
-                height: Platform.OS == 'web' ? 100 : 100,
-              }}
+            <TextInput
+              autoCapitalize="none"
+              textContentType="password"
+              placeholderTextColor={'gray'}
+              className="mt-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
+              nativeID="passwordField"
+              onChangeText={setPassword}
+              placeholder="Password"
             />
-          </View>
-          <Text className="mr-10 text-wrap text-xl text-white">
-            Discover what’s happening around you — from events and live shows to food deals, drink
-            specials, and more. Explore your city, find your vibe, and make every day unforgettable.
-          </Text>
-        </View>
-        <View className="flex-1">
-          <Text className="text-center text-3xl text-white">Login</Text>
-          <TextInput
-            placeholderTextColor={'gray'}
-            nativeID="emailField"
-            textContentType="emailAddress"
-            autoCapitalize="none"
-            className="my-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
-            onChangeText={setEmail}
-            placeholder="Email"
-          />
-          <TextInput
-            autoCapitalize="none"
-            textContentType="password"
-            placeholderTextColor={'gray'}
-            className="mt-10 rounded-xl border-2 border-gray-200 p-2 text-xl text-white"
-            nativeID="passwordField"
-            onChangeText={setPassword}
-            placeholder="Password"
-          />
-          <Text
-            onPress={() => setShowResetPassword(true)}
-            className="mt-2 text-right text-white underline">
-            Forgot Password?
-          </Text>
-          {err != '' && <Text className="text-center text-xl text-red-400">{err}</Text>}
-          <View style={{ paddingHorizontal: '10%' }}>
-            <TouchableOpacity
-              className="mt-10 rounded-2xl bg-[#00E0FF] p-2 text-center text-xl"
-              onPress={handleLogin}>
-              <Text className="text-center text-xl text-black">Login</Text>
-            </TouchableOpacity>
-          </View>
-          <View className="flex-column mb-2 items-center border-blue-800">
-            <View className="my-3 flex-row">
-              <Text className="text-lg text-white">Dont have an Account? </Text>
-              <Link href={'/signUp'}>
-                <Text className="ml-2 text-lg text-[#00E0FF] underline">Create Account</Text>
-              </Link>
+            <Text
+              onPress={() => setShowResetPassword(true)}
+              className="mt-2 text-right text-white underline">
+              Forgot Password?
+            </Text>
+            {err != '' && <Text className="text-center text-xl text-red-400">{err}</Text>}
+            <View style={{ paddingHorizontal: '10%' }}>
+              <TouchableOpacity
+                className="mt-10 rounded-2xl bg-[#00E0FF] p-2 text-center text-xl"
+                onPress={handleLogin}>
+                <Text className="text-center text-xl text-black">Login</Text>
+              </TouchableOpacity>
+            </View>
+            <View className="flex-column mb-2 items-center border-blue-800">
+              <View className="my-3 flex-row">
+                <Text className="text-lg text-white">Dont have an Account? </Text>
+                <Link href={'/signUp'}>
+                  <Text className="ml-2 text-lg text-[#00E0FF] underline">Create Account</Text>
+                </Link>
+              </View>
             </View>
           </View>
         </View>

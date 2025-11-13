@@ -15,7 +15,6 @@ interface AuthContextProps {
   longitude: number;
   setRadius: React.Dispatch<React.SetStateAction<number>>;
   logout: () => Promise<void>;
-  continueAsGuest: () => void;
   radius: number;
   session?: string | null;
   isLoading: boolean;
@@ -63,11 +62,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     getlocation();
   }, []);
 
-  const continueAsGuest = () => {
-    let u = JSON.stringify({ user: { id: 0 }, guest: true, business: false });
-    setSession(u);
-  };
-
   return (
     <AuthContext.Provider
       value={{
@@ -76,7 +70,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         longitude,
         setRadius,
         logout,
-        continueAsGuest,
         radius,
         session,
         isLoading,

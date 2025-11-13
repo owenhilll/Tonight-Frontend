@@ -11,7 +11,7 @@ export default function Bookmarks() {
   const user = ses.user;
   const token = ses.token;
 
-  const queryKey = 'bookmarks' + user?.user.id;
+  const queryKey = 'bookmarks' + user.id;
 
   const {
     isLoading: bookmarksLoading,
@@ -45,6 +45,8 @@ export default function Bookmarks() {
         }),
   });
 
+  console.log(user);
+
   return (
     <View className="flex-1">
       <View className="w-[100%] flex-row">
@@ -65,7 +67,7 @@ export default function Bookmarks() {
         </View>
         <View className="flex-1" />
       </View>
-      {!user?.guest ? (
+      {!ses.guest ? (
         <View className="h-full flex-1">
           <FlatList
             data={bookmarks}

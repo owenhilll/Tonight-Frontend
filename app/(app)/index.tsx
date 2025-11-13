@@ -16,7 +16,6 @@ export default function HomeScreen() {
   const queryClient = useQueryClient();
 
   const ses = JSON.parse(session ?? '');
-  const user = ses.user;
 
   return (
     <View className="m-0 flex-1 p-0">
@@ -39,14 +38,14 @@ export default function HomeScreen() {
           <View
             className="z-50 flex-1 items-end justify-center"
             style={{ right: Platform.OS == 'web' ? 10 : 0 }}>
-            {user?.guest && (
+            {ses?.guest && (
               <TouchableOpacity
                 className="z-50 items-center justify-center rounded-full bg-[#00E0FF] p-2"
                 onPress={logout}>
                 <Text className="items-center text-black">Sign in</Text>
               </TouchableOpacity>
             )}
-            {!user?.guest && !user?.business && (
+            {!ses?.guest && !ses?.business && (
               <TouchableOpacity
                 className="z-50 items-center justify-center rounded-full bg-[#00E0FF] p-2"
                 onPress={logout}>
